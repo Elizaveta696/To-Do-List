@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node --env-file=.env src/index.js",
     "dev": "node --watch --env-file=.env src/index.js",
-    "lint": "eslint --fix src",
+        "lint": "biome check --fix ./src",
     "test": "vitest run"
   },
   "dependencies": {
@@ -25,8 +25,7 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.16.2",
-    "eslint-plugin-format": "^1.0.1",
+    "@biomejs/biome": "2.2.4",
     "supertest": "^7.1.1",
     "vitest": "^3.2.4"
   }
