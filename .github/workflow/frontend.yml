@@ -1,11 +1,7 @@
 # Name of the workflow
 name: Frontend Project
 # event on which to trigger the workflow
-on:
-  push:
-    branches:[main]
-  pull_request:
-    branches:[main]
+on: push
 # global enviironment variables
 
 # the jobs in the workflow
