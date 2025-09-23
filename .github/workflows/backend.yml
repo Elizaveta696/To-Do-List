@@ -1,0 +1,115 @@
+# Name of the workflow
+name: Backend Project
+# event on which to trigger the workflow
+on: pull_request
+# global environment variables
+
+# the jobs in the workflow
+jobs:
+  # Name of the job
+  test:
+    # The runner to use
+    runs-on: ubuntu-latest
+    # The steps to execute
+    steps:
+      # Step to fetch the code from the repo
+      - name: Checkout
+        # The actions that the step uses
+        uses: actions/checkout@v5.0.0
+      
+        #  # Step to install the latest node.js
+      - name: Setup Node.js environment
+        # The actions that the step uses
+        uses: actions/setup-node@v5.0.0
+        # Specific configuration for the action
+        with:
+          # Update to the latest node lts version
+          node-version: "20"
+
+        # Step to install the node modules
+      - name: Install node dependencies
+        # define the working directory for the command
+        working-directory: ./backend
+        # Install modules from packages.json
+        run: npm install
+
+        # Step to check code formatting and style
+      - name: Check code formating and style
+        # define the working directory for the command
+        working-directory: ./backend
+        # Run the lint command
+        run: npm run lint
+
+        # Step to run the tests
+      - name: Run tests
+        # define the working directory for the command
+        working-directory: ./backend
+        # Run the tests
+        run: echo "no tests yet"
+  build:
+    # make the job wait for test
+    needs: test
+    # The runner to use
+    runs-on: ubuntu-latest
+    # The steps to execute
+    steps:
+      # Step to fetch the code from the repo
+      - name: Checkout
+        # The actions that the step uses
+        uses: actions/checkout@v5.0.0
+
+      # Step to install the latest node.js
+      - name: Setup Node.js environment
+      # The actions that the step uses
+        uses: actions/setup-node@v5.0.0
+      # Specific configuration for the action
+        with:
+          # Update to the latest node lts version
+          node-version: "20"
+
+      # Step to install the node modules
+      - name: Install node dependencies
+        # define the working directory for the command
+        working-directory: ./backend
+        # Install modules from packages.json
+        run: npm install
+
+        # Step to run the production build command
+      - name: Build production
+        # define the working directory for the command
+        working-directory: ./backend
+        # Run the react build command
+        run: | 
+         npm start &
+         sleep 5
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
+          #configuration of the artifact
+        with:
+          # name of the artifact
+          name: backend-distribution
+          # the path to use, the site directory
+          path: backend/src
+  deploy:
+    # make the job wait for build job
+    needs: build
+    # The runner to use
+    runs-on: ubuntu-latest
+    # The steps to execute
+    steps:
+      # step to download the artifact
+      - name: Get build artifacts
+        # the action to use for downloading
+        uses: actions/download-artifact@v4
+        # the configuration needed by the action
+        with:
+          # name of the artifact to fetch
+          name: backend-distribution
+        # Intermediate step to see how the build-files was extracted
+      - name: Check the files
+        # run the ls command in the current directory
+        run: ls
+      - name: Deploy build
+        # Run a fake deploy command
+        run: echo "deploy..."
