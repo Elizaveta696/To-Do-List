@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.get("/", (_req, res) => {
   res.json({
-    message: "🦄🌈✨👋🌎🌍🌏✨🌈🦄",
+    message: "Hello from the working Backend!! yayy",
   });
 });
 
