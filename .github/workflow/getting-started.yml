@@ -1,0 +1,18 @@
+# Define a name for the workflow
+name: Getting Started
+# The trigger, this is a manual
+on: workflow_dispatch
+# The jobs in the workflow 
+jobs:
+  # Name of the job
+  first-job:
+    # The runner to use
+    runs-on: ubuntu-latest
+    # The steps to execute
+    steps:
+        # Name of the step
+      - name: Print Greeting
+        # The command
+        run: echo "Hello World!"
+      - name: Print Goodbye
+        run: echo "Done - Bye!"

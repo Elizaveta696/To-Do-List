@@ -3,7 +3,7 @@ name: Frontend Project
 # event on which to trigger the workflow
 on:
   push:
-    branches:[main]
+    branches:[frontend]
   pull_request:
     branches:[main]
 # global enviironment variables
