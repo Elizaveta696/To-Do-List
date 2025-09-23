@@ -90,7 +90,7 @@ jobs:
           # name of the artifact
           name: backend-distribution
           # the path to use, the site directory
-          path: backend/dist
+          path: backend/src
   deploy:
     # make the job wait for build job
     needs: build
