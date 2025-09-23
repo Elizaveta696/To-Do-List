@@ -2,7 +2,7 @@
 name: Backend Project
 # event on which to trigger the workflow
 on: pull_request
-# global enviironment variables
+# global environment variables
 
 # the jobs in the workflow
 jobs:
@@ -79,7 +79,7 @@ jobs:
         # define the working directory for the command
         working-directory: ./backend
         # Run the react build command
-        run: npm start
+        run: node src/index.js
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
