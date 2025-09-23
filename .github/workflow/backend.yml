@@ -1,7 +1,7 @@
 # Name of the workflow
-name: Frontend Project
+name: Backend Project
 # event on which to trigger the workflow
-on: push
+on: pull_request
 # global enviironment variables
 
 # the jobs in the workflow
@@ -29,21 +29,21 @@ jobs:
         # Step to install the node modules
       - name: Install node dependencies
         # define the working directory for the command
-        working-directory: ./frontend
+        working-directory: ./backend
         # Install modules from packages.json
         run: npm install
 
         # Step to check code formatting and style
       - name: Check code formating and style
         # define the working directory for the command
-        working-directory: ./frontend
+        working-directory: ./backend
         # Run the lint command
         run: npm run lint
 
         # Step to run the tests
       - name: Run tests
         # define the working directory for the command
-        working-directory: ./frontend
+        working-directory: ./backend
         # Run the tests
         run: echo "no tests yet"
   build:
@@ -70,14 +70,14 @@ jobs:
       # Step to install the node modules
       - name: Install node dependencies
         # define the working directory for the command
-        working-directory: ./frontend
+        working-directory: ./backend
         # Install modules from packages.json
         run: npm install
 
         # Step to run the production build command
       - name: Build production
         # define the working directory for the command
-        working-directory: ./frontend
+        working-directory: ./backend
         # Run the react build command
         run: npm run build
 
@@ -86,9 +86,9 @@ jobs:
           #configuration of the artifact
         with:
           # name of the artifact
-          name: frontend-distribution
+          name: backend-distribution
           # the path to use, the site directory
-          path: frontend/dist 
+          path: backend/dist
   deploy:
     # make the job wait for build job
     needs: build
@@ -103,7 +103,7 @@ jobs:
         # the configuration needed by the action
         with:
           # name of the artifact to fetch
-          name: frontend-distribution
+          name: backend-distribution
         # Intermediate step to see how the build-files was extracted
       - name: Check the files
         # run the ls command in the current directory
