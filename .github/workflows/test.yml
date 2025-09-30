@@ -120,5 +120,4 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: "${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}"	
-		
+          tags: "${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}"
