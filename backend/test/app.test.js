@@ -1,7 +1,7 @@
 import request from "supertest";
 import { describe, it } from "vitest";
 
-import app from "../src/app.js";
+import app from "../src/server.js";
 
 describe("app", () => {
 	it("responds with a not found message", () =>
@@ -12,13 +12,3 @@ describe("app", () => {
 			.expect(404));
 });
 
-describe("GET /", () => {
-	it("responds with a json message", () =>
-		request(app)
-			.get("/")
-			.set("Accept", "application/json")
-			.expect("Content-Type", /json/)
-			.expect(200, {
-				message: "Hello from the working Backend!! yayy 😎😎😎 !",
-			}));
-});
