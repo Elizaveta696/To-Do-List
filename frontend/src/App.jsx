@@ -1,36 +1,23 @@
+// ...existing code...
 import { useState } from "react";
-import viteLogo from "/vite.svg";
-import reactLogo from "./assets/react.svg";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
 import "./App.css";
 
 function App() {
-	const [count, setCount] = useState(0);
+	const [refreshKey, setRefreshKey] = useState(0);
 
 	return (
 		<>
-			<div>
-				<a href="https://vite.dev" target="_blank" rel="noopener">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank" rel="noopener">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
+			<h1>TeamBoard — Tasks</h1>
+			<TaskForm onCreated={() => setRefreshKey((k) => k + 1)} />
+			{/* TaskList reads tasks on mount — using a key forces reload when a new task is created */}
+			<div key={refreshKey}>
+				<TaskList />
 			</div>
-			<h1>Elizaveta and Alicja welcome you to PG's frontend! 🥳</h1>
-
-			<div className="card">
-				<button type="button" onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.jsx</code> and save to test HMR
-				</p>
-			</div>
-			<p className="read-the-docs">
-				Click on the Vite and React logos to learn more
-			</p>
 		</>
 	);
 }
 
 export default App;
+// ...existing code...
