@@ -5,13 +5,6 @@ import { sequelize } from "../src/config/db.js";
 import {Task} from "../src/models/Task.js";
 
 describe("Task API Integration Tests", () => {
-    beforeAll(async () => {
-        await sequelize.sync({ force: true });
-    });
-
-    afterAll(async () => {
-        await sequelize.close();
-    });
 
     it("should return an empty list when no tasks", async () => {
         const res = await request(app).get("/api/tasks");
