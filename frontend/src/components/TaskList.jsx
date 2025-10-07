@@ -5,6 +5,12 @@ export default function TaskList() {
 	const [tasks, setTasks] = useState([]);
 	const [loading, setLoading] = useState(true);
 
+	// editing state
+	const [editingId, setEditingId] = useState(null);
+	const [editTitle, setEditTitle] = useState("");
+	const [editDescription, setEditDescription] = useState("");
+	const [editLoading, setEditLoading] = useState(false);
+
 	const load = useCallback(async () => {
 		try {
 			setLoading(true);
@@ -40,33 +46,117 @@ export default function TaskList() {
 		}
 	};
 
+	const startEdit = (task) => {
+		setEditingId(task.id);
+		setEditTitle(task.title || "");
+		setEditDescription(task.description || "");
+	};
+
+	const cancelEdit = () => {
+		setEditingId(null);
+		setEditTitle("");
+		setEditDescription("");
+	};
+
+	const submitEdit = async (e) => {
+		e.preventDefault();
+		if (!editingId) return;
+		if (!editTitle.trim()) return alert("Title required");
+		try {
+			setEditLoading(true);
+			const updated = await updateTask(editingId, {
+				title: editTitle,
+				description: editDescription,
+			});
+			setTasks((t) => t.map((x) => (x.id === updated.id ? updated : x)));
+			cancelEdit();
+		} catch (err) {
+			console.error(err);
+			alert("Failed to save changes");
+		} finally {
+			setEditLoading(false);
+		}
+	};
+
 	if (loading) return <div>Loading tasks…</div>;
 	if (!tasks.length) return <div>No tasks yet</div>;
 
 	return (
-		<ul>
+		<div className="tasks-container">
 			{tasks.map((task) => (
-				<li key={task.id} style={{ marginBottom: 8 }}>
-					<strong
-						style={{ textDecoration: task.completed ? "line-through" : "none" }}
-					>
-						{task.title}
-					</strong>
-					<div>{task.description}</div>
-					<div>
-						<button type="button" onClick={() => toggleComplete(task)}>
-							{task.completed ? "Undo" : "Complete"}
-						</button>
-						<button
-							type="button"
-							onClick={() => handleDelete(task.id)}
-							style={{ marginLeft: 8 }}
-						>
-							Delete
-						</button>
-					</div>
-				</li>
+				<article className="task-card" key={task.id}>
+					{editingId === task.id ? (
+						<form className="task-form" onSubmit={submitEdit}>
+							<div>
+								<input
+									className="input"
+									value={editTitle}
+									onChange={(e) => setEditTitle(e.target.value)}
+									placeholder="Title"
+								/>
+							</div>
+							<div>
+								<input
+									className="input"
+									value={editDescription}
+									onChange={(e) => setEditDescription(e.target.value)}
+									placeholder="Description"
+								/>
+							</div>
+							<div>
+								<button
+									className="btn btn-primary"
+									type="submit"
+									disabled={editLoading}
+								>
+									{editLoading ? "Saving…" : "Save"}
+								</button>
+								<button
+									className="btn btn-ghost"
+									type="button"
+									onClick={cancelEdit}
+									style={{ marginLeft: 8 }}
+								>
+									Cancel
+								</button>
+							</div>
+						</form>
+					) : (
+						<>
+							<h3
+								className={`task-title ${task.completed ? "task-completed" : ""}`}
+							>
+								{task.title}
+							</h3>
+
+							<div className="task-description">{task.description}</div>
+							<div className="task-controls">
+								<button
+									className="btn btn-primary"
+									type="button"
+									onClick={() => toggleComplete(task)}
+								>
+									{task.completed ? "Undo" : "Complete"}
+								</button>
+								<button
+									className="btn"
+									type="button"
+									onClick={() => startEdit(task)}
+								>
+									Edit
+								</button>
+								<button
+									className="btn btn-ghost"
+									type="button"
+									onClick={() => handleDelete(task.id)}
+								>
+									Delete
+								</button>
+							</div>
+						</>
+					)}
+				</article>
 			))}
-		</ul>
+		</div>
 	);
 }

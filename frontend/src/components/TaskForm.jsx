@@ -24,9 +24,10 @@ export default function TaskForm({ onCreated }) {
 	};
 
 	return (
-		<form onSubmit={submit} style={{ marginBottom: 16 }}>
+		<form className="task-form" onSubmit={submit} style={{ marginBottom: 16 }}>
 			<div>
 				<input
+					className="input"
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
 					placeholder="Title"
@@ -34,12 +35,13 @@ export default function TaskForm({ onCreated }) {
 			</div>
 			<div>
 				<input
+					className="input"
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 					placeholder="Description"
 				/>
 			</div>
-			<button type="submit" disabled={loading}>
+			<button className="btn btn-primary" type="submit" disabled={loading}>
 				{loading ? "Saving…" : "Add Task"}
 			</button>
 		</form>
