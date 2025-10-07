@@ -73,8 +73,8 @@ jobs:
 
       - name: Drop test database
         run: |
-        psql -U postgres -c "DROP DATABASE IF EXISTS test_db;"
-        psql -U postgres -c "CREATE DATABASE test_db;"
+          psql -U postgres -c "DROP DATABASE IF EXISTS test_db;"
+          psql -U postgres -c "CREATE DATABASE test_db;"
 
       # Run backend integration tests
       - name: Run Backend Tests
