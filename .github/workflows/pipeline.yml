@@ -11,52 +11,25 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  test:
-    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  # Run frontend unit tests with Vitest in CI mode
+  frontend-tests:
+    runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Installing a Node LTS version
       - name: Install Node
         uses: actions/setup-node@v4.1.0
         with:
           node-version: "22"
 
-      # Installing the node modules for the frontend
       - name: Install Frontend Dependencies
         working-directory: ./frontend
         run: npm install
 
-      # Running lint check for the frontend
-      - name: Install Frontend Dependencies
+      - name: Run Frontend Tests (CI)
         working-directory: ./frontend
-        run: npm run lint
-
-      # Test that the frontend code build
-      - name: Run Frontend Tests
-        working-directory: ./frontend
-        run: npm run build
-
-      # Running the frontend tests
-      # Will be added in Week 40
-
-      # Installing the node modules for the backend
-      - name: Install Backend Dependencies
-        working-directory: ./backend
-        run: npm install
-
-      # Running the linter
-      - name: Run Backend Build
-        working-directory: ./backend
-        run: npm run lint
-
-      # Running backend tests
-      - name: Test Backend Code
-        working-directory: ./backend
-        run: npm run test
+        run: npm run test:ci
 
 
 # Job for building the frontend and backend container images and pushing it to the registry
@@ -69,8 +42,8 @@ jobs:
       # The type of runner that the job will run on
 
     runs-on: ubuntu-latest
-    # Test job needs to succeed
-    needs: test
+    # Test jobs need to succeed
+    needs: [frontend-tests]
     # Give the job permission to write packages to the registry
     permissions:
       contents: read
