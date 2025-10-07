@@ -14,7 +14,7 @@ describe("Task API Integration Tests", () => {
     });
 
     it("should return an empty list when no tasks", async () => {
-        const res = await request(app).get("/tasks");
+        const res = await request(app).get("/api/tasks");
         expect(res.status).toBe(200);
         expect(res.headers["content-type"]).toMatch(/json/);
         expect(Array.isArray(res.body)).toBe(true);
@@ -23,7 +23,7 @@ describe("Task API Integration Tests", () => {
 
     it("should create a new task", async () => {
         const newTask = {title: "Test Task", description:"Testsss"};
-        const res = await request(app).post("/tasks").send(newTask).set("Accept", "application/json");
+        const res = await request(app).post("/api/tasks").send(newTask).set("Accept", "application/json");
         expect(res.status).toBe(201);
         expect(res.body).toHaveProperty("id");
         expect(res.body.title).toBe(newTask.title);
@@ -31,7 +31,7 @@ describe("Task API Integration Tests", () => {
     });
 
     it("should fetch the created task", async () => {
-        const res = await request(app).get("/tasks");
+        const res = await request(app).get("/api/tasks");
         expect(res.status).toBe(200);
         expect(res.body).toHaveLength(1);
         expect(res.body[0]).toHaveProperty("title", "Test Task");
@@ -41,7 +41,7 @@ describe("Task API Integration Tests", () => {
         const tasks = await Task.findAll();
         const taskId = tasks[0].id;
 
-        const res = await request(app).put(`/tasks/${taskId}`).send({ completed: true }).set("Accept", "application/json");
+        const res = await request(app).put(`/api/tasks/${taskId}`).send({ completed: true }).set("Accept", "application/json");
         expect(res.status).toBe(200);
         expect(res.body.completed).toBe(true);
     });
@@ -50,11 +50,11 @@ describe("Task API Integration Tests", () => {
         const tasks = await Task.findAll();
         const taskId = tasks[0].id;
 
-        const res = await request(app).delete(`/tasks/${taskId}`);
+        const res = await request(app).delete(`/api/tasks/${taskId}`);
         
         expect(res.status).toBe(204);
 
-        const taskCheck = await request(app).get("/tasks");
+        const taskCheck = await request(app).get("/api/tasks");
         expect(taskCheck.body).toHaveLength(0);
     });
 });

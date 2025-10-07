@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(json());
 
-app.use('/tasks', router);
+app.use('/api/tasks', router);
 
 sequelize.sync().then(() => {
 	console.log("Database synced");
