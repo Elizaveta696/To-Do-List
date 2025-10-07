@@ -1,4 +1,3 @@
-
 # This is the CD/CD pipeline
 name: CI/CD
 
@@ -31,6 +30,63 @@ jobs:
         working-directory: ./frontend
         run: npm run test:ci
 
+  # BACKEND TESTS (Integration with PostgreSQL)
+  backend-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: "22"
+
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      # Create test environment variables dynamically
+      - name: Set Environment Variables
+        working-directory: ./backend
+        run: |
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_USER=postgres" >> .env
+          echo "DB_PASSWORD=password" >> .env
+          echo "DB_NAME=test_db" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "NODE_ENV=test" >> .env
+
+      # Wait for PostgreSQL to be ready
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -U postgres; do
+            echo "Waiting for database..."
+            sleep 2
+          done
+
+      # Run backend integration tests
+      - name: Run Backend Tests
+        working-directory: ./backend
+        env:
+          NODE_ENV: test
+        run: npm test
+
 
 # Job for building the frontend and backend container images and pushing it to the registry
   build:
@@ -43,7 +99,7 @@ jobs:
 
     runs-on: ubuntu-latest
     # Test jobs need to succeed
-    needs: [frontend-tests]
+    needs: [frontend-tests, backend-tests]
     # Give the job permission to write packages to the registry
     permissions:
       contents: read
