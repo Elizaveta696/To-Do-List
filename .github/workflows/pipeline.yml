@@ -42,7 +42,7 @@ jobs:
           - 5432:5432
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: test_db
         options: >-
           --health-cmd="pg_isready -U postgres"
@@ -60,17 +60,7 @@ jobs:
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: npm install
-
-      # Create test environment variables dynamically
-      - name: Set Environment Variables
-        working-directory: ./backend
-        run: |
-          echo "DB_HOST=localhost" >> .env
-          echo "DB_USER=postgres" >> .env
-          echo "DB_PASSWORD=password" >> .env
-          echo "DB_NAME=test_db" >> .env
-          echo "DB_PORT=5432" >> .env
-          echo "NODE_ENV=test" >> .env
+    
 
       # Wait for PostgreSQL to be ready
       - name: Wait for PostgreSQL
@@ -84,11 +74,11 @@ jobs:
       - name: Run Backend Tests
         working-directory: ./backend
         env:
-          DB_USER: postgres
-          DB_PASSWORD: password
-          DB_NAME: test_db
-          DB_HOST: localhost
-          DB_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
         run: npm test
 
 
