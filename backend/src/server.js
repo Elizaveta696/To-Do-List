@@ -1,8 +1,8 @@
-import express, { json } from 'express';
-import { config } from 'dotenv';
-import cors from 'cors';
-import { connectDB, sequelize } from './config/db.js';
-import {router} from './routes/taskRoutes.js';
+import cors from "cors";
+import { config } from "dotenv";
+import express, { json } from "express";
+import { connectDB, sequelize } from "./config/db.js";
+import { router } from "./routes/taskRoutes.js";
 
 config();
 connectDB();
@@ -14,7 +14,7 @@ app.use(json());
 app.use('/tasks', router);
 
 sequelize.sync().then(() => {
-    console.log('Database synced');
+	console.log("Database synced");
 });
 
 const PORT = process.env.PORT || 3000;

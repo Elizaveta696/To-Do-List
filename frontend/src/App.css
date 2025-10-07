@@ -1,42 +1,189 @@
+:root {
+	--bg: #0f1724;
+	--surface: #0b1220;
+	--muted-surface: #07101a;
+	--text: #e6eef8;
+	--muted-text: #9aa6b2;
+	--accent: #60a5fa;
+	--accent-strong: #7cdbff;
+	--danger: #ff6b6b;
+	--radius: 12px;
+	--elevation: 0 8px 22px rgba(3, 8, 25, 0.6);
+	--gap: 16px;
+	--max-width: 980px;
+}
+
+/* Page */
+html,
+body,
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+	height: 100%;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* App container */
+.app {
+	max-width: var(--max-width);
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Header */
+.app h1 {
+	margin: 0 0 4px 0;
+	font-size: 1.4rem;
+	color: var(--accent-strong);
+	letter-spacing: -0.2px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Form */
+.task-form {
+	background: linear-gradient(
+		180deg,
+		rgba(255, 255, 255, 0.02),
+		rgba(0, 0, 0, 0.02)
+	);
+	padding: 12px;
+	border-radius: calc(var(--radius) - 4px);
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	box-shadow: var(--elevation);
+}
+.task-form .input {
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	padding: 8px 10px;
+	border-radius: 8px;
+	color: var(--text);
+	outline: none;
+}
+.task-form .input::placeholder {
+	color: var(--muted-text);
+}
+.task-form .input:focus {
+	border-color: rgba(96, 165, 250, 0.9);
+	box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.06);
 }
 
-.card {
-  padding: 2em;
+/* Buttons */
+.btn {
+	background: transparent;
+	color: var(--text);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	padding: 8px 12px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition:
+		transform 0.12s ease,
+		box-shadow 0.12s ease,
+		background 0.12s ease;
+}
+.btn:active {
+	transform: translateY(1px);
+}
+.btn-primary {
+	background: linear-gradient(
+		90deg,
+		var(--accent) 0%,
+		var(--accent-strong) 100%
+	);
+	color: #04233a;
+	border: none;
+	box-shadow: 0 8px 18px rgba(96, 165, 250, 0.12);
+}
+.btn-primary:hover {
+	background: linear-gradient(90deg, #0073ff 0%, #00bbff 100%);
+	color: #063254;
+	box-shadow: 0 2px 4px rgba(96, 165, 250, 0.2);
+}
+.btn-ghost {
+	background: transparent;
+	color: var(--accent);
+	border: 1px solid rgba(124, 219, 255, 0.08);
 }
 
-.read-the-docs {
-  color: #888;
+/* Tasks container: grid of cards */
+.tasks-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: var(--gap);
+	align-items: start;
+}
+
+/* Card styling (always visible) */
+.task-card {
+	background: linear-gradient(
+		180deg,
+		rgba(255, 255, 255, 0.012),
+		rgba(0, 0, 0, 0.06)
+	);
+	border-radius: var(--radius);
+	padding: 14px;
+	box-shadow: var(--elevation);
+	border: 1px solid rgba(255, 255, 255, 0.03);
+	transition:
+		transform 0.12s ease,
+		box-shadow 0.12s ease;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.task-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 16px 36px rgba(3, 8, 25, 0.7);
+}
+
+/* Only make the edit form vertical */
+.task-card .task-form {
+	background: transparent;
+	box-shadow: none;
+	border: none;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: flex-start;
+	text-align: left;
+}
+
+/* Card content */
+.task-title {
+	font-weight: 600;
+	color: var(--text);
+	font-size: 1rem;
+	margin: 0;
+}
+.task-description {
+	color: var(--muted-text);
+	font-size: 0.92rem;
+	margin: 0;
+	white-space: pre-wrap;
+}
+
+/* Completed */
+.task-completed {
+	opacity: 0.6;
+	text-decoration: line-through;
+}
+
+/* Controls row at bottom */
+.task-controls {
+	margin-top: auto;
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+/* Small & responsive tweaks */
+@media (max-width: 480px) {
+	.task-form {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	.task-controls {
+		flex-wrap: wrap;
+	}
 }

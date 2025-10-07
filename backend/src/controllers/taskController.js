@@ -1,4 +1,4 @@
-import {Task} from '../models/Task.js';
+import { Task } from "../models/Task.js";
 
 //get all
 const getTask = async (req, res) => {
@@ -13,14 +13,15 @@ const getTask = async (req, res) => {
 
 //add task
 const addTask = async (req, res) => {
-    try {
-        const { title, description } = req.body;
-        const task = await Task.create({ title, description });
-        res.status(201).json(task);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
+	try {
+		const { title, description } = req.body;
+		const task = await Task.create({ title, description });
+		res.status(201).json(task);
+	} catch (error) {
+		console.error("Error creating task:", error);
+		res.status(500).json({ message: error.message });
+	}
+};
 
 //edit task
 const editTask = async (req, res) => {
@@ -52,4 +53,4 @@ const deleteTask = async(req, res) => {
   }
 }
 
-export { getTask, addTask, editTask, deleteTask};
+export { getTask, addTask, editTask, deleteTask };

@@ -1,4 +1,4 @@
-FROM node:22-alpine as build-stage
+FROM node:22-alpine AS build-stage
 WORKDIR /app
 COPY package*.json /app/
 RUN npm install
@@ -7,3 +7,4 @@ RUN npm run build
 
 FROM nginx:alpine3.20-slim
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
