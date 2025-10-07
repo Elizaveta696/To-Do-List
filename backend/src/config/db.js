@@ -3,12 +3,12 @@ import { config } from 'dotenv';
 
 config();
 
-const sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
+export const sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
     host: process.env.POSTGRES_HOST || 'localhost',
     dialect: 'postgres',
 });
 
-const connectDB = async () => {
+export const connectDB = async () => {
     try {
         await sequelize.authenticate();
         console.log('PostgreSQL connected');
@@ -18,4 +18,3 @@ const connectDB = async () => {
     }
 };
 
-export { sequelize, connectDB };
