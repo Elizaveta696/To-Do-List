@@ -6,6 +6,10 @@ import {Task} from "../src/models/Task.js";
 
 describe("Task API Integration Tests", () => {
 
+    it("should return an empty list when no tasks", async () => {
+        const res = await request(app).get("/api/tasks");
+
+    });
 
     it("should create a new task", async () => {
         const newTask = {title: "Test Task", description:"Testsss"};
