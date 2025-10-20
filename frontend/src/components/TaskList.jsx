@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchTasks, removeTask, updateTask } from "../api/tasks";
 import TaskItem from "./TaskItem";
 
-export default function TaskList() {
+export default function TaskList({ token }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +16,7 @@ export default function TaskList() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     load();
@@ -37,7 +37,7 @@ export default function TaskList() {
       console.error("Failed to delete task, reloading list", e);
       // restore previous state or reload from server
       try {
-        const data = await fetchTasks();
+        const data = await fetchTasks(token);
         setTasks(data);
       } catch (err) {
         // fallback: restore previous tasks if fetch fails
