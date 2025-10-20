@@ -1,0 +1,44 @@
+### Register a new user
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "mypassword"
+}
+### Login user
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "mypassword"
+}
+
+### Create a task
+POST http://localhost:3000/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
+
+{
+  "title": "Finish project",
+  "description": "Complete backend + frontend integration"
+}
+
+### Get all tasks
+GET http://localhost:3000/api/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
+
+### Update task
+PUT http://localhost:3000/api/tasks/4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
+
+{
+  "completed": true,
+  "description": "Finish backend + frontend + tests"
+}
+
+### Delete task
+DELETE http://localhost:3000/api/tasks/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
