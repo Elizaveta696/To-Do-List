@@ -203,8 +203,10 @@ body,
 	flex-direction: column;
 	gap: 12px;
 	/* portrait card: taller than wide */
-	min-width: 200px;
-	max-width: 240px;
+	box-sizing: border-box;
+	/* fixed visuami width in layout (flex-basis) so internal changes don't alter card width */
+	flex: 0 0 220px; /* flex-grow:0, flex-shrink:0, basis:220px */
+	min-width: 280px;
 	min-height: 320px;
 }
 
@@ -235,14 +237,17 @@ body,
 .task-title {
 	font-weight: 600;
 	color: var(--text);
-	font-size: 1rem;
+	font-size: 1.2rem;
 	margin: 0;
 }
 .task-description {
 	color: var(--muted-text);
-	font-size: 0.92rem;
+	font-size: 1rem;
 	margin: 0;
 	white-space: pre-wrap;
+	/* allow long words/URLs to break and wrap inside the card */
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 /* Completed */
