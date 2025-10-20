@@ -1,22 +1,21 @@
 :root {
-	--bg: #0f1724;
-	--surface: #0b1220;
-	--muted-surface: #07101a;
-	--text: #e6eef8;
-	--muted-text: #9aa6b2;
-	--accent: #60a5fa;
-	--accent-strong: #7cdbff;
-	--accent-active: #0073ff;
-	--accent-strong-active: #00bbff;
-	--danger: #ff6b6b;
-	--radius: 12px;
-	/* softer navy-blue elevation shadow */
-	--elevation: 0 8px 22px rgba(2, 20, 46, 0.35);
-	--gap: 16px;
-	--max-width: 980px;
+    --bg: #0f1724;
+    --surface: #0b1220;
+    --muted-surface: #07101a;
+    --text: #e6eef8;
+    --muted-text: #9aa6b2;
+    --accent: #60a5fa;
+    --accent-strong: #7cdbff;
+    --accent-active: #0073ff;
+    --accent-strong-active: #00bbff;
+    --danger: #ff6b6b;
+    --radius: 12px;
+    /* softer navy-blue elevation shadow */
+    --elevation: 0 8px 22px rgba(2, 20, 46, 0.35);
+    --gap: 16px;
+    --max-width: 980px;
 }
 
-/* Bright / light theme overrides when documentElement has .theme-light */
 .theme-light {
 	/* softer, more subtle bright background */
 	/* more white in the middle; blue concentrated near the bottom */
@@ -28,8 +27,8 @@
 	--accent: #96e1ff;
 	--accent-strong: #63a8fc;
 	--accent-active: #5ad0ff;
-	--accent-strong-active: #2f8cfe;
-	--danger: #ef4444;
+    --accent-strong-active: #2f8cfe;
+    --danger: #ef4444;
 }
 
 /* Theme toggle button (top-right) - ghost style */
@@ -44,253 +43,333 @@
 	height: 40px;
 	border-radius: 8px;
 	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	border: 1px solid rgba(255,255,255,0.06);
-	box-shadow: none;
-	cursor: pointer;
-	transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+
+    align-items: center;
+    justify-content: center;
+
+
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: none;
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
 }
 .theme-toggle:hover {
-	background: rgba(255,255,255,0.03);
-	border-color: rgba(255,255,255,0.12);
-	transform: translateY(-1px);
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-1px);
 }
 .theme-light .theme-toggle {
-	border-color: rgba(7,20,34,0.08);
+    border-color: rgba(7,20,34,0.08);
 }
 .theme-light .theme-toggle:hover {
-	background: rgba(7,20,34,0.04);
+    background: rgba(7,20,34,0.04);
 }
 
 /* Page */
 html,
 body,
 #root {
-	/* ensure full viewport coverage and keep bg fixed during scroll */
-	min-height: 100vh;
-	height: auto;
-	background: var(--bg);
-	background-attachment: fixed;
-	background-size: cover;
-	color: var(--text);
+    /* ensure full viewport coverage and keep bg fixed during scroll */
+    min-height: 100vh;
+    height: auto;
+    background: var(--bg);
+    background-attachment: fixed;
+    background-size: cover;
+    color: var(--text);
 }
 
 /* App container */
 .app {
-	max-width: var(--max-width);
-	margin: 0 auto;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 /* Header */
 .app h1 {
-	margin: 0 0 4px 0;
-	font-size: 1.4rem;
-	color: var(--accent-strong);
-	letter-spacing: -0.2px;
+    margin: 0 0 4px 0;
+    font-size: 1.4rem;
+    color: var(--accent-strong);
+    letter-spacing: -0.2px;
 }
 
 /* Form */
 .task-form {
-	background: linear-gradient(
-		180deg,
-		rgba(255, 255, 255, 0.02),
-		rgba(0, 0, 0, 0.02)
-	);
-	padding: 12px;
-	border-radius: calc(var(--radius) - 4px);
-	display: flex;
-	gap: 12px;
-	align-items: center;
-	box-shadow: var(--elevation);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.02),
+        rgba(0, 0, 0, 0.02)
+    );
+    padding: 12px;
+    border-radius: calc(var(--radius) - 4px);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    box-shadow: var(--elevation);
 }
 
 /* Top-level add-task form should appear as a card above the background */
 .app > .task-form {
-	background: var(--surface);
-	padding: 14px;
-	border-radius: calc(var(--radius) - 4px);
-	box-shadow: var(--elevation);
-	border: 1px solid rgba(0,0,0,0.04);
-	position: relative;
-	z-index: 2;
+    background: var(--surface);
+    padding: 16px;
+    border-radius: calc(var(--radius) - 4px);
+    box-shadow: var(--elevation);
+    border: 1px solid rgba(0,0,0,0.04);
+    position: sticky;
+    top: 20px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
 }
 .task-form .input {
-	background: transparent;
-	border: 1px solid rgba(255, 255, 255, 0.05);
-	padding: 8px 10px;
-	border-radius: 8px;
-	color: var(--text);
-	outline: none;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--text);
+    outline: none;
 }
 .task-form .input::placeholder {
-	color: var(--muted-text);
+    color: var(--muted-text);
 }
 .task-form .input:focus {
-	border-color: rgba(96, 165, 250, 0.9);
-	box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.06);
+    border-color: rgba(96, 165, 250, 0.9);
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.06);
 }
 
 /* Buttons */
 .btn {
-	background: transparent;
-	color: var(--text);
-	border: 1px solid rgba(255, 255, 255, 0.06);
-	padding: 8px 12px;
-	border-radius: 8px;
-	cursor: pointer;
-	transition:
-		transform 0.12s ease,
-		box-shadow 0.12s ease,
-		background 0.12s ease;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease;
 }
 .btn:active {
-	transform: translateY(1px);
+    transform: translateY(1px);
+}
+
+
+/* Top-level buttons in the .app column should not stretch full width */
+.app > .btn,
+.app > .btn-primary {
+    align-self: flex-start;
+    width: auto;
 }
 .btn-primary {
-	background: linear-gradient(
-		90deg,
-		var(--accent) 0%,
-		var(--accent-strong) 100%
-	);
-	color: #04233a;
-	border: none;
-	box-shadow: 0 8px 18px rgba(96, 165, 250, 0.12);
+    background: linear-gradient(
+        90deg,
+        var(--accent) 0%,
+        var(--accent-strong) 100%
+    );
+    color: #04233a;
+    border: none;
+    box-shadow: 0 8px 18px rgba(96, 165, 250, 0.12);
 }
 .btn-primary:hover {
-	background: linear-gradient(
-		90deg,
-		var(--accent-active) 0%,
-		var(--accent-strong-active) 100%
-	);
-	color: #063254;
-	box-shadow: 0 2px 4px rgba(2, 20, 46, 0.16);
+    background: linear-gradient(
+        90deg,
+        var(--accent-active) 0%,
+        var(--accent-strong-active) 100%
+    );
+    color: #063254;
+    box-shadow: 0 2px 4px rgba(2, 20, 46, 0.16);
 }
 .btn-ghost {
-	background: transparent;
-	color: var(--accent-strong);
-	border: 1px solid rgba(124, 219, 255, 0.08);
+    background: transparent;
+    color: var(--accent-strong);
+    border: 1px solid rgba(124, 219, 255, 0.08);
 }
 
 /* Tasks container: row of cards (horizontal scroll on small screens) */
 .tasks-container {
-	display: flex;
-	flex-direction: row;
-	gap: var(--gap);
-	align-items: flex-start;
-	flex-wrap: wrap; /* wrap to next row when cards don't fit */
-	justify-content: center; /* center rows */
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap);
+    align-items: flex-start;
+    flex-wrap: wrap; /* wrap to next row when cards don't fit */
+    justify-content: center; /* center rows */
 }
 
 /* Card styling (always visible) */
 .task-card {
-	/* use theme-aware surface so cards sit on top of the page gradient */
-	background: var(--surface);
-	/* slight translucency in dark mode is preserved by the surface color choice */
-	border-radius: var(--radius);
-	padding: 14px;
-	box-shadow: var(--elevation);
-	position: relative;
-	z-index: 1;
-	border: 1px solid rgba(255, 255, 255, 0.03);
-	transition:
-		transform 0.12s ease,
-		box-shadow 0.12s ease;
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	/* portrait card: taller than wide */
-	box-sizing: border-box;
-	/* fixed visuami width in layout (flex-basis) so internal changes don't alter card width */
-	flex: 0 0 220px; /* flex-grow:0, flex-shrink:0, basis:220px */
-	min-width: 280px;
-	min-height: 320px;
+    /* use theme-aware surface so cards sit on top of the page gradient */
+    background: var(--surface);
+    /* slight translucency in dark mode is preserved by the surface color choice */
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: var(--elevation);
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* portrait card: taller than wide */
+    box-sizing: border-box;
+    /* fixed visuami width in layout (flex-basis) so internal changes don't alter card width */
+    flex: 0 0 220px; /* flex-grow:0, flex-shrink:0, basis:220px */
+    min-width: 280px;
+    min-height: 320px;
 }
 
 .task-card:hover {
-	transform: translateY(-4px);
-	box-shadow: 0 16px 36px rgba(2, 20, 46, 0.32);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(2, 20, 46, 0.32);
 }
 
 /* Only make the edit form vertical (inputs) but keep action buttons inline */
 .task-card .task-form {
-	background: transparent;
-	box-shadow: none;
-	border: none;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	align-items: flex-start;
-	text-align: left;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    text-align: left;
 }
 .task-card .task-form .form-actions {
-	display: flex;
-	gap: 8px;
-	align-items: center;
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 /* Card content */
 .task-title {
-	font-weight: 600;
-	color: var(--text);
-	font-size: 1.2rem;
-	margin: 0;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 1.2rem;
+    margin: 0;
 }
 .task-description {
-	color: var(--muted-text);
-	font-size: 1rem;
-	margin: 0;
-	white-space: pre-wrap;
-	/* allow long words/URLs to break and wrap inside the card */
-	overflow-wrap: anywhere;
-	word-break: break-word;
+    color: var(--muted-text);
+    font-size: 1rem;
+    margin: 0;
+    white-space: pre-wrap;
+    /* allow long words/URLs to break and wrap inside the card */
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* Completed */
 .task-completed {
-	opacity: 0.6;
-	text-decoration: line-through;
+    opacity: 0.6;
+    text-decoration: line-through;
 }
 
 /* Controls row at bottom */
 .task-controls {
-	margin-top: auto;
-	display: flex;
-	gap: 8px;
-	align-items: center;
+    margin-top: auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 /* Small & responsive tweaks */
 @media (max-width: 480px) {
-	.task-form {
-		flex-direction: column;
-		align-items: stretch;
-	}
-	.task-controls {
-		flex-wrap: wrap;
-	}
+    .task-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .task-controls {
+        flex-wrap: wrap;
+    }
 
-	/* ensure card form action buttons wrap or stack on very small screens */
-	.task-card .task-form .form-actions {
-		flex-wrap: wrap;
-		gap: 6px;
-	}
+    /* ensure card form action buttons wrap or stack on very small screens */
+    .task-card .task-form .form-actions {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
 
-	/* on small screens show a single column (stacked) instead of horizontal row */
-	.tasks-container {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 12px;
-		overflow-x: visible;
-	}
+    /* on small screens show a single column (stacked) instead of horizontal row */
+    .tasks-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        overflow-x: visible;
+    }
 
-	/* on medium screens allow cards to stretch a bit to fill space */
-	.task-card {
-		max-width: 100%;
-		min-width: 0;
-	}
+    /* on medium screens allow cards to stretch a bit to fill space */
+    .task-card {
+        max-width: 100%;
+        min-width: 0;
+    }
 }
+
+/* Overlay and narrow panel for New Task form */
+.overlay-form {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.overlay-panel {
+    background: var(--surface);
+    border-radius: calc(var(--radius) - 4px);
+    width: min(360px, 96%);
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+    box-shadow: 0 18px 48px rgba(2, 20, 46, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 16px;
+    z-index: 1001;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* make the task-form inside the panel vertical and full width */
+.overlay-panel .task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+.overlay-panel .task-form .input {
+    width: 100%;
+}
+
+/* small button style used in App.jsx */
+.btn-sm { padding: 6px 10px; font-size: 0.95rem; }
+
+/* make sure inputs size includes padding/border and never exceed panel */
+.overlay-panel .task-form .input,
+.overlay-panel .task-form textarea {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+/* keep action buttons on one line and aligned to right inside panel */
+.overlay-panel .form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 6px;
+}
+
+

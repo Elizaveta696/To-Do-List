@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createTask } from "../api/tasks";
 
-export default function TaskForm({ onCreated }) {
+export default function TaskForm({ onCreated, onClose }) {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function TaskForm({ onCreated }) {
 	};
 
 	return (
-		<form className="task-form" onSubmit={submit} style={{ marginBottom: 16 }}>
+	<form className="task-form" onSubmit={submit}>
 			<div>
 				<input
 					className="input"
@@ -41,9 +41,14 @@ export default function TaskForm({ onCreated }) {
 					placeholder="Description"
 				/>
 			</div>
-			<button className="btn btn-primary" type="submit" disabled={loading}>
-				{loading ? "Saving…" : "Add Task"}
-			</button>
+			<div className="form-actions">
+				<button className="btn btn-primary" type="submit" disabled={loading}>
+					{loading ? "Saving…" : "Add Task"}
+				</button>
+				<button className="btn btn-ghost" type="button" onClick={() => onClose?.()}>
+					Cancel
+				</button>
+			</div>
 		</form>
 	);
 }
