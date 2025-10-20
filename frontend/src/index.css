@@ -12,6 +12,17 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+/* Ensure the document background covers the full viewport and scrolls consistently */
+html,
+body,
+#root {
+	min-height: 100vh;
+	height: auto;
+	/* Use the raw --bg variable (may be a color or a gradient). Keep it fixed and cover the viewport. */
+	background: var(--bg, #0f1724);
+	background-attachment: fixed;
+	background-size: cover;
+}
 body {
 	display: flex;
 	flex-direction: column; /* stack content vertically */
@@ -26,7 +37,7 @@ body {
 	font-family:
 		Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 	color: var(--text);
-	background: linear-gradient(180deg, var(--bg) 0%, #08101a 100%);
+	/* body background is applied via the root selector above using --bg */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -40,13 +51,7 @@ a:hover {
 	color: #535bf2;
 }
 
-body {
-	margin: 0;
-	display: flex;
-	place-items: center;
-	min-width: 320px;
-	min-height: 100vh;
-}
+/* (duplicate body rules removed above; consolidated styles are in the first body block) */
 
 h1 {
 	font-size: 3.2em;
