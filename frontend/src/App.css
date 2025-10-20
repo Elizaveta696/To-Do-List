@@ -104,12 +104,14 @@ body,
 	border: 1px solid rgba(124, 219, 255, 0.08);
 }
 
-/* Tasks container: grid of cards */
+/* Tasks container: row of cards (horizontal scroll on small screens) */
 .tasks-container {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	display: flex;
+	flex-direction: row;
 	gap: var(--gap);
-	align-items: start;
+	align-items: flex-start;
+	flex-wrap: wrap; /* wrap to next row when cards don't fit */
+	justify-content: center; /* center rows */
 }
 
 /* Card styling (always visible) */
@@ -128,7 +130,11 @@ body,
 		box-shadow 0.12s ease;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 12px;
+	/* portrait card: taller than wide */
+	min-width: 200px;
+	max-width: 240px;
+	min-height: 320px;
 }
 
 .task-card:hover {
@@ -136,7 +142,7 @@ body,
 	box-shadow: 0 16px 36px rgba(3, 8, 25, 0.7);
 }
 
-/* Only make the edit form vertical */
+/* Only make the edit form vertical (inputs) but keep action buttons inline */
 .task-card .task-form {
 	background: transparent;
 	box-shadow: none;
@@ -147,6 +153,11 @@ body,
 	gap: 10px;
 	align-items: flex-start;
 	text-align: left;
+}
+.task-card .task-form .form-actions {
+	display: flex;
+	gap: 8px;
+	align-items: center;
 }
 
 /* Card content */
@@ -185,5 +196,25 @@ body,
 	}
 	.task-controls {
 		flex-wrap: wrap;
+	}
+
+	/* ensure card form action buttons wrap or stack on very small screens */
+	.task-card .task-form .form-actions {
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	/* on small screens show a single column (stacked) instead of horizontal row */
+	.tasks-container {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 12px;
+		overflow-x: visible;
+	}
+
+	/* on medium screens allow cards to stretch a bit to fill space */
+	.task-card {
+		max-width: 100%;
+		min-width: 0;
 	}
 }

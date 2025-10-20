@@ -33,22 +33,26 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
             className="input"
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
+            placeholder="Title"
           />
           <input
             className="input"
             value={editDescription}
             onChange={(e) => setEditDescription(e.target.value)}
+            placeholder="Description"
           />
-          <button className="btn btn-primary" type="submit" disabled={saving}>
-            {saving ? "Saving…" : "Save"}
-          </button>
-          <button
-            className="btn btn-ghost"
-            type="button"
-            onClick={() => setEditing(false)}
-          >
-            Cancel
-          </button>
+          <div className="form-actions">
+            <button className="btn btn-primary" type="submit" disabled={saving}>
+              {saving ? "Saving…" : "Save"}
+            </button>
+            <button
+              className="btn btn-ghost"
+              type="button"
+              onClick={() => setEditing(false)}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       ) : (
         <>
