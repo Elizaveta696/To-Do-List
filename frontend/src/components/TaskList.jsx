@@ -28,8 +28,22 @@ export default function TaskList() {
   };
 
   const handleDelete = async (id) => {
-    await removeTask(id);
+    // optimistic UI: remove task locally first
+    const prev = tasks;
     setTasks((t) => t.filter((x) => x.id !== id));
+    try {
+      await removeTask(id);
+    } catch (e) {
+      console.error("Failed to delete task, reloading list", e);
+      // restore previous state or reload from server
+      try {
+        const data = await fetchTasks();
+        setTasks(data);
+      } catch (err) {
+        // fallback: restore previous tasks if fetch fails
+        setTasks(prev);
+      }
+    }
   };
 
   if (loading) return <div>Loading tasks…</div>;
