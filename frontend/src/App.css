@@ -10,7 +10,8 @@
 	--accent-strong-active: #00bbff;
 	--danger: #ff6b6b;
 	--radius: 12px;
-	--elevation: 0 8px 22px rgba(3, 8, 25, 0.6);
+	/* softer navy-blue elevation shadow */
+	--elevation: 0 8px 22px rgba(2, 20, 46, 0.35);
 	--gap: 16px;
 	--max-width: 980px;
 }
@@ -18,7 +19,8 @@
 /* Bright / light theme overrides when documentElement has .theme-light */
 .theme-light {
 	/* softer, more subtle bright background */
-	--bg: linear-gradient(180deg, #fbfcfd 0%, #f6f9fb 60%);
+	/* more white in the middle; blue concentrated near the bottom */
+	--bg: linear-gradient(180deg, #ffffff, #eafdff);
 	--surface: #ffffff;
 	--muted-surface: #f8fafc;
 	--text: #071422;
@@ -65,7 +67,13 @@
 html,
 body,
 #root {
-	height: 100%;
+	/* ensure full viewport coverage and keep bg fixed during scroll */
+	min-height: 100vh;
+	height: auto;
+	background: var(--bg);
+	background-attachment: fixed;
+	background-size: cover;
+	color: var(--text);
 }
 
 /* App container */
@@ -98,6 +106,17 @@ body,
 	gap: 12px;
 	align-items: center;
 	box-shadow: var(--elevation);
+}
+
+/* Top-level add-task form should appear as a card above the background */
+.app > .task-form {
+	background: var(--surface);
+	padding: 14px;
+	border-radius: calc(var(--radius) - 4px);
+	box-shadow: var(--elevation);
+	border: 1px solid rgba(0,0,0,0.04);
+	position: relative;
+	z-index: 2;
 }
 .task-form .input {
 	background: transparent;
@@ -148,11 +167,11 @@ body,
 		var(--accent-strong-active) 100%
 	);
 	color: #063254;
-	box-shadow: 0 2px 4px rgba(96, 165, 250, 0.2);
+	box-shadow: 0 2px 4px rgba(2, 20, 46, 0.16);
 }
 .btn-ghost {
 	background: transparent;
-	color: var(--accent);
+	color: var(--accent-strong);
 	border: 1px solid rgba(124, 219, 255, 0.08);
 }
 
@@ -168,14 +187,14 @@ body,
 
 /* Card styling (always visible) */
 .task-card {
-	background: linear-gradient(
-		180deg,
-		rgba(255, 255, 255, 0.012),
-		rgba(0, 0, 0, 0.06)
-	);
+	/* use theme-aware surface so cards sit on top of the page gradient */
+	background: var(--surface);
+	/* slight translucency in dark mode is preserved by the surface color choice */
 	border-radius: var(--radius);
 	padding: 14px;
 	box-shadow: var(--elevation);
+	position: relative;
+	z-index: 1;
 	border: 1px solid rgba(255, 255, 255, 0.03);
 	transition:
 		transform 0.12s ease,
@@ -191,7 +210,7 @@ body,
 
 .task-card:hover {
 	transform: translateY(-4px);
-	box-shadow: 0 16px 36px rgba(3, 8, 25, 0.7);
+	box-shadow: 0 16px 36px rgba(2, 20, 46, 0.32);
 }
 
 /* Only make the edit form vertical (inputs) but keep action buttons inline */

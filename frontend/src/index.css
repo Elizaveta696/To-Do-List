@@ -16,10 +16,12 @@
 html,
 body,
 #root {
-	min-height: 100%;
-	height: 100%;
-	background: linear-gradient(180deg, var(--bg, #0f1724) 0%, #08101a 100%);
+	min-height: 100vh;
+	height: auto;
+	/* Use the raw --bg variable (may be a color or a gradient). Keep it fixed and cover the viewport. */
+	background: var(--bg, #0f1724);
 	background-attachment: fixed;
+	background-size: cover;
 }
 body {
 	display: flex;
@@ -35,7 +37,7 @@ body {
 	font-family:
 		Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 	color: var(--text);
-	background: linear-gradient(180deg, var(--bg) 0%, #08101a 100%);
+	/* body background is applied via the root selector above using --bg */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
