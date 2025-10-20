@@ -6,11 +6,59 @@
 	--muted-text: #9aa6b2;
 	--accent: #60a5fa;
 	--accent-strong: #7cdbff;
+	--accent-active: #0073ff;
+	--accent-strong-active: #00bbff;
 	--danger: #ff6b6b;
 	--radius: 12px;
 	--elevation: 0 8px 22px rgba(3, 8, 25, 0.6);
 	--gap: 16px;
 	--max-width: 980px;
+}
+
+/* Bright / light theme overrides when documentElement has .theme-light */
+.theme-light {
+	/* softer, more subtle bright background */
+	--bg: linear-gradient(180deg, #fbfcfd 0%, #f6f9fb 60%);
+	--surface: #ffffff;
+	--muted-surface: #f8fafc;
+	--text: #071422;
+	--muted-text: #55636a;
+	--accent: #4ecdff;
+	--accent-strong: #53a0ff;
+	--accent-active: #00b4fb;
+	--accent-strong-active: #0073ff;
+	--danger: #ef4444;
+}
+
+/* Theme toggle button (top-right) - ghost style */
+.theme-toggle {
+	position: fixed;
+	top: 12px;
+	right: 12px;
+	z-index: 9999;
+	background: transparent;
+	color: var(--text);
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid rgba(255,255,255,0.06);
+	box-shadow: none;
+	cursor: pointer;
+	transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+.theme-toggle:hover {
+	background: rgba(255,255,255,0.03);
+	border-color: rgba(255,255,255,0.12);
+	transform: translateY(-1px);
+}
+.theme-light .theme-toggle {
+	border-color: rgba(7,20,34,0.08);
+}
+.theme-light .theme-toggle:hover {
+	background: rgba(7,20,34,0.04);
 }
 
 /* Page */
@@ -94,7 +142,11 @@ body,
 	box-shadow: 0 8px 18px rgba(96, 165, 250, 0.12);
 }
 .btn-primary:hover {
-	background: linear-gradient(90deg, #0073ff 0%, #00bbff 100%);
+	background: linear-gradient(
+		90deg,
+		var(--accent-active) 0%,
+		var(--accent-strong-active) 100%
+	);
 	color: #063254;
 	box-shadow: 0 2px 4px rgba(96, 165, 250, 0.2);
 }
