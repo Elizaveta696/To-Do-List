@@ -1,8 +1,10 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/db.js';
 import { User } from './User.js';
 
-const Task = sequelize.define('Task', {
+export class Task extends Model {}
+
+Task.init({
     title: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -23,9 +25,10 @@ const Task = sequelize.define('Task', {
             key: 'id',
         },
     },
-
 }, {
-    timestamps: true,
+    sequelize,
+    modelName: "Task",
+    tableName: "tasks",
 });
 
 User.hasMany(Task, {foreignKey: 'userId', onDelete: 'CASCADE' });
