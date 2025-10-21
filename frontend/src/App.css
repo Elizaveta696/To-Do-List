@@ -19,7 +19,7 @@
 .theme-light {
 	/* softer, more subtle bright background */
 	/* more white in the middle; blue concentrated near the bottom */
-	--bg: linear-gradient(180deg, #ffffff, #eafdff);
+	--bg: linear-gradient(180deg, #ffffff, #f6fdff);
 	--surface: #ffffff;
 	--muted-surface: #f8fafc;
 	--text: #071422;
