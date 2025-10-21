@@ -71,8 +71,7 @@ jobs:
             sleep 2
           done
 
-      # Run backend integration tests
-      - name: Run Backend Tests
+
 
 
 # Job for building the frontend and backend container images and pushing it to the registry
