@@ -53,23 +53,23 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
               onChange={(e) => setEditDescription(e.target.value)}
               placeholder="Description"
             />
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div>
-                <label>Priority:</label>
-                <select className="input" value={editPriority} onChange={e => setEditPriority(e.target.value)}>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                </select>
-              </div>
+            <div>
+              <label>Due Date:</label>
               <input
                 className="input"
                 type="date"
                 value={editDueDate}
                 onChange={(e) => setEditDueDate(e.target.value)}
                 placeholder="Due Date"
-                style={{marginLeft: 16}}
               />
+            </div>
+            <div>
+              <label>Priority:</label>
+              <select className="input" value={editPriority} onChange={e => setEditPriority(e.target.value)}>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
             </div>
           </div>
           <div className="form-actions" style={{marginTop: 'auto'}}>
