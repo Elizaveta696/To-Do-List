@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createTask } from "../api/tasks";
 
-export default function TaskForm({ onCreated, onClose }) {
+export default function TaskForm({ token, onCreated, onClose }) {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [loading, setLoading] = useState(false);

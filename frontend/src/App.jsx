@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import "./App.css";
 
+
+
+
 function App() {
+	const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+	const [page, setPage] = useState(token ? "tasks" : "login");
 	const [refreshKey, setRefreshKey] = useState(0);
 	const [light, setLight] = useState(() => {
 		try {
@@ -33,6 +40,16 @@ function App() {
 		else document.documentElement.classList.remove("theme-light");
 	}, [light]);
 
+	// User Auth login and register
+	const handleLogout = () => {
+		setToken(null);
+		localStorage.removeItem("token");
+		setPage("login");
+	};
+
+	if (page === "login") return <Login setToken={setToken} setPage={setPage} />;
+	if (page === "register") return <Register setPage={setPage} />;
+
 	return (
 		<div className="app">
 			<button
@@ -50,6 +67,7 @@ function App() {
 				<div className="overlay-form" onClick={() => setShowAddForm(false)}>
 					<div className="overlay-panel" onClick={(e) => e.stopPropagation()}>
 						<TaskForm
+							token={token}
 							onCreated={() => {
 								setRefreshKey((k) => k + 1);
 								setShowAddForm(false);
@@ -68,6 +86,7 @@ function App() {
 			<div key={refreshKey}>
 				<TaskList />
 			</div>
+			<button onClick={handleLogout}>Logout</button>
 		</div>
 	);
 }

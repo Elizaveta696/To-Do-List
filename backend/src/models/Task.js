@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.js';
+import { User } from './User.js';
 
 const Task = sequelize.define('Task', {
     title: {
@@ -14,9 +15,20 @@ const Task = sequelize.define('Task', {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull:false,
+        references: {
+            model: User,
+            key: 'id',
+        },
+    },
 
 }, {
     timestamps: true,
 });
+
+User.hasMany(Task, {foreignKey: 'userId', onDelete: 'CASCADE' });
+Task.belongsTo(User, { foreignKey: 'userId'});
 
 export {Task} ;
