@@ -37,7 +37,8 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
   };
 
   return (
-    <article className="task-card">
+    <article className="task-card" style={{position: 'relative'}}>
+      {/* ...existing code... */}
       {editing ? (
         <form onSubmit={handleSave} className="task-form" style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
           <div style={{flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 10}}>
@@ -88,14 +89,36 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
       ) : (
         <>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8}}>
-            <span style={{ color: priorityColors[task.priority || task.importance] || "#333", fontWeight: "bold", fontSize: 14 }}>
+            <span style={{ color: priorityColors[task.priority || task.importance] || "#333", fontWeight: "bold", fontSize: 13 }}>
               Priority: {(task.priority || task.importance) ? (task.priority || task.importance).charAt(0).toUpperCase() + (task.priority || task.importance).slice(1) : "Medium"}
             </span>
-            {task.dueDate && (
-              <span className="task-due-date" style={{ fontSize: 14 }}>
-                Due: {new Date(task.dueDate).toLocaleDateString()}
-              </span>
-            )}
+            <div style={{display: 'flex', alignItems: 'center', gap: 4}}>
+              {task.dueDate && (
+                <span className="task-due-date" style={{ fontSize: 13 }}>
+                  Due: {new Date(task.dueDate).toLocaleDateString()}
+                </span>
+              )}
+              {!editing && (
+                <button
+                  className="btn btn-ghost"
+                  title="Delete"
+                  style={{
+                    width: 26,
+                    height: 26,
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 0,
+                    fontSize: '1rem',
+                    marginLeft: 2,
+                  }}
+                  onClick={() => onDelete(task.id)}
+                >
+                  <span style={{fontSize: '0.75rem', lineHeight: 1}}>🗑️</span>
+                </button>
+              )}
+            </div>
           </div>
           <h3 className={`task-title ${task.completed ? "task-completed" : ""}`}>
             {task.title}
@@ -107,9 +130,6 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
             </button>
             <button className="btn" onClick={() => setEditing(true)}>
               Edit
-            </button>
-            <button className="btn btn-ghost" onClick={() => onDelete(task.id)}>
-              Delete
             </button>
           </div>
         </>
