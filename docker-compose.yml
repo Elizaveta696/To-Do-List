@@ -6,6 +6,8 @@ services:
       context: ./frontend
     ports:
       - "80:80"
+    environment:
+      - NODE_ENV=production
     restart: always
 
   backend:
@@ -16,12 +18,8 @@ services:
     restart: always
     depends_on:
       - db
-    environment:
-      # these will be visible to the backend process
-      POSTGRES_HOST: db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: teamboard
+    env_file:
+      - ./backend/.env.prod
 
   db:
     image: postgres:15-alpine
