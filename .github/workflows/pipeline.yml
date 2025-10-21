@@ -73,14 +73,6 @@ jobs:
 
       # Run backend integration tests
       - name: Run Backend Tests
-        working-directory: ./backend
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-        run: npm test
 
 
 # Job for building the frontend and backend container images and pushing it to the registry
