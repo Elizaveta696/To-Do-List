@@ -17,6 +17,10 @@ Task.init({
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+        dueDate: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
     userId: {
         type: DataTypes.INTEGER,
         allowNull:false,

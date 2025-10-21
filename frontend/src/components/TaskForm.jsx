@@ -4,6 +4,7 @@ import { createTask } from "../api/tasks";
 export default function TaskForm({ token, onCreated, onClose }) {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
+	const [dueDate, setDueDate] = useState("");
 	const [loading, setLoading] = useState(false);
 
 	const submit = async (e) => {
@@ -11,9 +12,10 @@ export default function TaskForm({ token, onCreated, onClose }) {
 		if (!title.trim()) return alert("Title required");
 		try {
 			setLoading(true);
-			const newTask = await createTask({ title, description });
+			const newTask = await createTask({ title, description, dueDate: dueDate || null });
 			setTitle("");
 			setDescription("");
+			setDueDate("");
 			if (onCreated) onCreated(newTask);
 		} catch (e) {
 			console.error(e);
@@ -39,6 +41,15 @@ export default function TaskForm({ token, onCreated, onClose }) {
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 					placeholder="Description"
+				/>
+			</div>
+			<div>
+				<input
+					className="input"
+					type="date"
+					value={dueDate}
+					onChange={(e) => setDueDate(e.target.value)}
+					placeholder="Due Date"
 				/>
 			</div>
 			<div className="form-actions">
