@@ -113,9 +113,25 @@ body,
     font-size: 1.1rem;
     gap: 16px;
 }
-.header.night {
-    background: #222;
-    color: #fff;
+
+.header .btn {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease;
+}
+.header button:hover {
+	border-color: #646cff;
+}
+.header button:focus,
+.header button:focus-visible {
+	outline: 4px auto -webkit-focus-ring-color;
 }
 .header .btn-primary {
     background: linear-gradient(90deg, var(--accent) 0%, var(--accent-strong) 100%);
@@ -129,30 +145,11 @@ body,
     box-shadow: 0 2px 4px rgba(2, 20, 46, 0.16);
 }
 .header .btn-ghost {
-    background: transparent;
-    color: #222 !important;
+   background: transparent;
+    color: var(--accent-strong);
     border: 1px solid rgba(124, 219, 255, 0.08);
 }
-.header .btn-ghost:hover {
-    background: rgba(124, 219, 255, 0.08);
-}
-.header.night .btn-primary {
-    background: #444;
-    color: #fff;
-    box-shadow: none;
-}
-.header.night .btn-primary:hover {
-    background: #666;
-    color: #fff;
-}
-.header.night .btn-ghost {
-    background: transparent;
-    color: #222 !important;
-    border: 1px solid #666;
-}
-.header.night .btn-ghost:hover {
-    background: #222;
-}
+
 
 /* Form */
 .task-form {
@@ -224,6 +221,11 @@ body,
 .app > .btn-primary {
     align-self: flex-start;
     width: auto;
+}
+
+.btn-primary:focus,
+.btn-primary:focus-visible {
+	outline: 4px auto -webkit-focus-ring-color;
 }
 .btn-primary {
     background: linear-gradient(

@@ -72,7 +72,7 @@ function App() {
 				</div>
 			)}
 			<div key={refreshKey}>
-				<TaskList />
+				<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
 			</div>
 		</div>
 	);
