@@ -4,6 +4,8 @@ import { createTask } from "../api/tasks";
 export default function TaskForm({ token, onCreated, onClose }) {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
+	const [dueDate, setDueDate] = useState("");
+	const [priority, setPriority] = useState("medium");
 	const [loading, setLoading] = useState(false);
 
 	const submit = async (e) => {
@@ -11,9 +13,11 @@ export default function TaskForm({ token, onCreated, onClose }) {
 		if (!title.trim()) return alert("Title required");
 		try {
 			setLoading(true);
-			const newTask = await createTask({ title, description });
+			const newTask = await createTask({ title, description, dueDate: dueDate || null, priority });
 			setTitle("");
 			setDescription("");
+			setDueDate("");
+			setPriority("medium");
 			if (onCreated) onCreated(newTask);
 		} catch (e) {
 			console.error(e);
@@ -40,6 +44,23 @@ export default function TaskForm({ token, onCreated, onClose }) {
 					onChange={(e) => setDescription(e.target.value)}
 					placeholder="Description"
 				/>
+			</div>
+			<div>
+				<input
+					className="input"
+					type="date"
+					value={dueDate}
+					onChange={(e) => setDueDate(e.target.value)}
+					placeholder="Due Date"
+				/>
+			</div>
+			<div>
+				<label>Priority:</label>
+				<select className="input" value={priority} onChange={e => setPriority(e.target.value)}>
+					<option value="high">High</option>
+					<option value="medium">Medium</option>
+					<option value="low">Low</option>
+				</select>
 			</div>
 			<div className="form-actions">
 				<button className="btn btn-primary" type="submit" disabled={loading}>

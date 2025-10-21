@@ -66,12 +66,14 @@
 }
 
 /* Page */
+
 html,
 body,
 #root {
     min-height: 100vh;
     height: 100%;
     width: 100vw;
+    background: #0f1724; /* fallback solid dark color */
     background: var(--bg);
     background-attachment: fixed;
     background-size: cover;
@@ -79,6 +81,14 @@ body,
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.app {
+    background: var(--bg);
+}
+
+.theme-light .app {
+    background: linear-gradient(180deg, #ffffff, #f6fdff);
 }
 
 /* App container */
@@ -264,9 +274,7 @@ body,
 
 /* Card styling (always visible) */
 .task-card {
-    /* use theme-aware surface so cards sit on top of the page gradient */
     background: var(--surface);
-    /* slight translucency in dark mode is preserved by the surface color choice */
     border-radius: var(--radius);
     padding: 14px;
     box-shadow: var(--elevation);
@@ -279,12 +287,12 @@ body,
     display: flex;
     flex-direction: column;
     gap: 12px;
-    /* portrait card: taller than wide */
     box-sizing: border-box;
-    /* fixed visuami width in layout (flex-basis) so internal changes don't alter card width */
-    flex: 0 0 220px; /* flex-grow:0, flex-shrink:0, basis:220px */
+    flex: 0 0 220px;
     min-width: 280px;
     min-height: 320px;
+    max-height: 90vh;
+    overflow: auto;
 }
 
 .task-card:hover {
@@ -303,6 +311,8 @@ body,
     gap: 10px;
     align-items: flex-start;
     text-align: left;
+    max-height: 100%;
+    overflow: auto;
 }
 .task-card .task-form .form-actions {
     display: flex;
@@ -322,9 +332,11 @@ body,
     font-size: 1rem;
     margin: 0;
     white-space: pre-wrap;
-    /* allow long words/URLs to break and wrap inside the card */
     overflow-wrap: anywhere;
     word-break: break-word;
+    max-height: 120px;
+    overflow-y: auto;
+    padding-right: 4px;
 }
 
 /* Completed */

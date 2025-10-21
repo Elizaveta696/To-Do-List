@@ -1,4 +1,4 @@
 // Feature flags for the frontend
 export const FEATURE_FLAGS = {
-  lightThemeToggle: false // Set to false to disable light theme toggle
+  lightThemeToggle: true // Set to false to disable light theme toggle
 };
