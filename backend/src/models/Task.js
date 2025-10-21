@@ -33,5 +33,3 @@ Task.init({
 
 User.hasMany(Task, {foreignKey: 'userId', onDelete: 'CASCADE' });
 Task.belongsTo(User, { foreignKey: 'userId'});
-
-export {Task} ;
