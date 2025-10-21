@@ -29,6 +29,11 @@ Task.init({
             key: 'id',
         },
     },
+    priority: {
+        type: DataTypes.ENUM('high', 'medium', 'low'),
+        allowNull: false,
+        defaultValue: 'medium',
+    },
 }, {
     sequelize,
     modelName: "Task",

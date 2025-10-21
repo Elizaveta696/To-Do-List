@@ -5,6 +5,7 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
   const [editDueDate, setEditDueDate] = useState(task.dueDate ? task.dueDate.slice(0, 10) : "");
+  const [editPriority, setEditPriority] = useState(task.priority || task.importance || "medium");
   const [saving, setSaving] = useState(false);
 
   const handleSave = async (e) => {
@@ -16,6 +17,7 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
         title: editTitle,
         description: editDescription,
         dueDate: editDueDate || null,
+        priority: editPriority,
       });
       setEditing(false);
     } finally {
@@ -25,6 +27,13 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
 
   const handleToggle = async () => {
     await onUpdate(task.id, { completed: !task.completed });
+  };
+
+  // Color mapping for priority
+  const priorityColors = {
+    high: "#e53935", // red
+    medium: "#fbc02d", // yellow
+    low: "#43a047", // green
   };
 
   return (
@@ -44,13 +53,24 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
               onChange={(e) => setEditDescription(e.target.value)}
               placeholder="Description"
             />
-            <input
-              className="input"
-              type="date"
-              value={editDueDate}
-              onChange={(e) => setEditDueDate(e.target.value)}
-              placeholder="Due Date"
-            />
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div>
+                <label>Priority:</label>
+                <select className="input" value={editPriority} onChange={e => setEditPriority(e.target.value)}>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <input
+                className="input"
+                type="date"
+                value={editDueDate}
+                onChange={(e) => setEditDueDate(e.target.value)}
+                placeholder="Due Date"
+                style={{marginLeft: 16}}
+              />
+            </div>
           </div>
           <div className="form-actions" style={{marginTop: 'auto'}}>
             <button className="btn btn-primary" type="submit" disabled={saving}>
@@ -67,15 +87,20 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
         </form>
       ) : (
         <>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8}}>
+            <span style={{ color: priorityColors[task.priority || task.importance] || "#333", fontWeight: "bold", fontSize: 14 }}>
+              Priority: {(task.priority || task.importance) ? (task.priority || task.importance).charAt(0).toUpperCase() + (task.priority || task.importance).slice(1) : "Medium"}
+            </span>
+            {task.dueDate && (
+              <span className="task-due-date" style={{ fontSize: 14 }}>
+                Due: {new Date(task.dueDate).toLocaleDateString()}
+              </span>
+            )}
+          </div>
           <h3 className={`task-title ${task.completed ? "task-completed" : ""}`}>
             {task.title}
           </h3>
           <p className="task-description">{task.description}</p>
-          {task.dueDate && (
-            <p className="task-due-date">
-              Due: {new Date(task.dueDate).toLocaleDateString()}
-            </p>
-          )}
           <div className="task-controls">
             <button className="btn btn-primary" onClick={handleToggle}>
               {task.completed ? "Undo" : "Complete"}
