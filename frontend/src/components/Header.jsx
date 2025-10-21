@@ -7,11 +7,11 @@ export default function Header({ teamName, onAddTask, onLogout, onToggleNightMod
         <span style={{ fontWeight: "bold", fontSize: "1.5rem" }}>{teamName}</span>
         <button className="btn btn-primary" onClick={onAddTask}>New Task</button>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginLeft: "auto" }}>
-        <button className="btn" onClick={onLogout}>Logout</button>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginLeft: "auto" }}>  
         <button className="btn btn-ghost" onClick={onToggleNightMode} aria-label="Toggle night mode">
           {nightMode ? "🌞" : "🌙"}
         </button>
+         <button className="btn" onClick={onLogout}>Logout</button>
       </div>
     </header>
   );
