@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FEATURE_FLAGS } from "./featureFlags";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import Login from "./components/Login";
@@ -30,6 +31,7 @@ function App() {
 	}, [showAddForm]);
 
 	useEffect(() => {
+		if (!FEATURE_FLAGS.lightThemeToggle) return;
 		try {
 			localStorage.setItem("theme", nightMode ? "dark" : "light");
 		} catch (e) {}
@@ -53,7 +55,7 @@ function App() {
 				teamName="TeamBoard"
 				onAddTask={() => setShowAddForm(true)}
 				onLogout={handleLogout}
-				onToggleNightMode={() => setNightMode((v) => !v)}
+				onToggleNightMode={FEATURE_FLAGS.lightThemeToggle ? () => setNightMode((v) => !v) : undefined}
 				nightMode={nightMode}
 			/>
 			{/* show New Task form overlay */}
