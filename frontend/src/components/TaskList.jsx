@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchTasks, removeTask, updateTask } from "../api/tasks";
 import TaskItem from "./TaskItem";
 
-export default function TaskList({ token }) {
+export default function TaskList({ token, onAddTask }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,7 +47,13 @@ export default function TaskList({ token }) {
   };
 
   if (loading) return <div>Loading tasks…</div>;
-  if (!tasks.length) return <div>No tasks yet</div>;
+  if (!tasks.length) {
+    return (
+      <div style={{ textAlign: "center", margin: "32px 0" }}>
+        No tasks yet
+      </div>
+    );
+  }
 
   return (
     <div className="tasks-container">
