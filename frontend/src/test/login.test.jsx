@@ -39,5 +39,12 @@ describe("Login flow", () => {
 		await user.type(screen.getByPlaceholderText(/password/i), "testpass");
 		await user.click(screen.getByRole("button", { name: /login/i }));
 		expect(await screen.findByText("TeamBoard")).toBeInTheDocument();
+		// Theme toggle button presence depends on feature flag
+		const { FEATURE_FLAGS } = require("../featureFlags");
+		if (FEATURE_FLAGS.lightThemeToggle) {
+			expect(screen.getByRole("button", { name: /toggle night mode/i })).toBeInTheDocument();
+		} else {
+			expect(screen.queryByRole("button", { name: /toggle night mode/i })).not.toBeInTheDocument();
+		}
 	});
 });

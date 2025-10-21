@@ -14,6 +14,7 @@ vi.mock("../api/tasks", () => ({
 }));
 
 import App from "../App";
+import { FEATURE_FLAGS } from "../featureFlags";
 import { createTask, fetchTasks } from "../api/tasks";
 
 describe("App integration", () => {
@@ -56,6 +57,13 @@ describe("App integration", () => {
 		expect(await screen.findByText("TeamBoard")).toBeInTheDocument();
 		// Should show 'No tasks yet' in TaskList
 		expect(await screen.findByText("No tasks yet")).toBeInTheDocument();
+
+		// Theme toggle button presence depends on feature flag
+		if (FEATURE_FLAGS.lightThemeToggle) {
+			expect(screen.getByRole("button", { name: /toggle night mode/i })).toBeInTheDocument();
+		} else {
+			expect(screen.queryByRole("button", { name: /toggle night mode/i })).not.toBeInTheDocument();
+		}
 
 		// Add a task
 		await user.click(screen.getByRole("button", { name: /new task/i }));
