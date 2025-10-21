@@ -1,7 +1,9 @@
-import { DataTypes  } from "sequelize";
+import { DataTypes, Model  } from "sequelize";
 import { sequelize } from "../config/db.js";
 
-export const User = sequelize.define("User", {
+export class User extends Model {}
+
+User.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true, 
@@ -16,4 +18,10 @@ export const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull:false,
     }
-})
+}, {
+    sequelize,
+    modelname: "User",
+    tableName: "users",
+}
+
+) 
