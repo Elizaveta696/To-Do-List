@@ -1,0 +1,43 @@
+// src/test/login.test.jsx
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("../api/tasks", () => ({
+	fetchTasks: vi.fn(),
+	createTask: vi.fn(),
+	updateTask: vi.fn(),
+	removeTask: vi.fn(),
+}));
+
+import App from "../App";
+import { fetchTasks } from "../api/tasks";
+
+describe("Login flow", () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+		window.localStorage.clear();
+		global.fetch = vi.fn((url, options) => {
+			if (url.includes("/api/auth/login")) {
+				return Promise.resolve({
+					json: () => Promise.resolve({ accessToken: "mock-token" })
+				});
+			}
+			return Promise.resolve({
+				json: () => Promise.resolve({})
+			});
+		});
+		// Mock fetchTasks to return an empty array so TaskList doesn't crash
+		fetchTasks.mockResolvedValue([]);
+	});
+
+	it("should allow login and show header", async () => {
+		render(<App />);
+		const user = userEvent.setup();
+		await user.type(screen.getByPlaceholderText(/username/i), "testuser");
+		await user.type(screen.getByPlaceholderText(/password/i), "testpass");
+		await user.click(screen.getByRole("button", { name: /login/i }));
+		expect(await screen.findByText("TeamBoard")).toBeInTheDocument();
+	});
+});

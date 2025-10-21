@@ -19,39 +19,55 @@ import { createTask, fetchTasks } from "../api/tasks";
 describe("App integration", () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
+		window.localStorage.clear();
+		// Mock fetch for login
+		global.fetch = vi.fn((url, options) => {
+			if (url.includes("/api/auth/login")) {
+				return Promise.resolve({
+					json: () => Promise.resolve({ accessToken: "mock-token" })
+				});
+			}
+			// fallback for other fetches
+			return Promise.resolve({
+				json: () => Promise.resolve({})
+			});
+		});
 	});
 
-	it("renders title and can add a task (TaskForm -> TaskList)", async () => {
+	it("should allow login and add a task", async () => {
 		const newTask = {
 			id: "1",
 			title: "Buy milk",
 			description: "2L",
 			completed: false,
 		};
-
-		// Initial TaskList: empty; after create, TaskList should show newTask
 		fetchTasks.mockResolvedValueOnce([]).mockResolvedValueOnce([newTask]);
 		createTask.mockResolvedValueOnce(newTask);
 
 		render(<App />);
-
-		// Title check (integration, global)
-		expect(screen.getByText("TeamBoard — Tasks")).toBeInTheDocument();
-
 		const user = userEvent.setup();
+
+		// Simulate login
+		await user.type(screen.getByPlaceholderText(/username/i), "testuser");
+		await user.type(screen.getByPlaceholderText(/password/i), "testpass");
+		await user.click(screen.getByRole("button", { name: /login/i }));
+
+		// Should show header after login
+		expect(await screen.findByText("TeamBoard")).toBeInTheDocument();
+		// Should show 'No tasks yet' in TaskList
+		expect(await screen.findByText("No tasks yet")).toBeInTheDocument();
+
+		// Add a task
+		await user.click(screen.getByRole("button", { name: /new task/i }));
+		expect(screen.getByText(/new task/i)).toBeInTheDocument();
 		await user.type(screen.getByPlaceholderText("Title"), newTask.title);
-		await user.type(
-			screen.getByPlaceholderText("Description"),
-			newTask.description,
-		);
-		await user.click(screen.getByRole("button", { name: /add task/i }));
+		await user.type(screen.getByPlaceholderText("Description"), newTask.description);
+		await user.click(screen.getByRole("button", { name: /add/i }));
 
 		expect(createTask).toHaveBeenCalledWith({
 			title: newTask.title,
 			description: newTask.description,
 		});
-
-		// After the form triggers onCreated, TaskList remounts and should show the task
 		expect(await screen.findByText(newTask.title)).toBeInTheDocument();
 	});
 });
