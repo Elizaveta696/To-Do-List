@@ -3,18 +3,15 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Header from "./components/Header";
 import "./App.css";
-
-
-
-
 function App() {
 	const [token, setToken] = useState(() => localStorage.getItem("token") || null);
 	const [page, setPage] = useState(token ? "tasks" : "login");
 	const [refreshKey, setRefreshKey] = useState(0);
-	const [light, setLight] = useState(() => {
+	const [nightMode, setNightMode] = useState(() => {
 		try {
-			return localStorage.getItem("theme") === "light";
+			return localStorage.getItem("theme") === "dark";
 		} catch (e) {
 			return false;
 		}
@@ -34,11 +31,11 @@ function App() {
 
 	useEffect(() => {
 		try {
-			localStorage.setItem("theme", light ? "light" : "dark");
+			localStorage.setItem("theme", nightMode ? "dark" : "light");
 		} catch (e) {}
-		if (light) document.documentElement.classList.add("theme-light");
-		else document.documentElement.classList.remove("theme-light");
-	}, [light]);
+		if (nightMode) document.documentElement.classList.remove("theme-light");
+		else document.documentElement.classList.add("theme-light");
+	}, [nightMode]);
 
 	// User Auth login and register
 	const handleLogout = () => {
@@ -52,18 +49,15 @@ function App() {
 
 	return (
 		<div className="app">
-			<button
-				className="theme-toggle"
-				aria-label="Toggle theme"
-				onClick={() => setLight((v) => !v)}
-			>
-				{light ? "🌙" : "🌞"}
-			</button>
-
-			<h1>TeamBoard — Tasks</h1>
-			{/* show New Task button when form hidden; show overlay panel when toggled */}
-			{showAddForm ? (
-				/* backdrop: clicking it will close the overlay */
+			<Header
+				teamName="TeamBoard"
+				onAddTask={() => setShowAddForm(true)}
+				onLogout={handleLogout}
+				onToggleNightMode={() => setNightMode((v) => !v)}
+				nightMode={nightMode}
+			/>
+			{/* show New Task form overlay */}
+			{showAddForm && (
 				<div className="overlay-form" onClick={() => setShowAddForm(false)}>
 					<div className="overlay-panel" onClick={(e) => e.stopPropagation()}>
 						<TaskForm
@@ -71,22 +65,15 @@ function App() {
 							onCreated={() => {
 								setRefreshKey((k) => k + 1);
 								setShowAddForm(false);
-								// keep form hidden after successful creation
 							}}
 							onClose={() => setShowAddForm(false)}
 						/>
 					</div>
 				</div>
-			) : (
-				<button className="btn btn-primary" onClick={() => setShowAddForm(true)}>
-					New Task
-				</button>
 			)}
-			{/* TaskList reads tasks on mount — using a key forces reload when a new task is created */}
 			<div key={refreshKey}>
 				<TaskList />
 			</div>
-			<button onClick={handleLogout}>Logout</button>
 		</div>
 	);
 }

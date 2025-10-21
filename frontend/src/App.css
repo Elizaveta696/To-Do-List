@@ -69,30 +69,89 @@
 html,
 body,
 #root {
-    /* ensure full viewport coverage and keep bg fixed during scroll */
     min-height: 100vh;
-    height: auto;
+    height: 100%;
+    width: 100vw;
     background: var(--bg);
     background-attachment: fixed;
     background-size: cover;
     color: var(--text);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* App container */
 .app {
-    max-width: var(--max-width);
-    margin: 0 auto;
+    width: 100%;
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
 /* Header */
-.app h1 {
-    margin: 0 0 4px 0;
-    font-size: 1.4rem;
-    color: var(--accent-strong);
-    letter-spacing: -0.2px;
+
+
+.header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    z-index: 100;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--elevation);
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    gap: 16px;
+}
+.header.night {
+    background: #222;
+    color: #fff;
+}
+.header .btn-primary {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-strong) 100%);
+    color: #04233a;
+    border: none;
+    box-shadow: 0 8px 18px rgba(96, 165, 250, 0.12);
+}
+.header .btn-primary:hover {
+    background: linear-gradient(90deg, var(--accent-active) 0%, var(--accent-strong-active) 100%);
+    color: #063254;
+    box-shadow: 0 2px 4px rgba(2, 20, 46, 0.16);
+}
+.header .btn-ghost {
+    background: transparent;
+    color: #222 !important;
+    border: 1px solid rgba(124, 219, 255, 0.08);
+}
+.header .btn-ghost:hover {
+    background: rgba(124, 219, 255, 0.08);
+}
+.header.night .btn-primary {
+    background: #444;
+    color: #fff;
+    box-shadow: none;
+}
+.header.night .btn-primary:hover {
+    background: #666;
+    color: #fff;
+}
+.header.night .btn-ghost {
+    background: transparent;
+    color: #222 !important;
+    border: 1px solid #666;
+}
+.header.night .btn-ghost:hover {
+    background: #222;
 }
 
 /* Form */
