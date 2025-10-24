@@ -1,8 +1,6 @@
-const API_URL = "http://localhost:3000/api/tasks";
-
 export const fetchTasks = async () => {
 	const token = localStorage.getItem("token");
-	const res = await fetch(API_URL, {
+	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
 		headers: { Authorization: `Bearer ${token}` },
 	});
 	if (!res.ok) throw new Error("Failed to fetch tasks");
@@ -11,7 +9,7 @@ export const fetchTasks = async () => {
 
 export const createTask = async (task) => {
 	const token = localStorage.getItem("token");
-	const res = await fetch(API_URL, {
+	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
 		method: "POST",
 		headers: {
 		"Content-Type": "application/json",
@@ -25,7 +23,7 @@ export const createTask = async (task) => {
 
 export const updateTask = async (id, updates) => {
 	const token = localStorage.getItem("token");
-	const res = await fetch(`${API_URL}/${id}`, {
+	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
 		method: "PUT",
 		headers: { 
 			"Content-Type": "application/json",
@@ -39,7 +37,7 @@ export const updateTask = async (id, updates) => {
 
 export const removeTask = async (id) => {
 	const token = localStorage.getItem("token");
-	const res = await fetch(`${API_URL}/${id}`, { 
+	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, { 
 		method: "DELETE",
 		headers: { Authorization: `Bearer ${token}`, // send JWT
 		},
