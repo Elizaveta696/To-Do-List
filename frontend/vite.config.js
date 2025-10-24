@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react";
+import fs from "fs"; // needed for your esbuild plugin
 import { defineConfig } from "vite";
 
 // https://vite.dev/config/
@@ -40,6 +41,18 @@ export default defineConfig({
 					},
 				},
 			],
+		},
+	},
+	build: {
+		sourcemap: true,
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (id.includes("node_modules")) {
+						return "vendor";
+					}
+				},
+			},
 		},
 	},
 });
