@@ -4,8 +4,6 @@ services:
   frontend:
     build:
       context: ./frontend
-    ports:
-      - "80:80"
     environment:
       - NODE_ENV=production
     restart: always
@@ -13,8 +11,6 @@ services:
   backend:
     build:
       context: ./backend
-    ports:
-      - "3000:3000"
     restart: always
     depends_on:
       - db
