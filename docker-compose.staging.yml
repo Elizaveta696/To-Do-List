@@ -14,3 +14,19 @@ services:
     env_file:
       - .env
     restart: always
+    
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: teamboard
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    # optional: expose port for local tools
+    ports:
+      - "5432:5432"
+  
+volumes:
+  db-data:
