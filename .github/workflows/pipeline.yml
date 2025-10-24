@@ -101,7 +101,7 @@ jobs:
       - name: Install OpenVpn
         run: |
           sudo apt update
-          sudo apt --asume-yes --no-install-recommends install openvpn-systemd-resolved
+          sudo apt --assume-yes --no-install-recommends install openvpn-systemd-resolved
 
       - name: Setup VPN config
         run: |
