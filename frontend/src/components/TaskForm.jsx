@@ -13,7 +13,12 @@ export default function TaskForm({ token, onCreated, onClose }) {
 		if (!title.trim()) return alert("Title required");
 		try {
 			setLoading(true);
-			const newTask = await createTask({ title, description, dueDate: dueDate || null, priority });
+			const newTask = await createTask({
+				title,
+				description,
+				dueDate: dueDate || null,
+				priority,
+			});
 			setTitle("");
 			setDescription("");
 			setDueDate("");
@@ -28,7 +33,7 @@ export default function TaskForm({ token, onCreated, onClose }) {
 	};
 
 	return (
-	<form className="task-form" onSubmit={submit}>
+		<form className="task-form" onSubmit={submit}>
 			<div>
 				<input
 					className="input"
@@ -55,8 +60,12 @@ export default function TaskForm({ token, onCreated, onClose }) {
 				/>
 			</div>
 			<div>
-				<label>Priority:</label>
-				<select className="input" value={priority} onChange={e => setPriority(e.target.value)}>
+				<label htmlFor="priority">Priority:</label>
+				<select
+					className="input"
+					value={priority}
+					onChange={(e) => setPriority(e.target.value)}
+				>
 					<option value="high">High</option>
 					<option value="medium">Medium</option>
 					<option value="low">Low</option>
@@ -66,7 +75,11 @@ export default function TaskForm({ token, onCreated, onClose }) {
 				<button className="btn btn-primary" type="submit" disabled={loading}>
 					{loading ? "Saving…" : "Add Task"}
 				</button>
-				<button className="btn btn-ghost" type="button" onClick={() => onClose?.()}>
+				<button
+					className="btn btn-ghost"
+					type="button"
+					onClick={() => onClose?.()}
+				>
 					Cancel
 				</button>
 			</div>
