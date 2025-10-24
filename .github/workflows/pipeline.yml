@@ -84,13 +84,19 @@ jobs:
     # Test jobs need to succeed
     needs: [frontend-tests, backend-tests]
 
-    timeout-minutes: 5
+    timeout-minutes: 9
     # Give the job permission to write packages to the registry
     permissions:
       contents: read
       packages: write
     
     steps:
+      
+    # Step to fetch the code from the repo
+      - name: Checkout
+        # The actions that the step uses
+        uses: actions/checkout@v5.0.0
+
 
       - name: Install OpenVpn
         run: |
@@ -121,17 +127,9 @@ jobs:
       # Install rsync
       - name: Install rsync
         run: sudo apt --assume-yes --no-install-recommends install rsync
-      
-      # Fetch the code using the checkout action
-      - name: Fetch Code
-        uses: actions/checkout@v4
 
-      # Installing the node modules for the frontend
-      - name: Install Node
-        uses: actions/setup-node@v4.1.0
-        with:
-          node-version: "20"
-
+      - name: Post Fetch Code Confirmation
+        run: echo "✅ Code successfully fetched and environment ready for deployment."
       
       # Add correct env file for frontend build
       - name: Copy staging .env to frontend folder
@@ -142,18 +140,17 @@ jobs:
       - name: Copy staging .env to backend folder
         working-directory: ./backend
         run: echo "${{ secrets.BACKEND_STAGING_ENV }}" > .env 
-
-
-    # Create stage_stack config and then sync to the VM server
+      
+# Create stage_stack config and then sync to the VM server
       - name: Create and sync stack configuration
         run: |
-          mkdir -p stage_stack
-          cp docker-compose.staging.yml stage_stack/docker-compose.yml
-          echo "BACKEND_IMAGE=${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}" >> stage_stack/.env
-          echo "FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}" >> stage_stack/.env
-          rsync -r stage_stack "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }}:./"
+            mkdir -p stage_stack
+            cp docker-compose.staging.yml stage_stack/docker-compose.yml
+            echo "BACKEND_IMAGE=${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}" >> stage_stack/.env
+            echo "FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}" >> stage_stack/.env
+            rsync -r stage_stack "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }}:./"
     
-    # SSH into VM server and bring up the stack
+      # SSH into VM server and bring up the stack
       - name: Start containers via SSH
         run:
           ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} 
@@ -164,7 +161,16 @@ jobs:
           docker compose up -d;
           "
 
+      - name: Upload VPN logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vpn-log
+          path: vpn.log
+      
       - name: Kill VPN connection
         if: always()
-        run: |
-          sudo killall openvpn
+        run: sudo killall openvpn || true
+
+      - name: Complete Job
+        run: echo "🎉 Deployment completed successfully!"
