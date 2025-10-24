@@ -166,7 +166,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vpn-log
-          path: vpn.log
+          path: /tmp/vpn.log
       
       - name: Kill VPN connection
         if: always()
