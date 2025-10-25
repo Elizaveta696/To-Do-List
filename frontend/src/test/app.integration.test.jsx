@@ -72,10 +72,12 @@ describe("App integration", () => {
 		await user.type(screen.getByPlaceholderText("Description"), newTask.description);
 		await user.click(screen.getByRole("button", { name: /add/i }));
 
-		expect(createTask).toHaveBeenCalledWith({
-			title: newTask.title,
-			description: newTask.description,
-		});
-		expect(await screen.findByText(newTask.title)).toBeInTheDocument();
+			expect(createTask).toHaveBeenCalledWith({
+				title: newTask.title,
+				description: newTask.description,
+				priority: "medium",
+				dueDate: null,
+			});
+			expect(await screen.findByText(newTask.title)).toBeInTheDocument();
 	});
 });

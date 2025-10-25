@@ -13,31 +13,33 @@ const getTask = async (req, res) => {
 
 //add task
 const addTask = async (req, res) => {
-	try {
-		const { title, description } = req.body;
-		const task = await Task.create({ title, description, userId: req.user.userId, });
-		res.status(201).json(task);
-	} catch (error) {
-		console.error("Error creating task:", error);
-		res.status(500).json({ message: error.message });
-	}
+  try {
+    const { title, description, dueDate, priority } = req.body;
+    const task = await Task.create({ title, description, dueDate, priority, userId: req.user.userId });
+    res.status(201).json(task);
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ message: error.message });
+  }
 };
 
 //edit task
 const editTask = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { title, description, completed } = req.body;
+  const { id } = req.params;
+  const { title, description, completed, dueDate, priority } = req.body;
 
-    const task = await Task.findOne({ where: { id, userId: req.user.userId } });
-    if (!task) return res.status(404).json({ message: "Task not found" });
+  const task = await Task.findOne({ where: { id, userId: req.user.userId } });
+  if (!task) return res.status(404).json({ message: "Task not found" });
 
-    task.title = title ?? task.title;
-    task.description = description ?? task.description;
-    task.completed = completed ?? task.completed;
-    await task.save();
+  task.title = title ?? task.title;
+  task.description = description ?? task.description;
+  task.completed = completed ?? task.completed;
+  task.dueDate = dueDate ?? task.dueDate;
+  task.priority = priority ?? task.priority;
+  await task.save();
 
-    res.json(task);
+  res.json(task);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });

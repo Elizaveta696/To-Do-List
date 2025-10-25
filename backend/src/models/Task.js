@@ -17,6 +17,10 @@ Task.init({
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+        dueDate: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
     userId: {
         type: DataTypes.INTEGER,
         allowNull:false,
@@ -24,6 +28,11 @@ Task.init({
             model: User,
             key: 'id',
         },
+    },
+    priority: {
+        type: DataTypes.ENUM('high', 'medium', 'low'),
+        allowNull: false,
+        defaultValue: 'medium',
     },
 }, {
     sequelize,
