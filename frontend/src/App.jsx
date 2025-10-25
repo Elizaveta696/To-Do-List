@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
-import { FEATURE_FLAGS } from "./featureFlags";
-import TaskForm from "./components/TaskForm";
-import TaskList from "./components/TaskList";
+import { useEffect, useState } from "react";
+import Header from "./components/Header";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Header from "./components/Header";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
+import { FEATURE_FLAGS } from "./featureFlags";
 import "./App.css";
 function App() {
-	const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+	const [token, setToken] = useState(
+		() => localStorage.getItem("token") || null,
+	);
 	const [page, setPage] = useState(token ? "tasks" : "login");
 	const [refreshKey, setRefreshKey] = useState(0);
 	const [nightMode, setNightMode] = useState(() => {
 		try {
 			return localStorage.getItem("theme") === "dark";
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	});
@@ -30,11 +32,21 @@ function App() {
 		};
 	}, [showAddForm]);
 
+	// close overlay on Escape for keyboard users
+	useEffect(() => {
+		if (!showAddForm) return;
+		const onKey = (e) => {
+			if (e.key === "Escape") setShowAddForm(false);
+		};
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+	}, [showAddForm]);
+
 	useEffect(() => {
 		if (!FEATURE_FLAGS.lightThemeToggle) return;
 		try {
 			localStorage.setItem("theme", nightMode ? "dark" : "light");
-		} catch (e) {}
+		} catch {}
 		if (nightMode) document.documentElement.classList.remove("theme-light");
 		else document.documentElement.classList.add("theme-light");
 	}, [nightMode]);
@@ -55,13 +67,24 @@ function App() {
 				teamName="TeamBoard"
 				onAddTask={() => setShowAddForm(true)}
 				onLogout={handleLogout}
-				onToggleNightMode={FEATURE_FLAGS.lightThemeToggle ? () => setNightMode((v) => !v) : undefined}
+				onToggleNightMode={
+					FEATURE_FLAGS.lightThemeToggle
+						? () => setNightMode((v) => !v)
+						: undefined
+				}
 				nightMode={nightMode}
 			/>
 			{/* show New Task form overlay */}
 			{showAddForm && (
-				<div className="overlay-form" onClick={() => setShowAddForm(false)}>
-					<div className="overlay-panel" onClick={(e) => e.stopPropagation()}>
+				<div className="overlay-form">
+					{/* semantic backdrop: use button so keyboard (Enter/Space) works automatically */}
+					<button
+						type="button"
+						className="overlay-backdrop"
+						aria-label="Close new task form"
+						onClick={() => setShowAddForm(false)}
+					/>
+					<div className="overlay-panel" role="dialog" aria-modal="true">
 						<TaskForm
 							token={token}
 							onCreated={() => {

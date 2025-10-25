@@ -90,27 +90,45 @@ describe("TaskList (unit)", () => {
 		).toBeInTheDocument();
 	});
 
-	it("deletes a task after confirm", async () => {
-		const t = {
-			id: "b",
-			title: "Delete me",
-			description: "",
-			completed: false,
-		};
-		fetchTasks.mockResolvedValueOnce([t]);
-		removeTask.mockResolvedValueOnce({});
+		it("deletes a task after confirm", async () => {
+			const t = {
+				id: "b",
+				title: "Delete me",
+				description: "",
+				completed: false,
+			};
+			fetchTasks.mockResolvedValueOnce([t]);
+			removeTask.mockResolvedValueOnce({});
 
-		render(<TaskList />);
+			render(<TaskList />);
 
-		const titleEl = await screen.findByText(t.title);
-		const card = titleEl.closest("article");
-		const deleteBtn = within(card).getByRole("button", { name: /delete/i });
+			const titleEl = await screen.findByText(t.title);
+			const card = titleEl.closest("article");
+			// Find the delete button by its accessible name (trash emoji)
+			const deleteBtn = within(card).getByRole("button", { name: /🗑️/ });
 
-		await userEvent.click(deleteBtn);
+			await userEvent.click(deleteBtn);
 
-		expect(removeTask).toHaveBeenCalledWith(t.id);
-		await waitFor(() =>
-			expect(screen.queryByText(t.title)).not.toBeInTheDocument(),
-		);
+			expect(removeTask).toHaveBeenCalledWith(t.id);
+			await waitFor(() =>
+				expect(screen.queryByText(t.title)).not.toBeInTheDocument(),
+			);
+		});
+
+		it("shows priority and due date", async () => {
+			const t = {
+				id: "c",
+				title: "Priority Test",
+				description: "desc",
+				completed: false,
+				priority: "high",
+				dueDate: "2025-10-21T00:00:00.000Z",
+			};
+			fetchTasks.mockResolvedValueOnce([t]);
+			render(<TaskList />);
+			const titleEl = await screen.findByText(t.title);
+			const card = titleEl.parentElement.parentElement; // h3 > div > article
+			expect(within(card).getByText(/Priority: High/i)).toBeInTheDocument();
+			expect(within(card).getByText(/Due:/i)).toBeInTheDocument();
+		});
 	});
-});

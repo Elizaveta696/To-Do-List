@@ -9,12 +9,11 @@ export const sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POST
 });
 
 export const connectDB = async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('PostgreSQL connected');
-    } catch (error) {
-        console.log(error);
-        process.exit(1);
-    }
+	try {
+		await sequelize.authenticate();
+		console.log("PostgreSQL connected");
+	} catch (error) {
+		console.log(error);
+		process.exit(1);
+	}
 };
-
