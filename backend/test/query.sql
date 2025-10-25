@@ -1,2 +1,2 @@
-SELECT * FROM task_managet_dev;
+SELECT * FROM tasks;
 
