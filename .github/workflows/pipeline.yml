@@ -88,6 +88,20 @@ jobs:
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      
+      - name: Create frontend .env
+        working-directory: ./frontend
+        run: |
+          echo "${{ secrets.FRONTEND_STAGING_ENV }}" > .env
+          echo "Frontend .env content:"
+          cat .env
+
+      - name: Create backend .env
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.BACKEND_STAGING_ENV }}" > .env
+          echo "Backend .env content:"
+          cat .env
 
       - name: Build and push backend image
         run: |
