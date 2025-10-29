@@ -58,8 +58,27 @@ function App() {
 		setPage("login");
 	};
 
-	if (page === "login") return <Login setToken={setToken} setPage={setPage} />;
-	if (page === "register") return <Register setPage={setPage} />;
+	const toggleNight = FEATURE_FLAGS.lightThemeToggle
+		? () => setNightMode((v) => !v)
+		: undefined;
+
+	if (page === "login")
+		return (
+			<Login
+				setToken={setToken}
+				setPage={setPage}
+				onToggleNightMode={toggleNight}
+				nightMode={nightMode}
+			/>
+		);
+	if (page === "register")
+		return (
+			<Register
+				setPage={setPage}
+				onToggleNightMode={toggleNight}
+				nightMode={nightMode}
+			/>
+		);
 
 	return (
 		<div className="app">
