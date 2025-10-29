@@ -84,11 +84,11 @@ body,
 }
 
 .app {
-	background: var(--bg);
+	background: transparent; /* let the document root background show through */
 }
 
 .theme-light .app {
-	background: linear-gradient(180deg, #ffffff, #f6fdff);
+	background: transparent; /* keep app surface transparent so --bg (root) covers whole viewport */
 }
 
 /* App container */
@@ -168,35 +168,46 @@ body,
 }
 
 /* Form */
-.task-form {
-	background: linear-gradient(
-		180deg,
-		rgba(255, 255, 255, 0.02),
-		rgba(0, 0, 0, 0.02)
-	);
-	padding: 12px;
+.auth-card {
+	background: var(--surface);
+	color: var(--text);
+	padding: 18px 28px 28px; /* slightly less top padding so heading sits higher */
 	border-radius: calc(var(--radius) - 4px);
-	display: flex;
-	gap: 12px;
-	align-items: center;
 	box-shadow: var(--elevation);
+	width: 100%;
+	max-width: 420px;
+	border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* Top-level add-task form should appear as a card above the background */
-.app > .task-form {
-	background: var(--surface);
-	padding: 16px;
-	border-radius: calc(var(--radius) - 4px);
-	box-shadow: var(--elevation);
-	border: 1px solid rgba(0, 0, 0, 0.04);
-	position: sticky;
-	top: 20px;
-	z-index: 20;
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	align-items: stretch;
+.auth-card h2 {
+	text-align: center;
+	margin: 0 0 12px;
+	font-size: 1.5rem;
 }
+
+/* smaller inputs inside card with subtle border and shadow */
+.auth-card .input {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 8px;
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 8px;
+	color: var(--text);
+	box-shadow: 0 6px 18px rgba(2, 20, 46, 0.12);
+	transition:
+		box-shadow 0.12s ease,
+		border-color 0.12s ease,
+		transform 0.12s ease;
+}
+
+.auth-card .input:focus {
+	border-color: rgba(96, 165, 250, 0.9);
+	box-shadow: 0 10px 30px rgba(96, 165, 250, 0.08);
+	outline: none;
+	transform: translateY(-1px);
+}
+
 .task-form .input {
 	background: transparent;
 	border: 1px solid rgba(255, 255, 255, 0.05);
@@ -451,4 +462,80 @@ body,
 	justify-content: flex-end;
 	align-items: center;
 	margin-top: 6px;
+}
+
+/* Auth / Login card centered on screen */
+.auth-page {
+	min-height: calc(100vh - 40px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.auth-card {
+	background: var(--surface);
+	color: var(--text);
+	padding: 24px 20px 28px;
+	border-radius: calc(var(--radius) - 4px);
+	box-shadow: var(--elevation);
+	width: 100%;
+	max-width: 420px;
+	border: 1px solid rgba(255, 255, 255, 0.04);
+	box-sizing: border-box;
+}
+
+/* smaller inputs inside card */
+.auth-card form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px; /* reduced gap between inputs */
+}
+
+.auth-card .input {
+	width: 100%;
+	max-width: 360px; /* ensure inputs never exceed the card */
+	padding: 10px;
+	margin: 0;
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 8px;
+	color: var(--text);
+	box-sizing: border-box;
+}
+
+.auth-card .form-actions {
+	display: flex;
+	gap: 8px;
+	justify-content: center;
+	width: 100%;
+}
+
+.auth-card .form-actions .btn {
+	min-width: 110px;
+}
+
+.theme-toggle {
+	position: fixed;
+	top: 12px;
+	right: 12px;
+	z-index: 9999;
+	background: transparent;
+	color: var(--text);
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	box-shadow: none;
+	cursor: pointer;
+	transition:
+		background 0.12s ease,
+		border-color 0.12s ease,
+		transform 0.12s ease;
 }

@@ -58,8 +58,27 @@ function App() {
 		setPage("login");
 	};
 
-	if (page === "login") return <Login setToken={setToken} setPage={setPage} />;
-	if (page === "register") return <Register setPage={setPage} />;
+	const toggleNight = FEATURE_FLAGS.lightThemeToggle
+		? () => setNightMode((v) => !v)
+		: undefined;
+
+	if (page === "login")
+		return (
+			<Login
+				setToken={setToken}
+				setPage={setPage}
+				onToggleNightMode={toggleNight}
+				nightMode={nightMode}
+			/>
+		);
+	if (page === "register")
+		return (
+			<Register
+				setPage={setPage}
+				onToggleNightMode={toggleNight}
+				nightMode={nightMode}
+			/>
+		);
 
 	return (
 		<div className="app">
@@ -77,13 +96,7 @@ function App() {
 			{/* show New Task form overlay */}
 			{showAddForm && (
 				<div className="overlay-form">
-					{/* semantic backdrop: use button so keyboard (Enter/Space) works automatically */}
-					<button
-						type="button"
-						className="overlay-backdrop"
-						aria-label="Close new task form"
-						onClick={() => setShowAddForm(false)}
-					/>
+					{/* backdrop removed: overlay will remain until closed via Escape or explicit controls */}
 					<div className="overlay-panel" role="dialog" aria-modal="true">
 						<TaskForm
 							token={token}

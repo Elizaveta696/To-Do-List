@@ -1,6 +1,7 @@
 export const fetchTasks = async () => {
+	const base = import.meta.env.VITE_API_URL || "";
 	const token = localStorage.getItem("token");
-	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
+	const res = await fetch(`${base}/api/tasks`, {
 		headers: { Authorization: `Bearer ${token}` },
 	});
 	if (!res.ok) throw new Error("Failed to fetch tasks");
@@ -8,12 +9,13 @@ export const fetchTasks = async () => {
 };
 
 export const createTask = async (task) => {
+	const base = import.meta.env.VITE_API_URL || "";
 	const token = localStorage.getItem("token");
-	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, {
+	const res = await fetch(`${base}/api/tasks`, {
 		method: "POST",
 		headers: {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${token}`, //  send JWT
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`, //  send JWT
 		},
 		body: JSON.stringify(task),
 	});
@@ -22,10 +24,11 @@ export const createTask = async (task) => {
 };
 
 export const updateTask = async (id, updates) => {
+	const base = import.meta.env.VITE_API_URL || "";
 	const token = localStorage.getItem("token");
-	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
+	const res = await fetch(`${base}/api/tasks/${id}`, {
 		method: "PUT",
-		headers: { 
+		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${token}`, // send JWT
 		},
@@ -36,10 +39,12 @@ export const updateTask = async (id, updates) => {
 };
 
 export const removeTask = async (id) => {
+	const base = import.meta.env.VITE_API_URL || "";
 	const token = localStorage.getItem("token");
-	const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, { 
+	const res = await fetch(`${base}/api/tasks/${id}`, {
 		method: "DELETE",
-		headers: { Authorization: `Bearer ${token}`, // send JWT
+		headers: {
+			Authorization: `Bearer ${token}`, // send JWT
 		},
 	});
 	if (!res.ok) throw new Error("Failed to delete task");
