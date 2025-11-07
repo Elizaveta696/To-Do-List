@@ -1,0 +1,2 @@
+0 */12 * * * /Users/ala/course-project-pg/backup.sh >> /Users/ala/course-project-pg/backup.log 2>&1
+
