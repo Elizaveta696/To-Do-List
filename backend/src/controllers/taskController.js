@@ -1,4 +1,5 @@
 import { Task } from "../models/Task.js";
+import { sequelize } from "../config/db.js";
 
 //get all
 const getTask = async (req, res) => {
@@ -61,4 +62,18 @@ const deleteTask = async(req, res) => {
   }
 }
 
-export { getTask, addTask, editTask, deleteTask };
+const healthCheck = async(req, res) => {
+  res.status(200).json({status:"ok", msage:"Server is running!!"})
+}
+
+const readyCheck = async(req, res) => {
+  try{
+    await sequelize.authenticate();
+    res.status(200).json({ status: "ok", message: "Database connection is successful!"})
+  }catch (e) {
+    console.error("Database readiness check failed: ", e.message);
+    res.status(500).json({ status: "error", message: e.message})
+  }
+}
+
+export { getTask, addTask, editTask, deleteTask, healthCheck, readyCheck };
