@@ -1,0 +1,167 @@
+==========================================================   
+Total: 10 (UNKNOWN: 0, LOW: 0, MEDIUM: 6, HIGH: 4, CRITICAL: 0)
+
+┌─────────┬────────────────┬──────────┬────────┬───────────────────┬────────────────┬──────────────────────────────────────────────────────────────┐
+│ Library │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version  │                            Title                             │
+├─────────┼────────────────┼──────────┼────────┼───────────────────┼────────────────┼──────────────────────────────────────────────────────────────┤
+│ stdlib  │ CVE-2025-58183 │ HIGH     │ fixed  │ v1.23.12          │ 1.24.8, 1.25.2 │ golang: archive/tar: Unbounded allocation when parsing GNU   │
+│         │                │          │        │             
+      │                │ sparse map                          
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-58183                   │
+│         ├────────────────┤          │        │             
+      │                ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-58186 │          │        │             
+      │                │ Despite HTTP headers having a default limit of 1MB, the      │
+│         │                │          │        │             
+      │                │ number of...                        
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-58186                   │
+│         ├────────────────┤          │        │             
+      ├────────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-58187 │          │        │             
+      │ 1.24.9, 1.25.3 │ Due to the design of the name constraint checking algorithm, │
+│         │                │          │        │             
+      │                │ the proce...                        
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-58187                   │
+│         ├────────────────┤          │        │             
+      ├────────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-58188 │          │        │             
+      │ 1.24.8, 1.25.2 │ Validating certificate chains which contain DSA public keys  │
+│         │                │          │        │             
+      │                │ can cause ......                    
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-58188                   │
+│         ├────────────────┼──────────┤        │             
+      │                ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-47912 │ MEDIUM   │        │             
+      │                │ net/url: Insufficient validation of bracketed IPv6 hostnames │
+│         │                │          │        │             
+      │                │ in net/url                          
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-47912                   │
+│         ├────────────────┤          │        │             
+      │                ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-58185 │          │        │             
+      │                │ encoding/asn1: Parsing DER payload can cause memory          │
+│         │                │          │        │             
+      │                │ exhaustion in encoding/asn1         
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-58185                   │
+│         ├────────────────┤          │        │             
+      │                ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-58189 │          │        │             
+      │                │ crypto/tls: go crypto/tls ALPN negotiation error contains    │
+│         │                │          │        │             
+      │                │ attacker controlled information                              │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-58189                   │
+│         ├────────────────┤          │        │             
+      │                ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-61723 │          │        │             
+      │                │ encoding/pem: Quadratic complexity when parsing some invalid │
+│         │                │          │        │             
+      │                │ inputs in encoding/pem              
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-61723                   │
+│         ├────────────────┤          │        │             
+      │                ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-61724 │          │        │             
+      │                │ net/textproto: Excessive CPU consumption in                  │
+│         │                │          │        │             
+      │                │ Reader.ReadResponse in net/textproto                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-61724                   │
+│         ├────────────────┤          │        │             
+      │                ├──────────────────────────────────────────────────────────────┤
+│         │ CVE-2025-61725 │          │        │             
+      │                │ net/mail: Excessive CPU consumption in ParseAddress in       │
+│         │                │          │        │             
+      │                │ net/mail                            
+                         │
+│         │                │          │        │             
+      │                │ https://avd.aquasec.com/nvd/cve-2025-61725                   │
+└─────────┴────────────────┴──────────┴────────┴───────────────────┴────────────────┴──────────────────────────────────────────────────────────────┘
+
+app/Dockerfile (dockerfile)
+===========================
+Tests: 27 (SUCCESSES: 25, FAILURES: 2)
+Failures: 2 (UNKNOWN: 0, LOW: 1, MEDIUM: 0, HIGH: 1, CRITICAL: 0)
+
+AVD-DS-0002 (HIGH): Specify at least 1 USER command in Dockerfile with non-root user as argument
+════════════════════════════════════════
+Running containers with 'root' user can lead to a container escape situation. It is a best practice to run containers as non-root users, which can be done by adding a 'USER' statement to the Dockerfile.
+
+See https://avd.aquasec.com/misconfig/ds002
+────────────────────────────────────────
+
+
+AVD-DS-0026 (LOW): Add HEALTHCHECK instruction in your Dockerfile
+════════════════════════════════════════
+You should add HEALTHCHECK instruction in your docker container images to perform the health check on running containers. 
+
+See https://avd.aquasec.com/misconfig/ds026
+────────────────────────────────────────
+
+
+
+app/node_modules/bcrypt/Dockerfile (dockerfile)
+===============================================
+Tests: 27 (SUCCESSES: 23, FAILURES: 4)
+Failures: 4 (UNKNOWN: 0, LOW: 2, MEDIUM: 0, HIGH: 2, CRITICAL: 0)
+
+AVD-DS-0002 (HIGH): Specify at least 1 USER command in Dockerfile with non-root user as argument
+════════════════════════════════════════
+Running containers with 'root' user can lead to a container escape situation. It is a best practice to run containers as non-root users, which can be done by adding a 'USER' statement to the Dockerfile.
+
+See https://avd.aquasec.com/misconfig/ds002
+────────────────────────────────────────
+
+
+AVD-DS-0005 (LOW): Consider using 'COPY . /usr/local/opt/${project}' command instead of 'ADD . /usr/local/opt/${project}' 
+════════════════════════════════════════
+You should use COPY instead of ADD unless you want to extract a tar file. Note that an ADD command will extract a tar file, which adds the risk of Zip-based vulnerabilities. Accordingly, it is advised to use a COPY command, which does not extract tar files.
+
+See https://avd.aquasec.com/misconfig/ds005
+────────────────────────────────────────
+ app/node_modules/bcrypt/Dockerfile:39
+────────────────────────────────────────
+  39 [ ADD . /usr/local/opt/${project}
+────────────────────────────────────────
+
+
+AVD-DS-0026 (LOW): Add HEALTHCHECK instruction in your Dockerfile
+════════════════════════════════════════
+You should add HEALTHCHECK instruction in your docker container images to perform the health check on running containers. 
+
+See https://avd.aquasec.com/misconfig/ds026
+────────────────────────────────────────
+
+
+AVD-DS-0029 (HIGH): '--no-install-recommends' flag is missed: 'echo "#log: ${project}: Setup system"   && set -x   && apt-get update -y   && apt-get install -y     build-essential     python3   && apt-get clean   && update-alternatives --install /usr/local/bin/python python /usr/bin/python3 20   && npm i -g prebuildify@5 node-gyp@9   && sync'
+════════════════════════════════════════
+'apt-get' install should use '--no-install-recommends' to minimize image size.
+
+See https://avd.aquasec.com/misconfig/ds029
+────────────────────────────────────────
+ app/node_modules/bcrypt/Dockerfile:28-37
+────────────────────────────────────────
+  28 ┌ RUN echo "#log: ${project}: Setup system" \
+  29 │   && set -x \
+  30 │   && apt-get update -y \
+  31 │   && apt-get install -y \
+  32 │     build-essential \
+  33 │     python3 \
+  34 │   && apt-get clean \
+  35 │   && update-alternatives --install /usr/local/bin/python python /usr/bin/python3 20 \
+  36 │   && npm i -g prebuildify@5 node-gyp@9 \
+  37 └   && sync
+────────────────────────────────────────
