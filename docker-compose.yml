@@ -1,3 +1,15 @@
+version: "3.9"
+
+networks:
+  observability:
+    external: true
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
+  lgtm-data:
+
 services:
   lgtm:
     image: grafana/otel-lgtm:latest
@@ -10,43 +22,13 @@ services:
     volumes:
       - lgtm-data:/var/lib/grafana
     restart: unless-stopped
+    networks:
+      - observability
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3030/api/health"] 
       interval: 30s
       timeout: 10s
       retries: 5
-      
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "80:80"
-    env_file:
-      - ./frontend/.env
-    environment:
-      - NODE_ENV=production
-    restart: unless-stopped
-
-  backend:
-    environment:
-      NODE_ENV: production
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
-      OTEL_TRACES_EXPORTER: otlp
-      OTEL_METRICS_EXPORTER: otlp
-      OTEL_LOGS_EXPORTER: otlp
-      OTEL_SERVICE_NAME: backend_service
-    networks:
-      - default
-      - observability
-    build:
-      context: ./backend
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-    depends_on:
-      - db
-    env_file:
-      - ./backend/.env.prod
 
   db:
     image: postgres:15-alpine
@@ -57,14 +39,44 @@ services:
       POSTGRES_DB: teamboard
     volumes:
       - db-data:/var/lib/postgresql/data
-    # optional: expose port for local tools
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - app-network
 
-networks:
-  observability:
-    external: true
-    
-volumes:
-  db-data:
-  lgtm-data:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env.prod
+    environment:
+      NODE_ENV: production
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_SERVICE_NAME: backend_service
+    restart: unless-stopped
+    depends_on:
+      - db
+      - lgtm
+    networks:
+      - app-network
+      - observability
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    env_file:
+      - ./frontend/.env
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - app-network
