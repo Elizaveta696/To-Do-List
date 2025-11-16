@@ -191,13 +191,12 @@ jobs:
       - name: Start containers via SSH
         run: |
         
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} " \
-            echo '${{ secrets.GITHUB_TOKEN }}' | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin && \
+          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} "
+            echo \"${{ secrets.GITHUB_TOKEN }}\" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin && \
             cd stage_stack && \
             docker compose pull && \
-            docker compose up -d \
+            docker compose up -d
           "
-
       - name: Upload VPN logs
         if: always()
         uses: actions/upload-artifact@v4
