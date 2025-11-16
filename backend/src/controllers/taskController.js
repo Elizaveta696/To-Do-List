@@ -1,5 +1,6 @@
 import { Task } from "../models/Task.js";
 import { sequelize } from "../config/db.js";
+import mongoSanitize from 'mongo-sanitize';
 
 //get all
 const getTask = async (req, res) => {
@@ -27,10 +28,14 @@ const addTask = async (req, res) => {
 //edit task
 const editTask = async (req, res) => {
   try {
-  const { id } = req.params;
+
+  const safeId = mongoSanitize(req.params.id);
+
   const { title, description, completed, dueDate, priority } = req.body;
 
-  const task = await Task.findOne({ where: { id, userId: req.user.userId } });
+  const safeUserID = mongoSanitize(req.user.userId);
+
+  const task = await Task.findOne({ where: { safeId, userId: safeUserID } });
   if (!task) return res.status(404).json({ message: "Task not found" });
 
   task.title = title ?? task.title;
