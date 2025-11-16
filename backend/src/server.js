@@ -6,7 +6,7 @@ import express, { json } from "express";
 
 const { trace, context, metrics, logs } = pkg;
 
-const SERVICE_NAME = process.env.SERVICE_NAME || "backend_service";
+const SERVICE_NAME = "backend_service";
 const tracer = trace.getTracer(SERVICE_NAME);
 const meter = metrics?.getMeter(SERVICE_NAME);
 const logger = logs?.getLogger(SERVICE_NAME);
