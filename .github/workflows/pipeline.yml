@@ -191,10 +191,16 @@ jobs:
       - name: Start containers via SSH
         run: |
           ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} << 'EOF'
-            docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }};
             cd stage_stack;
-            docker compose pull;
-            docker compose up -d;
+            # Load pre-pulled images from tarballs (assumes runner copied backend.tar and frontend.tar)
+            if [ -f backend.tar ]; then
+            docker load -i backend.tar;
+            fi
+            if [ -f frontend.tar ]; then
+            docker load -i frontend.tar;
+            fi
+            # Start containers
+            docker compose up -d
           EOF
       - name: Upload VPN logs
         if: always()
