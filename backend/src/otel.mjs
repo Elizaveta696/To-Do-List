@@ -1,27 +1,49 @@
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
+import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
-// otel.mjs
 import { NodeSDK } from "@opentelemetry/sdk-node";
 
 const isProd = process.env.NODE_ENV === "production";
-const otlp = process.env.OTEL_EXPORTER_OTLP_ENDPOINT || "http://lgtm:4318";
+const otlpEndpoint =
+	process.env.OTEL_EXPORTER_OTLP_ENDPOINT || "http://lgtm:4318";
 
-const sdk = new NodeSDK({
-	traceExporter: isProd
-		? new OTLPTraceExporter({ url: `${otlp}/v1/traces` })
-		: undefined,
-	metricReader: isProd
-		? new PeriodicExportingMetricReader({
-				exporter: new OTLPMetricExporter({ url: `${otlp}/v1/metrics` }),
-				exportIntervalMillis: 10000,
-			})
-		: undefined,
-	// logs likewise: only configure exporter in prod
-	instrumentations: [getNodeAutoInstrumentations()],
-});
+let sdk;
 
-if (process.env.OTEL_SDK_DISABLED !== "true") {
-	sdk.start();
+if (isProd && process.env.OTEL_SDK_DISABLED !== "true") {
+	const traceExporter = new OTLPTraceExporter({
+		url: `${otlpEndpoint}/v1/traces`,
+	});
+
+	const metricReader = new PeriodicExportingMetricReader({
+		exporter: new OTLPMetricExporter({ url: `${otlpEndpoint}/v1/metrics` }),
+		exportIntervalMillis: 10000, // adjust as needed
+	});
+
+	const logExporter = new OTLPLogExporter({
+		url: `${otlpEndpoint}/v1/logs`,
+	});
+
+	sdk = new NodeSDK({
+		traceExporter,
+		metricReader,
+		logRecordProcessor: new BatchLogRecordProcessor(logExporter),
+		instrumentations: [getNodeAutoInstrumentations()],
+	});
+
+	try {
+		sdk.start();
+		console.log("✅ OpenTelemetry SDK initialized (production mode)");
+	} catch (err) {
+		console.error("❌ Error starting OpenTelemetry SDK", err);
+	}
+
+	process.on("SIGTERM", () => sdk.shutdown());
+	process.on("SIGINT", () => sdk.shutdown());
+} else {
+	console.log("ℹ️ OpenTelemetry SDK disabled (not production)");
 }
+
+export { sdk };
