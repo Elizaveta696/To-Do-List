@@ -1,5 +1,5 @@
 // server.js
-import "./otel.mjs"; // OTEL SDK initialized first
+import "./otel.mjs"; // Initialize OTEL SDK first
 import pkg from "@opentelemetry/api";
 import cors from "cors";
 import express, { json } from "express";
@@ -22,9 +22,7 @@ const requestCounter = meter?.createCounter("http_server_request_count", {
 
 const requestDuration = meter?.createHistogram(
 	"http_server_request_duration_seconds",
-	{
-		description: "HTTP request duration in seconds",
-	},
+	{ description: "HTTP request duration in seconds" },
 ) ?? { record: () => {} };
 
 // Logging helper
@@ -73,3 +71,32 @@ app.use((req, res, next) => {
 		});
 	});
 });
+
+// Example route
+app.get("/", (req, res) => {
+	res.json({ message: "Hello from backend_service!" });
+});
+
+// Start HTTP server
+const PORT = process.env.PORT || 3000;
+const server = app.listen(PORT, () => {
+	console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// Graceful shutdown
+const shutdown = async () => {
+	console.log("🛑 Shutting down server...");
+	server.close(async () => {
+		try {
+			await sdk.shutdown();
+			console.log("✅ OTEL SDK shutdown completed");
+		} catch (err) {
+			console.error("❌ OTEL SDK shutdown failed", err);
+		} finally {
+			process.exit(0);
+		}
+	});
+};
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
