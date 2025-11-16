@@ -1,0 +1,40 @@
+                   
+                   
+┌─────────────────┐
+│ 2 Code Findings │
+└─────────────────┘
+                             
+  [36m[22m[24m  nginx.conf[0m
+    ❯❱ [1mgeneric.nginx.security.possible-h2c-[0m  
+  [1m     smuggling.possible-nginx-h2c-smuggling[0m
+          Conditions for Nginx H2C smuggling       
+          identified. H2C smuggling allows         
+          upgrading HTTP/1.1 connections to lesser-
+          known HTTP/2 over cleartext (h2c)        
+          connections which can allow a bypass of  
+          reverse proxy access controls, and lead  
+          to long-lived, unrestricted HTTP traffic 
+          directly to back-end servers. To         
+          mitigate: WebSocket support required:    
+          Allow only the value websocket for       
+          HTTP/1.1 upgrade headers (e.g., Upgrade: 
+          websocket). WebSocket support not        
+          required: Do not forward Upgrade headers.
+          Details: https://sg.run/ploZ             
+                                                   
+           16┆ proxy_http_version 1.1;
+           17┆ proxy_set_header Upgrade
+               $http_upgrade;          
+           18┆ proxy_set_header Connection
+               'upgrade';                 
+   
+    ❯❱ [1mgeneric.nginx.security.request-host-used.request-[0m
+  [1m     host-used[0m                                        
+          '$http_host' and '$host' variables may  
+          contain a malicious value from attacker 
+          controlled 'Host' request header. Use an
+          explicitly configured host value or a   
+          allow list for validation.              
+          Details: https://sg.run/4x3Z            
+                                                  
+           19┆ proxy_set_header Host $host;
