@@ -1,6 +1,6 @@
 // Import the production-aware OpenTelemetry initializer first so exporters
 // (OTLP) are configured when `NODE_ENV=production`.
-import "../otel.mjs";
+import "./otel.mjs";
 
 // Use default import for the API (CJS-compatible) and extract only the stable pieces.
 // Named exports like `logs` may not be present depending on the installed `@opentelemetry/*` packages.
