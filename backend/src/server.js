@@ -1,4 +1,3 @@
-// server.js
 import "./otel.mjs"; // Initialize OTEL SDK first
 import pkg from "@opentelemetry/api";
 import cors from "cors";
@@ -82,13 +81,13 @@ const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
 	console.log(`🚀 Server running on port ${PORT}`);
 });
-//sillychange
+
 // Graceful shutdown
 const shutdown = async () => {
 	console.log("🛑 Shutting down server...");
 	server.close(async () => {
 		try {
-			await sdk.shutdown();
+			if (typeof sdk !== "undefined") await sdk.shutdown();
 			console.log("✅ OTEL SDK shutdown completed");
 		} catch (err) {
 			console.error("❌ OTEL SDK shutdown failed", err);
@@ -100,3 +99,6 @@ const shutdown = async () => {
 
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
+
+// Keep container alive even if OTEL clears event loop
+setInterval(() => {}, 1 << 30);
