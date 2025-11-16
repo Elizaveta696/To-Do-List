@@ -1,4 +1,21 @@
 services:
+  lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: lgtm
+    ports:
+      - "3030:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - lgtm-data:/var/lib/grafana
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/api/health"] 
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      
   frontend:
     build:
       context: ./frontend
@@ -11,6 +28,16 @@ services:
     restart: unless-stopped
 
   backend:
+    environment:
+      NODE_ENV: production
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_SERVICE_NAME: backend_service
+    networks:
+      - default
+      - observability
     build:
       context: ./backend
     ports:
@@ -32,7 +59,12 @@ services:
       - db-data:/var/lib/postgresql/data
     # optional: expose port for local tools
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
 
+networks:
+  observability:
+    external: true
+    
 volumes:
   db-data:
+  lgtm-data:

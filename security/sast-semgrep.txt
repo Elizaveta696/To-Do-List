@@ -5,39 +5,57 @@
 └─────────────────┘
                                                             
   [36m[22m[24m  backend/src/controllers/taskController.js[0m
-   ❯❯❱ [1majinabraham.njsscan.database.nosql_find_injection.node_nosqli_injection[0m
-          Untrusted user input in findOne() function can result in NoSQL Injection.
-          Details: https://sg.run/0q35                                             
-                                                                                   
-           33┆ const task = await Task.findOne({ where: { id, userId: req.user.userId } });
+   ❯❯❱ [1majinabraham.njsscan.database.nosql_find_injection.node_nosql[0m
+  [1m     i_injection[0m                                                 
+          Untrusted user input in findOne() function can
+          result in NoSQL Injection.                    
+          Details: https://sg.run/0q35                  
+                                                        
+           33┆ const task = await Task.findOne({ where:
+               { id, userId: req.user.userId } });     
                                                    
   [36m[22m[24m  backend/src/routes/authRoutes.js[0m
-    ❯❱ [1majinabraham.njsscan.crypto.timing_attack_node.node_timing_attack[0m
-          String comparisons using '===', '!==', '!=' and '==' is vulnerable to timing attacks. A timing      
-          attack allows the attacker to learn potentially sensitive information by, for example, measuring how
-          long it takes for the application to respond to a request.  More info:                              
-          https://nodejs.org/en/learn/getting-started/security-best-practices#information-exposure-through-   
-          timing-attacks-cwe-208                                                                              
-          Details: https://sg.run/BDR2                                                                        
-                                                                                                              
-           68┆ refreshTokens = refreshTokens.filter((t) => t !== token);
+    ❯❱ [1majinabraham.njsscan.crypto.timing_attack_node.node_timing_at[0m
+  [1m     tack[0m                                                        
+          String comparisons using '===', '!==', '!=' and 
+          '==' is vulnerable to timing attacks. A timing  
+          attack allows the attacker to learn potentially 
+          sensitive information by, for example, measuring
+          how long it takes for the application to respond
+          to a request.  More info:                       
+          https://nodejs.org/en/learn/getting-            
+          started/security-best-practices#information-    
+          exposure-through-timing-attacks-cwe-208         
+          Details: https://sg.run/BDR2                    
+                                                          
+           68┆ refreshTokens = refreshTokens.filter((t)
+               => t !== token);                        
                                       
   [36m[22m[24m  frontend/nginx.conf[0m
-    ❯❱ [1mgeneric.nginx.security.possible-h2c-smuggling.possible-nginx-h2c-smuggling[0m
-          Conditions for Nginx H2C smuggling identified. H2C smuggling allows upgrading HTTP/1.1 connections 
-          to lesser-known HTTP/2 over cleartext (h2c) connections which can allow a bypass of reverse proxy  
-          access controls, and lead to long-lived, unrestricted HTTP traffic directly to back-end servers. To
-          mitigate: WebSocket support required: Allow only the value websocket for HTTP/1.1 upgrade headers  
-          (e.g., Upgrade: websocket). WebSocket support not required: Do not forward Upgrade headers.        
-          Details: https://sg.run/ploZ                                                                       
-                                                                                                             
+    ❯❱ [1mgeneric.nginx.security.possible-h2c-smuggling.possible-[0m
+  [1m     nginx-h2c-smuggling[0m                                    
+          Conditions for Nginx H2C smuggling identified.   
+          H2C smuggling allows upgrading HTTP/1.1          
+          connections to lesser-known HTTP/2 over cleartext
+          (h2c) connections which can allow a bypass of    
+          reverse proxy access controls, and lead to long- 
+          lived, unrestricted HTTP traffic directly to     
+          back-end servers. To mitigate: WebSocket support 
+          required: Allow only the value websocket for     
+          HTTP/1.1 upgrade headers (e.g., Upgrade:         
+          websocket). WebSocket support not required: Do   
+          not forward Upgrade headers.                     
+          Details: https://sg.run/ploZ                     
+                                                           
            16┆ proxy_http_version 1.1;
            17┆ proxy_set_header Upgrade $http_upgrade;
            18┆ proxy_set_header Connection 'upgrade';
    
     ❯❱ [1mgeneric.nginx.security.request-host-used.request-host-used[0m
-          '$http_host' and '$host' variables may contain a malicious value from attacker controlled 'Host'
-          request header. Use an explicitly configured host value or a allow list for validation.         
-          Details: https://sg.run/4x3Z                                                                    
-                                                                                                          
+          '$http_host' and '$host' variables may contain a 
+          malicious value from attacker controlled 'Host'  
+          request header. Use an explicitly configured host
+          value or a allow list for validation.            
+          Details: https://sg.run/4x3Z                     
+                                                           
            19┆ proxy_set_header Host $host;
