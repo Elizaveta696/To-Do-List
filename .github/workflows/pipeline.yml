@@ -189,14 +189,13 @@ jobs:
     
       # SSH into VM server and bring up the stack
       - name: Start containers via SSH
-        run:
-          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} 
-          "
-          docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }};
-          cd stage_stack;
-          docker compose pull;
-          docker compose up -d;
-          "
+        run: |
+          ssh ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_SERVER }} << 'EOF'
+            docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }};
+            cd stage_stack;
+            docker compose pull;
+            docker compose up -d;
+          EOF
       - name: Upload VPN logs
         if: always()
         uses: actions/upload-artifact@v4
