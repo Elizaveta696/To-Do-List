@@ -105,12 +105,12 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          docker build -t ghcr.io/${{ env.BACKEND_IMAGE_NAME }}:latest ./backend
+          docker build --no-cache -t ghcr.io/${{ env.BACKEND_IMAGE_NAME }}:latest ./backend
           docker push ghcr.io/${{ env.BACKEND_IMAGE_NAME }}:latest
 
       - name: Build and push frontend image
         run: |
-          docker build -t ghcr.io/${{ env.FRONTEND_IMAGE_NAME }}:latest ./frontend
+          docker build --no-cache -t ghcr.io/${{ env.FRONTEND_IMAGE_NAME }}:latest ./frontend
           docker push ghcr.io/${{ env.FRONTEND_IMAGE_NAME }}:latest
   
 # Job for building the frontend and backend container images and pushing it to the registry
