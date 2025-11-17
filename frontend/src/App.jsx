@@ -19,8 +19,6 @@ function App() {
 			return false;
 		}
 	});
-
-	// show/hide the add-task form
 	const [showAddForm, setShowAddForm] = useState(false);
 
 	// lock body scroll while overlay is open

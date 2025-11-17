@@ -1,5 +1,17 @@
+const resolveBase = () => {
+	const builtBase = import.meta.env.VITE_API_URL || "";
+	if (
+		typeof window !== "undefined" &&
+		window.location.hostname !== "localhost" &&
+		builtBase.includes("localhost")
+	) {
+		return "";
+	}
+	return builtBase || "";
+};
+
 export const fetchTasks = async () => {
-	const base = import.meta.env.VITE_API_URL || "";
+	const base = resolveBase();
 	const token = localStorage.getItem("token");
 	const res = await fetch(`${base}/api/tasks`, {
 		headers: { Authorization: `Bearer ${token}` },
@@ -9,13 +21,13 @@ export const fetchTasks = async () => {
 };
 
 export const createTask = async (task) => {
-	const base = import.meta.env.VITE_API_URL || "";
+	const base = resolveBase();
 	const token = localStorage.getItem("token");
 	const res = await fetch(`${base}/api/tasks`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			Authorization: `Bearer ${token}`, //  send JWT
+			Authorization: `Bearer ${token}`,
 		},
 		body: JSON.stringify(task),
 	});
@@ -24,13 +36,13 @@ export const createTask = async (task) => {
 };
 
 export const updateTask = async (id, updates) => {
-	const base = import.meta.env.VITE_API_URL || "";
+	const base = resolveBase();
 	const token = localStorage.getItem("token");
 	const res = await fetch(`${base}/api/tasks/${id}`, {
 		method: "PUT",
 		headers: {
 			"Content-Type": "application/json",
-			Authorization: `Bearer ${token}`, // send JWT
+			Authorization: `Bearer ${token}`,
 		},
 		body: JSON.stringify(updates),
 	});
@@ -39,12 +51,12 @@ export const updateTask = async (id, updates) => {
 };
 
 export const removeTask = async (id) => {
-	const base = import.meta.env.VITE_API_URL || "";
+	const base = resolveBase();
 	const token = localStorage.getItem("token");
 	const res = await fetch(`${base}/api/tasks/${id}`, {
 		method: "DELETE",
 		headers: {
-			Authorization: `Bearer ${token}`, // send JWT
+			Authorization: `Bearer ${token}`,
 		},
 	});
 	if (!res.ok) throw new Error("Failed to delete task");

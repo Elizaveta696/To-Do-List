@@ -12,19 +12,40 @@ export default function Login({
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
-		const base = import.meta.env.VITE_API_URL || "";
-		const res = await fetch(`${base}/api/auth/login`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ username, password }),
-		});
-		const data = await res.json();
-		if (data.accessToken) {
-			setToken(data.accessToken);
-			localStorage.setItem("token", data.accessToken);
-			setPage("tasks");
-		} else {
-			setError(data.message || "Login failed");
+		// Determine API base at runtime to avoid using a build-time localhost URL
+		// when the app is deployed somewhere else.
+		const builtBase = import.meta.env.VITE_API_URL || "";
+		const base =
+			typeof window !== "undefined" &&
+			window.location.hostname !== "localhost" &&
+			builtBase.includes("localhost")
+				? ""
+				: builtBase || "";
+
+		try {
+			const res = await fetch(`${base}/api/auth/login`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ username, password }),
+			});
+
+			let data;
+			try {
+				data = await res.json();
+			} catch (_) {
+				data = {};
+			}
+
+			if (res.ok && data.accessToken) {
+				setToken(data.accessToken);
+				localStorage.setItem("token", data.accessToken);
+				setPage("tasks");
+			} else {
+				setError(data.message || `Login failed (${res.status})`);
+			}
+		} catch (err) {
+			console.error("Login error", err);
+			setError(`Network error: ${err.message}`);
 		}
 	};
 
