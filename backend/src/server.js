@@ -1,4 +1,3 @@
-// server.js
 import "./otel.mjs"; // ← MUST BE FIRST
 import pkg from "@opentelemetry/api";
 import cors from "cors";
@@ -23,10 +22,10 @@ app.use(cors());
 app.use(json());
 
 app.get("/", (req, res) => {
-	res.json({ status: "OK", service: "backend_service" });
+	res.json({ status: "OK", service: SERVICE_NAME });
 });
 
-/* OTEL MIDDLEWARE (unchanged) */
+/* OTEL + Loki-Compatible Middleware */
 const requestCounter = meter?.createCounter("http_server_request_count", {
 	description: "Total HTTP requests",
 }) ?? { add: () => {} };
@@ -35,11 +34,6 @@ const requestDuration = meter?.createHistogram(
 	"http_server_request_duration_seconds",
 	{ description: "HTTP request duration in seconds" },
 ) ?? { record: () => {} };
-
-const safeLoggerEmit = (rec) => {
-	if (logger?.emit) logger.emit(rec);
-	else console.log("[OTEL-LOG]", rec);
-};
 
 app.use((req, res, next) => {
 	const span = tracer.startSpan("http.server", {
@@ -51,6 +45,8 @@ app.use((req, res, next) => {
 
 	res.on("finish", () => {
 		const duration = (Date.now() - start) / 1000;
+
+		// Metrics
 		requestCounter.add(1, {
 			route: req.path,
 			method: req.method,
@@ -61,20 +57,38 @@ app.use((req, res, next) => {
 			method: req.method,
 			status: res.statusCode,
 		});
+
+		// Tracing
 		span.setAttribute("http.status_code", res.statusCode);
 		span.setAttribute("http.duration_s", duration);
 		span.end();
-		safeLoggerEmit({
-			body: `Handled request ${req.method} ${req.path}`,
-			attributes: {
-				service_name: SERVICE_NAME,
-				route: req.path,
-				method: req.method,
-				status: res.statusCode,
-				duration_s: duration,
-			},
-			severityNumber: 9,
-		});
+
+		// Logs — OTEL if available, otherwise fallback to stdout
+		const logRecord = {
+			service: SERVICE_NAME,          // Loki label
+			route: req.path,                // Loki label
+			method: req.method,             // Loki label
+			status: res.statusCode,         // Loki label
+			duration_s: duration,
+			msg: `Handled request ${req.method} ${req.path}`,
+			level: "INFO",
+		};
+
+		if (logger?.emit) {
+			logger.emit({
+				body: logRecord.msg,
+				attributes: {
+					"service.name": SERVICE_NAME,   // matches collector labels
+					route: req.path,
+					method: req.method,
+					status: res.statusCode,
+					duration_s: duration,
+				},
+				severityNumber: 9,
+			});
+		} else {
+			console.log(JSON.stringify(logRecord));
+		}
 	});
 });
 
@@ -92,7 +106,7 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, async () => {
 	try {
-		await connectDB(); // ← DB CONNECT HERE
+		await connectDB();
 		await sequelize.sync({ alter: true });
 		console.log("Database synced");
 		console.log(`Server running on port ${PORT}`);

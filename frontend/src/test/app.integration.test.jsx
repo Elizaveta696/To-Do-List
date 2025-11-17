@@ -25,11 +25,15 @@ describe("App integration", () => {
 		global.fetch = vi.fn((url, options) => {
 			if (url.includes("/api/auth/login")) {
 				return Promise.resolve({
+					ok: true,
+					status: 200,
 					json: () => Promise.resolve({ accessToken: "mock-token" })
 				});
 			}
 			// fallback for other fetches
 			return Promise.resolve({
+				ok: true,
+				status: 200,
 				json: () => Promise.resolve({})
 			});
 		});

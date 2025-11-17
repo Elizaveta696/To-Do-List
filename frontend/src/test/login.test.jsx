@@ -21,10 +21,14 @@ describe("Login flow", () => {
 		global.fetch = vi.fn((url, options) => {
 			if (url.includes("/api/auth/login")) {
 				return Promise.resolve({
+					ok: true,
+					status: 200,
 					json: () => Promise.resolve({ accessToken: "mock-token" })
 				});
 			}
 			return Promise.resolve({
+				ok: true,
+				status: 200,
 				json: () => Promise.resolve({})
 			});
 		});
