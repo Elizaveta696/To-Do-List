@@ -3,8 +3,14 @@ import { createPortal } from "react-dom";
 import { FiLogOut, FiMenu, FiMoon, FiSun } from "react-icons/fi";
 import { FEATURE_FLAGS } from "../featureFlags";
 
-export default function Header({ onLogout, onToggleNightMode, nightMode }) {
+export default function Header({
+	onLogout,
+	onToggleNightMode,
+	nightMode,
+	teamName = "My tasks",
+}) {
 	const [navOpen, setNavOpen] = useState(false);
+	const [showTeams, setShowTeams] = useState(false);
 
 	return (
 		<nav
@@ -32,9 +38,35 @@ export default function Header({ onLogout, onToggleNightMode, nightMode }) {
 						className="nav-expand-panel"
 						aria-label="Expanded navigation"
 					>
-						<div className="nav-panel-inner">
+						<div className="nav-actions">
+							<button
+								type="button"
+								className="btn nav-panel-btn nav-expand-toggle"
+								onClick={() => setShowTeams((v) => !v)}
+								aria-expanded={showTeams}
+							>
+								List teams
+								<span className="expand-indicator" aria-hidden="true" />
+							</button>
+
+							{showTeams && (
+								<ul className="team-list">
+									<li>
+										<button
+											type="button"
+											className="btn nav-panel-btn team-item"
+										>
+											{teamName}
+										</button>
+									</li>
+								</ul>
+							)}
+
 							<button type="button" className="btn nav-panel-btn">
-								button 1
+								Join team
+							</button>
+							<button type="button" className="btn nav-panel-btn">
+								Create new team
 							</button>
 						</div>
 					</section>,

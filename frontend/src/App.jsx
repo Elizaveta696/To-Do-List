@@ -109,7 +109,7 @@ function App() {
 			)}
 			<main className="main-content">
 				<header className="page-header">
-					<h1 className="page-title">TeamBoard</h1>
+					<h1 className="page-title">My tasks</h1>
 				</header>
 				<div key={refreshKey}>
 					<TaskList token={token} onAddTask={() => setShowAddForm(true)} />

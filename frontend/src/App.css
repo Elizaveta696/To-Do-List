@@ -372,6 +372,23 @@ body::before {
 	flex-direction: column;
 	gap: 12px;
 }
+.nav-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.team-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.team-list li {
+	margin: 0 0 8px 0;
+}
+.nav-panel-btn {
+	width: 100%;
+	text-align: center;
+}
 .nav-panel-btn {
 	padding: 10px 12px;
 	border-radius: 8px;
@@ -383,6 +400,39 @@ body::before {
 .nav-panel-btn:hover {
 	border-color: #646cff;
 	background: rgba(100, 108, 255, 0.04);
+}
+
+/* List expand indicator (triangle) inside the List teams button */
+.nav-expand-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+.nav-expand-toggle .expand-indicator {
+	/* triangle pointing right using border trick (smaller) */
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 6px;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-left: 6px solid currentColor;
+	transition: transform 0.12s ease;
+}
+/* rotate triangle down when expanded */
+.nav-expand-toggle[aria-expanded="true"] .expand-indicator {
+	transform: rotate(90deg);
+}
+
+/* Make the team item visually darker / more prominent */
+.nav-expand-panel .team-item {
+	background: rgba(2, 20, 46, 0.56); /* darker fill */
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	color: var(--text);
+}
+.theme-light .nav-expand-panel .team-item {
+	background: rgba(7, 20, 34, 0.06);
+	border: 1px solid rgba(7, 20, 34, 0.06);
 }
 
 /* Responsive: when sidebar becomes top bar, place the panel under the bar */
