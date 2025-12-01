@@ -542,6 +542,80 @@ body,
 	justify-content: center; /* center rows */
 }
 
+/* New layout: three vertical priority columns */
+.tasks-columns {
+	display: flex;
+	gap: 40px;
+	align-items: flex-start;
+	justify-content: center;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 8px 12px;
+}
+.task-column {
+	flex: 1 1 320px;
+	max-width: 380px;
+	min-width: 260px;
+	background: var(--surface);
+	border-radius: calc(var(--radius) - 4px);
+	padding: 24px; /* increased padding for more space between card and container */
+	box-shadow: var(--elevation);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.column-title {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 700;
+	padding: 4px 8px;
+}
+.column-body {
+	display: flex;
+	flex-direction: column;
+	gap: 24px; /* larger gap between cards */
+}
+.empty-column {
+	color: var(--muted-text);
+	font-size: 0.95rem;
+	padding: 8px 6px;
+}
+
+/* Slight color accents per column */
+.column-high {
+	border-top: 4px solid rgba(229, 57, 53, 0.12);
+}
+.column-medium {
+	border-top: 4px solid rgba(251, 192, 45, 0.12);
+}
+.column-low {
+	border-top: 4px solid rgba(67, 160, 71, 0.12);
+}
+
+@media (max-width: 900px) {
+	.tasks-columns {
+		gap: 12px;
+		padding: 8px;
+	}
+	.task-column {
+		min-width: 220px;
+		max-width: 320px;
+	}
+}
+
+@media (max-width: 720px) {
+	.tasks-columns {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+	.task-column {
+		max-width: 100%;
+		min-width: 0;
+	}
+}
+
 /* Card styling (always visible) */
 .task-card {
 	/* In dark mode use the same subtle vertical gradient as the sidebar for cohesion */
@@ -559,9 +633,10 @@ body,
 	flex-direction: column;
 	gap: 12px;
 	box-sizing: border-box;
-	flex: 0 0 220px;
-	min-width: 280px;
-	min-height: 320px;
+	/* slightly smaller cards for denser layout */
+	flex: 0 0 200px;
+	min-width: 220px;
+	min-height: 260px;
 	max-height: 90vh;
 	overflow: auto;
 }
