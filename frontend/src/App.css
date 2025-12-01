@@ -2,7 +2,7 @@
 	/* deeper, more saturated blue background for dark mode */
 	--bg: linear-gradient(
 		180deg,
-		#00131a 0%,
+		#000a1a 0%,
 		#00324a 40%,
 		#00526a 75%,
 		#00607a 100%
@@ -140,7 +140,6 @@ body::before {
 }
 
 .theme-light .app {
-	background: transparent; /* keep app surface transparent so --bg (root) covers whole viewport */
 	/* apply the theme gradient and make it scale with the full document height */
 	background: var(--bg);
 	background-repeat: no-repeat;
@@ -262,6 +261,9 @@ body::before {
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
+	align-items: center;
+	/* align vertically with the page title (main content padding) */
+	margin-top: 5px;
 }
 .sidebar-bottom {
 	display: flex;
@@ -280,6 +282,7 @@ body::before {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	color: #000000;
 	transition:
 		background 0.12s ease,
 		transform 0.12s ease;
@@ -289,7 +292,9 @@ body::before {
 	background: rgba(124, 219, 255, 0.06);
 	transform: translateY(-2px);
 }
-
+.sidebar.night .logout-btn {
+	color: #ffffff;
+}
 /* make theme button slightly larger to match logout */
 .sidebar .theme-btn {
 	width: 48px;
@@ -307,13 +312,104 @@ body::before {
 	color: var(--surface);
 }
 .theme-light .theme-btn {
-	color: #ffffff;
+	color: #000000;
 }
 
 /* When the sidebar is in 'night' mode the visible icon is the sun — keep it blue */
 .sidebar.night .theme-btn {
 	/* make the sun icon bright — match the + button's stronger blue */
-	color: var(--accent-strong);
+	color: #ffffff;
+}
+
+/* Expand / collapse button shown at top of the sidebar (hamburger) */
+.sidebar .nav-expand-btn {
+	/* mimic sidebar theme button sizing/behavior; color comes from .theme-btn */
+	width: 48px;
+	height: 48px;
+	padding: 6px;
+	border-radius: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	color: #000000;
+	border: 1px solid rgba(255, 255, 255, 0.04);
+	font-size: 1.1rem;
+	cursor: pointer;
+	transition:
+		transform 0.12s ease,
+		background 0.12s ease,
+		border-color 0.12s ease;
+}
+.sidebar .nav-expand-btn:hover {
+	border-color: #646cff;
+	background: rgba(100, 108, 255, 0.04);
+	transform: translateY(-2px);
+}
+
+/* Panel that expands to the right of the sidebar */
+.nav-expand-panel {
+	position: fixed;
+	left: 96px;
+	top: 0;
+	bottom: 0;
+	width: 260px;
+	/* darker bluish-grey surface for expanded navigation */
+	/* darker, opaque bluish-grey so content behind doesn't show through */
+	background: linear-gradient(180deg, #0c1a2d 0%, #0d1e34 55%, #0c1a2d 100%);
+	color: var(--text);
+	/* push shadow to the right so it doesn't fall onto the sidebar */
+	box-shadow: 12px 0 34px rgba(2, 20, 46, 0.56);
+	/* sit above main content (task cards) and floating controls */
+	z-index: 1400;
+	display: flex;
+	flex-direction: column;
+	padding: 16px;
+	box-sizing: border-box;
+}
+.nav-panel-inner {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.nav-panel-btn {
+	padding: 10px 12px;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--text);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	cursor: pointer;
+}
+.nav-panel-btn:hover {
+	border-color: #646cff;
+	background: rgba(100, 108, 255, 0.04);
+}
+
+/* Responsive: when sidebar becomes top bar, place the panel under the bar */
+@media (max-width: 720px) {
+	.nav-expand-panel {
+		left: 0;
+		top: 64px;
+		bottom: auto;
+		width: 100%;
+		min-height: 120px;
+		box-shadow: 0 6px 18px rgba(2, 20, 46, 0.24);
+	}
+}
+
+/* Light theme: use a light grey background and dark text for the panel */
+.theme-light .nav-expand-panel {
+	background: linear-gradient(180deg, #eef2f7 0%, #e6eef8 100%);
+	color: #04233a;
+	border-left: 1px solid rgba(7, 20, 34, 0.06);
+}
+
+/* If the sidebar is explicitly in night mode, ensure the panel is very dark */
+.sidebar.night .nav-expand-panel {
+	background: linear-gradient(180deg, #114161 0%, #07141a 55%, #0a1518 100%);
+	box-shadow: 14px 0 40px rgba(0, 0, 0, 0.7);
+	border-left: 1px solid rgba(0, 0, 0, 0.2);
+	z-index: 1600; /* extra priority for night mode overlays */
 }
 
 /* Main content sits to the right of the sidebar */
