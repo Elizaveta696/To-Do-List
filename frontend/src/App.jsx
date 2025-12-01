@@ -96,6 +96,14 @@ function App() {
 				<div className="overlay-form">
 					{/* backdrop removed: overlay will remain until closed via Escape or explicit controls */}
 					<div className="overlay-panel" role="dialog" aria-modal="true">
+						<button
+							type="button"
+							className="modal-close"
+							onClick={() => setShowAddForm(false)}
+							aria-label="Close"
+						>
+							×
+						</button>
 						<TaskForm
 							token={token}
 							onCreated={() => {

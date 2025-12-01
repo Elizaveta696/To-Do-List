@@ -435,6 +435,99 @@ body::before {
 	border: 1px solid rgba(7, 20, 34, 0.06);
 }
 
+/* Join modal overlay and dialog */
+.modal-overlay {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(2, 20, 46, 0.56);
+	z-index: 2400; /* above the nav panel and other overlays */
+}
+.join-modal {
+	width: 520px; /* wider modal on desktop */
+	max-width: 94%;
+	background: var(--surface);
+	color: var(--text);
+	border-radius: 12px;
+	padding: 22px;
+	box-shadow: 0 28px 80px rgba(2, 20, 46, 0.6);
+	position: relative;
+	box-sizing: border-box;
+}
+.theme-light .join-modal {
+	background: #ffffff;
+	color: #04233a;
+}
+.join-modal h3 {
+	margin: 0 0 12px 0;
+	font-size: 1.25rem;
+	font-weight: 700;
+}
+.modal-close {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	background: transparent;
+	border: none;
+	font-size: 18px;
+	width: 36px;
+	height: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	cursor: pointer;
+	color: var(--muted-text);
+	transition:
+		transform 0.12s ease,
+		background 0.12s ease,
+		color 0.12s ease;
+}
+.join-modal .modal-body label {
+	display: block;
+	font-size: 1rem;
+	margin-bottom: 10px;
+}
+.join-modal .modal-body input {
+	width: 100%;
+	padding: 10px 12px;
+	border-radius: 8px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: transparent;
+	color: var(--text);
+	box-sizing: border-box;
+	margin-top: 6px;
+}
+.theme-light .join-modal .modal-body input {
+	border: 1px solid rgba(7, 20, 34, 0.06);
+	background: #ffffff;
+	color: #04233a;
+}
+.modal-actions {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+	margin-top: 14px;
+}
+
+/* Make action buttons slightly larger in modal */
+.modal-actions .btn {
+	font-size: 0.95rem;
+	padding: 8px 12px;
+}
+
+/* Hover/focus effect for the close X */
+.modal-close:hover {
+	transform: scale(1.08);
+	background: rgba(255, 255, 255, 0.04);
+	color: var(--accent-strong);
+}
+.modal-close:focus-visible {
+	outline: 3px solid rgba(96, 165, 250, 0.16);
+}
+
 /* Responsive: when sidebar becomes top bar, place the panel under the bar */
 @media (max-width: 720px) {
 	.nav-expand-panel {
@@ -974,20 +1067,20 @@ body::before {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 1000;
+	z-index: 2300; /* above nav-expand-panel (1400/1600) */
 	padding: 20px;
 }
 
 .overlay-panel {
 	background: var(--surface);
 	border-radius: calc(var(--radius) - 4px);
-	width: min(360px, 96%);
+	width: min(520px, 96%);
 	max-height: calc(100vh - 48px);
 	overflow: auto;
-	box-shadow: 0 18px 48px rgba(2, 20, 46, 0.5);
+	box-shadow: 0 24px 64px rgba(2, 20, 46, 0.56);
 	border: 1px solid rgba(255, 255, 255, 0.04);
-	padding: 16px;
-	z-index: 1001;
+	padding: 20px;
+	z-index: 2301; /* sit above overlay backdrop */
 	box-sizing: border-box;
 	position: relative;
 }
@@ -1004,9 +1097,28 @@ body::before {
 	border: none;
 }
 
+.overlay-panel .task-form label {
+	font-size: 1rem;
+	font-weight: 600;
+}
+
 .overlay-panel .task-form .input {
 	width: 100%;
+	padding: 10px 12px;
+	font-size: 1rem;
 }
+
+/* make overlay inputs show a neutral grey border */
+.overlay-panel .task-form .input {
+	border: 1px solid rgba(128, 128, 128, 0.22);
+	background: transparent;
+}
+
+.theme-light .overlay-panel .task-form .input {
+	border: 1px solid rgba(34, 34, 34, 0.08);
+}
+
+/* priority-row removed — priority now uses stacked label like other fields */
 
 /* small button style used in App.jsx */
 .btn-sm {
@@ -1027,7 +1139,24 @@ body::before {
 	gap: 8px;
 	justify-content: flex-end;
 	align-items: center;
-	margin-top: 6px;
+	margin-top: 10px;
+}
+
+.overlay-panel .form-actions .btn {
+	padding: 10px 14px;
+	font-size: 1rem;
+}
+
+/* Make the Cancel (ghost) button in the Add Task overlay use white text for contrast */
+.overlay-panel .form-actions .btn.btn-ghost {
+	color: #ffffff;
+	border-color: rgba(255, 255, 255, 0.06);
+	background: transparent;
+}
+.theme-light .overlay-panel .form-actions .btn.btn-ghost {
+	/* in light theme use black text for the ghost Cancel button */
+	color: #000000;
+	border-color: rgba(7, 20, 34, 0.08);
 }
 
 /* Auth / Login card centered on screen */

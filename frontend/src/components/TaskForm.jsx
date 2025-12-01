@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { createTask } from "../api/tasks";
 
 export default function TaskForm({ token, onCreated, onClose }) {
+	const id = useId();
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [dueDate, setDueDate] = useState("");
@@ -35,52 +36,66 @@ export default function TaskForm({ token, onCreated, onClose }) {
 	return (
 		<form className="task-form" onSubmit={submit}>
 			<div>
-				<input
-					className="input"
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-					placeholder="Title"
-				/>
+				<label>
+					Title
+					<input
+						id={`title-${id}`}
+						className="input"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+						placeholder=""
+					/>
+				</label>
 			</div>
 			<div>
-				<input
-					className="input"
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
-					placeholder="Description"
-				/>
+				<label>
+					Description
+					<input
+						className="input"
+						value={description}
+						onChange={(e) => setDescription(e.target.value)}
+						placeholder=""
+					/>
+				</label>
 			</div>
 			<div>
-				<input
-					className="input"
-					type="date"
-					value={dueDate}
-					onChange={(e) => setDueDate(e.target.value)}
-					placeholder="Due Date"
-				/>
+				<label>
+					Date
+					<input
+						id={`date-${id}`}
+						className="input"
+						type="date"
+						value={dueDate}
+						onChange={(e) => setDueDate(e.target.value)}
+						placeholder=""
+					/>
+				</label>
 			</div>
 			<div>
-				<label htmlFor="priority">Priority:</label>
-				<select
-					className="input"
-					value={priority}
-					onChange={(e) => setPriority(e.target.value)}
-				>
-					<option value="high">High</option>
-					<option value="medium">Medium</option>
-					<option value="low">Low</option>
-				</select>
+				<label htmlFor={`priority-${id}`}>
+					Priority
+					<select
+						id={`priority-${id}`}
+						className="input"
+						value={priority}
+						onChange={(e) => setPriority(e.target.value)}
+					>
+						<option value="high">High</option>
+						<option value="medium">Medium</option>
+						<option value="low">Low</option>
+					</select>
+				</label>
 			</div>
 			<div className="form-actions">
-				<button className="btn btn-primary" type="submit" disabled={loading}>
-					{loading ? "Saving…" : "Add Task"}
-				</button>
 				<button
 					className="btn btn-ghost"
 					type="button"
 					onClick={() => onClose?.()}
 				>
 					Cancel
+				</button>
+				<button className="btn btn-primary" type="submit" disabled={loading}>
+					{loading ? "Saving…" : "Add Task"}
 				</button>
 			</div>
 		</form>

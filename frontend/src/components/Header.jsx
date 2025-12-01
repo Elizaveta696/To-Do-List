@@ -11,6 +11,7 @@ export default function Header({
 }) {
 	const [navOpen, setNavOpen] = useState(false);
 	const [showTeams, setShowTeams] = useState(false);
+	const [joinModalOpen, setJoinModalOpen] = useState(false);
 
 	return (
 		<nav
@@ -62,12 +63,66 @@ export default function Header({
 								</ul>
 							)}
 
-							<button type="button" className="btn nav-panel-btn">
+							<button
+								type="button"
+								className="btn nav-panel-btn"
+								onClick={() => setJoinModalOpen(true)}
+							>
 								Join team
 							</button>
 							<button type="button" className="btn nav-panel-btn">
 								Create new team
 							</button>
+						</div>
+					</section>,
+					document.body,
+				)}
+
+			{joinModalOpen &&
+				createPortal(
+					<section
+						className="modal-overlay"
+						onClick={() => setJoinModalOpen(false)}
+					>
+						<div className="join-modal" onClick={(e) => e.stopPropagation()}>
+							<button
+								type="button"
+								className="modal-close"
+								onClick={() => setJoinModalOpen(false)}
+								aria-label="Close"
+							>
+								×
+							</button>
+							<h3>Join team</h3>
+							<div className="modal-body">
+								<label>
+									Enter team ID
+									<input type="text" name="teamId" />
+								</label>
+								<label>
+									Enter password
+									<input type="password" name="teamPassword" />
+								</label>
+							</div>
+							<div className="modal-actions">
+								<button
+									type="button"
+									className="btn"
+									onClick={() => setJoinModalOpen(false)}
+								>
+									Cancel
+								</button>
+								<button
+									type="button"
+									className="btn btn-primary"
+									onClick={() => {
+										/* No backend logic for now */
+										console.log("Join clicked");
+									}}
+								>
+									Join
+								</button>
+							</div>
 						</div>
 					</section>,
 					document.body,
