@@ -6,6 +6,8 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import { FEATURE_FLAGS } from "./featureFlags";
 import "./App.css";
+import { FiPlus } from "react-icons/fi";
+
 function App() {
 	const [token, setToken] = useState(
 		() => localStorage.getItem("token") || null,
@@ -81,8 +83,6 @@ function App() {
 	return (
 		<div className="app">
 			<Header
-				teamName="TeamBoard"
-				onAddTask={() => setShowAddForm(true)}
 				onLogout={handleLogout}
 				onToggleNightMode={
 					FEATURE_FLAGS.lightThemeToggle
@@ -107,9 +107,24 @@ function App() {
 					</div>
 				</div>
 			)}
-			<div key={refreshKey}>
-				<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
-			</div>
+			<main className="main-content">
+				<header className="page-header">
+					<h1 className="page-title">TeamBoard</h1>
+				</header>
+				<div key={refreshKey}>
+					<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
+				</div>
+				{/* floating circular add button */}
+				<button
+					type="button"
+					className="floating-add"
+					onClick={() => setShowAddForm(true)}
+					aria-label="Add task"
+					title="New task"
+				>
+					<FiPlus />
+				</button>
+			</main>
 		</div>
 	);
 }

@@ -1,56 +1,38 @@
 import React from "react";
+import { FiLogOut, FiMoon, FiSun } from "react-icons/fi";
 import { FEATURE_FLAGS } from "../featureFlags";
 
-export default function Header({
-	teamName,
-	onAddTask,
-	onLogout,
-	onToggleNightMode,
-	nightMode,
-}) {
+export default function Header({ onLogout, onToggleNightMode, nightMode }) {
 	return (
-		<header
-			className={`header${nightMode ? " night" : ""}`}
-			style={{
-				position: "sticky",
-				top: 0,
-				left: 0,
-				width: "100%",
-				zIndex: 100,
-				borderRadius: 0,
-				marginLeft: 0,
-			}}
+		<nav
+			className={`sidebar${nightMode ? " night" : ""}`}
+			aria-label="Main navigation"
 		>
-			<div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-				<span style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-					{teamName}
-				</span>
-				<button type="button" className="btn btn-primary" onClick={onAddTask}>
-					New Task
-				</button>
+			<div className="sidebar-top">
+				{/* navigation / brand area intentionally minimal */}
 			</div>
-			<div
-				style={{
-					display: "flex",
-					alignItems: "center",
-					gap: "0.5rem",
-					marginLeft: "auto",
-				}}
-			>
+			<div className="sidebar-bottom">
 				{FEATURE_FLAGS.lightThemeToggle && (
 					<button
 						type="button"
-						className="btn btn-ghost"
+						className="btn btn-ghost theme-btn icon-btn"
 						onClick={onToggleNightMode}
 						aria-label="Toggle night mode"
+						title={nightMode ? "Switch to light" : "Switch to dark"}
 					>
-						{nightMode ? "🌞" : "🌙"}
+						{nightMode ? <FiSun /> : <FiMoon />}
 					</button>
 				)}
-				<button type="button" className="btn" onClick={onLogout}>
-					Logout
+				<button
+					type="button"
+					className="btn logout-btn icon-btn"
+					onClick={onLogout}
+					aria-label="Logout"
+					title="Logout"
+				>
+					<FiLogOut />
 				</button>
 			</div>
-		</header>
+		</nav>
 	);
 }

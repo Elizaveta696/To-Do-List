@@ -47,22 +47,67 @@ export default function TaskList({ token, onAddTask }) {
 	};
 
 	if (loading) return <div>Loading tasks…</div>;
-	if (!tasks.length) {
-		return (
-			<div style={{ textAlign: "center", margin: "32px 0" }}>No tasks yet</div>
-		);
-	}
+
+	// Group tasks by priority (high, medium, low)
+	const groups = { high: [], medium: [], low: [] };
+	tasks.forEach((t) => {
+		const p = (t.priority || t.importance || "medium").toLowerCase();
+		if (groups[p]) groups[p].push(t);
+		else groups.medium.push(t);
+	});
 
 	return (
-		<div className="tasks-container">
-			{tasks.map((task) => (
-				<TaskItem
-					key={task.id}
-					task={task}
-					onUpdate={handleUpdate}
-					onDelete={handleDelete}
-				/>
-			))}
+		<div className="tasks-columns">
+			<div className="task-column column-high">
+				<h3 className="column-title">High</h3>
+				<div className="column-body">
+					{groups.high.length === 0 && (
+						<div className="empty-column">No high priority tasks</div>
+					)}
+					{groups.high.map((task) => (
+						<TaskItem
+							key={task.id}
+							task={task}
+							onUpdate={handleUpdate}
+							onDelete={handleDelete}
+						/>
+					))}
+				</div>
+			</div>
+
+			<div className="task-column column-medium">
+				<h3 className="column-title">Medium</h3>
+				<div className="column-body">
+					{groups.medium.length === 0 && (
+						<div className="empty-column">No medium priority tasks</div>
+					)}
+					{groups.medium.map((task) => (
+						<TaskItem
+							key={task.id}
+							task={task}
+							onUpdate={handleUpdate}
+							onDelete={handleDelete}
+						/>
+					))}
+				</div>
+			</div>
+
+			<div className="task-column column-low">
+				<h3 className="column-title">Low</h3>
+				<div className="column-body">
+					{groups.low.length === 0 && (
+						<div className="empty-column">No low priority tasks</div>
+					)}
+					{groups.low.map((task) => (
+						<TaskItem
+							key={task.id}
+							task={task}
+							onUpdate={handleUpdate}
+							onDelete={handleDelete}
+						/>
+					))}
+				</div>
+			</div>
 		</div>
 	);
 }
