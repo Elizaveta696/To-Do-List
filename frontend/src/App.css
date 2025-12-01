@@ -167,6 +167,85 @@ body,
 	border: 1px solid rgba(124, 219, 255, 0.08);
 }
 
+/* Left sidebar layout (replaces top header) */
+.sidebar {
+	position: fixed;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 220px;
+	box-sizing: border-box;
+	padding: 20px 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	background: var(--surface);
+	color: var(--text);
+	box-shadow: 2px 0 18px rgba(2, 20, 46, 0.24);
+	z-index: 200;
+}
+.sidebar .brand {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.sidebar .team-name {
+	font-weight: 700;
+	font-size: 1.2rem;
+}
+.sidebar-top {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.sidebar-bottom {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin-top: auto; /* push to bottom */
+}
+.sidebar .logout-btn {
+	margin-left: auto;
+}
+
+/* Main content sits to the right of the sidebar */
+.main-content {
+	margin-left: 220px;
+	padding: 24px;
+	min-height: 100vh;
+	box-sizing: border-box;
+}
+
+/* Responsive: collapse sidebar to top for small screens */
+@media (max-width: 720px) {
+	.sidebar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 64px;
+		width: 100%;
+		flex-direction: row;
+		align-items: center;
+		padding: 8px 12px;
+		gap: 8px;
+	}
+	.sidebar-top {
+		flex-direction: row;
+		gap: 8px;
+		align-items: center;
+	}
+	.sidebar-bottom {
+		margin-top: 0;
+		margin-left: auto;
+	}
+	.main-content {
+		margin-left: 0;
+		margin-top: 64px;
+		padding: 16px;
+	}
+}
+
 /* Form */
 .auth-card {
 	background: var(--surface);

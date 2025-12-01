@@ -107,9 +107,11 @@ function App() {
 					</div>
 				</div>
 			)}
-			<div key={refreshKey}>
-				<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
-			</div>
+			<main className="main-content">
+				<div key={refreshKey}>
+					<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
+				</div>
+			</main>
 		</div>
 	);
 }

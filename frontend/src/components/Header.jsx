@@ -9,48 +9,33 @@ export default function Header({
 	nightMode,
 }) {
 	return (
-		<header
-			className={`header${nightMode ? " night" : ""}`}
-			style={{
-				position: "sticky",
-				top: 0,
-				left: 0,
-				width: "100%",
-				zIndex: 100,
-				borderRadius: 0,
-				marginLeft: 0,
-			}}
+		<nav
+			className={`sidebar${nightMode ? " night" : ""}`}
+			aria-label="Main navigation"
 		>
-			<div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-				<span style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-					{teamName}
-				</span>
+			<div className="sidebar-top">
+				<div className="brand">
+					<span className="team-name">{teamName}</span>
+				</div>
 				<button type="button" className="btn btn-primary" onClick={onAddTask}>
 					New Task
 				</button>
 			</div>
-			<div
-				style={{
-					display: "flex",
-					alignItems: "center",
-					gap: "0.5rem",
-					marginLeft: "auto",
-				}}
-			>
+			<div className="sidebar-bottom">
 				{FEATURE_FLAGS.lightThemeToggle && (
 					<button
 						type="button"
-						className="btn btn-ghost"
+						className="btn btn-ghost theme-btn"
 						onClick={onToggleNightMode}
 						aria-label="Toggle night mode"
 					>
 						{nightMode ? "🌞" : "🌙"}
 					</button>
 				)}
-				<button type="button" className="btn" onClick={onLogout}>
+				<button type="button" className="btn logout-btn" onClick={onLogout}>
 					Logout
 				</button>
 			</div>
-		</header>
+		</nav>
 	);
 }
