@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiTrash2 } from "react-icons/fi";
 
 export default function TaskItem({ task, onUpdate, onDelete }) {
 	const [editing, setEditing] = useState(false);
@@ -140,22 +141,13 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
 							{!editing && (
 								<button
 									type="button"
-									className="btn btn-ghost"
+									className="btn btn-ghost icon-btn delete-btn"
 									title="Delete"
-									style={{
-										width: 26,
-										height: 26,
-										borderRadius: "50%",
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "center",
-										padding: 0,
-										fontSize: "1rem",
-										marginLeft: 2,
-									}}
+									aria-label="Delete task"
+									style={{ marginLeft: 2 }}
 									onClick={() => onDelete(task.id)}
 								>
-									<span style={{ fontSize: "0.75rem", lineHeight: 1 }}>🗑️</span>
+									<FiTrash2 />
 								</button>
 							)}
 						</div>

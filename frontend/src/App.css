@@ -173,13 +173,15 @@ body,
 	left: 0;
 	top: 0;
 	bottom: 0;
-	width: 220px;
+	width: 96px; /* narrower sidebar */
 	box-sizing: border-box;
-	padding: 20px 16px;
+	padding: 10px 8px;
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
-	background: var(--surface);
+	gap: 8px;
+	/* subtle colored sidebar using accent */
+	background: linear-gradient(180deg, rgba(96, 165, 250, 0.04), var(--surface));
+	border-right: 1px solid rgba(96, 165, 250, 0.06);
 	color: var(--text);
 	box-shadow: 2px 0 18px rgba(2, 20, 46, 0.24);
 	z-index: 200;
@@ -200,17 +202,45 @@ body,
 }
 .sidebar-bottom {
 	display: flex;
-	gap: 8px;
+	flex-direction: column; /* stack buttons */
+	gap: 10px;
 	align-items: center;
 	margin-top: auto; /* push to bottom */
+	padding-bottom: 8px;
 }
 .sidebar .logout-btn {
-	margin-left: auto;
+	/* compact to match theme icon button */
+	width: 48px;
+	height: 48px;
+	font-size: 1.45rem; /* larger logout icon */
+	padding: 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition:
+		background 0.12s ease,
+		transform 0.12s ease;
+}
+
+.sidebar .logout-btn:hover {
+	background: rgba(124, 219, 255, 0.06);
+	transform: translateY(-2px);
+}
+
+/* make theme button slightly larger to match logout */
+.sidebar .theme-btn {
+	width: 48px;
+	height: 48px;
+	font-size: 1.45rem;
+	padding: 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 /* Main content sits to the right of the sidebar */
 .main-content {
-	margin-left: 220px;
+	margin-left: 96px;
 	padding: 24px;
 	min-height: 100vh;
 	box-sizing: border-box;
@@ -243,6 +273,72 @@ body,
 		margin-left: 0;
 		margin-top: 64px;
 		padding: 16px;
+	}
+}
+
+/* Page title above tasks */
+.page-header {
+	margin-bottom: 12px;
+}
+.page-title {
+	margin: 0 0 8px 0;
+	font-size: 1.6rem;
+	font-weight: 700;
+	color: var(--text);
+}
+
+/* Floating circular add button */
+.floating-add {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	bottom: auto;
+	width: 64px;
+	height: 64px;
+	aspect-ratio: 1 / 1;
+	padding: 0;
+	border-radius: 50%;
+	/* primary blue look by default */
+	background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+	color: #04233a;
+	font-size: 2rem;
+	line-height: 1;
+	border: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 12px 36px rgba(2, 20, 46, 0.32);
+	cursor: pointer;
+	z-index: 1200;
+	transition:
+		transform 0.12s ease,
+		box-shadow 0.12s ease,
+		filter 0.12s ease,
+		background 0.12s ease;
+}
+.floating-add:active {
+	transform: scale(0.98);
+}
+
+.floating-add:hover {
+	/* intensify color like a complete/primary button */
+	background: linear-gradient(
+		90deg,
+		var(--accent-active),
+		var(--accent-strong-active)
+	);
+	color: #04233a;
+	filter: none;
+	box-shadow: 0 18px 44px rgba(2, 20, 46, 0.42);
+}
+
+@media (max-width: 720px) {
+	.floating-add {
+		top: 12px;
+		right: 12px;
+		width: 56px;
+		height: 56px;
+		font-size: 1.8rem;
 	}
 }
 
@@ -355,6 +451,33 @@ body,
 	background: transparent;
 	color: var(--accent-strong);
 	border: 1px solid rgba(124, 219, 255, 0.08);
+}
+
+/* Icon button helper (used in the sidebar for compact icon-only buttons) */
+.icon-btn {
+	font-size: 1.25rem;
+	padding: 8px;
+	border-radius: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+}
+.icon-btn:focus-visible {
+	outline: 3px solid rgba(96, 165, 250, 0.18);
+	outline-offset: 2px;
+}
+
+/* make delete icon black */
+.delete-btn {
+	/* default: white for dark theme */
+	color: #ffffff;
+}
+
+/* in light theme make delete icon black for contrast */
+.theme-light .delete-btn {
+	color: #000000;
 }
 
 /* Tasks container: row of cards (horizontal scroll on small screens) */
