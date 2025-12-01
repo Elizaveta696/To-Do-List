@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
 
 export default function Login({
 	setToken,
@@ -54,11 +55,11 @@ export default function Login({
 			{onToggleNightMode && (
 				<button
 					type="button"
-					className="theme-toggle"
+					className="theme-toggle icon-btn"
 					aria-label="Toggle night mode"
 					onClick={onToggleNightMode}
 				>
-					{nightMode ? "🌞" : "🌙"}
+					{nightMode ? <FiSun /> : <FiMoon />}
 				</button>
 			)}
 			<div className="auth-card">

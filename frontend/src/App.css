@@ -1,5 +1,6 @@
 :root {
-	--bg: #0f1724;
+	/* deeper, more blueish background for dark mode */
+	--bg: linear-gradient(180deg, #041428 0%, #071a2b 100%);
 	--surface: #0b1220;
 	--muted-surface: #07101a;
 	--text: #e6eef8;
@@ -67,6 +68,27 @@
 	background: rgba(7, 20, 34, 0.04);
 }
 
+/* Ensure the login/auth theme-toggle is visible and colored per theme
+   - In dark mode (default) make the sun icon bright blue
+   - In light mode make the moon icon white for visibility */
+.auth-page .theme-toggle {
+	position: fixed;
+	top: 12px;
+	right: 12px;
+	z-index: 2000;
+	color: var(--text);
+}
+.theme-light .auth-page .theme-toggle {
+	color: #ffffff; /* moon white in bright mode */
+}
+:not(.theme-light) .auth-page .theme-toggle {
+	color: var(--accent-strong); /* sun bright blue in dark mode */
+}
+.auth-page .theme-toggle svg {
+	width: 22px;
+	height: 22px;
+}
+
 /* Page */
 
 html,
@@ -77,6 +99,8 @@ body,
 	width: 100vw;
 	background-attachment: fixed;
 	background-size: cover;
+	/* use the theme background variable so dark/light switch applies */
+	background: var(--bg);
 	color: var(--text);
 	margin: 0;
 	padding: 0;
@@ -179,11 +203,23 @@ body,
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	/* subtle colored sidebar using accent */
-	background: linear-gradient(180deg, rgba(96, 165, 250, 0.04), var(--surface));
-	border-right: 1px solid rgba(96, 165, 250, 0.06);
-	color: var(--text);
-	box-shadow: 2px 0 18px rgba(2, 20, 46, 0.24);
+	/* Dark mode (default): subtle vertical gradient to blend with page background */
+	background: linear-gradient(180deg, #031023 0%, var(--surface) 100%);
+	border-right: none;
+	color: var(--text); /* light text for dark background */
+	box-shadow: 1px 0 18px rgba(2, 20, 46, 0.32);
+}
+
+/* Light theme: solid bright blue sidebar with dark text */
+.theme-light .sidebar {
+	/* try the other blue in light mode (softer but still bright) */
+	background: linear-gradient(
+		180deg,
+		var(--accent) 0%,
+		var(--accent-strong) 100%
+	);
+	color: #04233a; /* dark text for contrast on bright background */
+	box-shadow: 2px 0 18px rgba(47, 140, 254, 0.12);
 	z-index: 200;
 }
 .sidebar .brand {
@@ -238,6 +274,21 @@ body,
 	justify-content: center;
 }
 
+/* Theme icon color: in dark mode make it blend with the sidebar background;
+   in light mode make the icon white for visibility */
+.sidebar .theme-btn {
+	color: var(--surface);
+}
+.theme-light .theme-btn {
+	color: #ffffff;
+}
+
+/* When the sidebar is in 'night' mode the visible icon is the sun — keep it blue */
+.sidebar.night .theme-btn {
+	/* make the sun icon bright — match the + button's stronger blue */
+	color: var(--accent-strong);
+}
+
 /* Main content sits to the right of the sidebar */
 .main-content {
 	margin-left: 96px;
@@ -290,24 +341,24 @@ body,
 /* Floating circular add button */
 .floating-add {
 	position: fixed;
-	top: 20px;
 	right: 20px;
-	bottom: auto;
-	width: 64px;
-	height: 64px;
+	bottom: 20px;
+	top: auto;
+	width: 56px;
+	height: 56px;
 	aspect-ratio: 1 / 1;
 	padding: 0;
 	border-radius: 50%;
 	/* primary blue look by default */
 	background: linear-gradient(90deg, var(--accent), var(--accent-strong));
 	color: #04233a;
-	font-size: 2rem;
+	font-size: 1.8rem;
 	line-height: 1;
 	border: none;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 12px 36px rgba(2, 20, 46, 0.32);
+	box-shadow: 0 10px 30px rgba(2, 20, 46, 0.28);
 	cursor: pointer;
 	z-index: 1200;
 	transition:
@@ -334,11 +385,12 @@ body,
 
 @media (max-width: 720px) {
 	.floating-add {
-		top: 12px;
 		right: 12px;
-		width: 56px;
-		height: 56px;
-		font-size: 1.8rem;
+		bottom: 12px;
+		top: auto;
+		width: 52px;
+		height: 52px;
+		font-size: 1.6rem;
 	}
 }
 
@@ -492,7 +544,8 @@ body,
 
 /* Card styling (always visible) */
 .task-card {
-	background: var(--surface);
+	/* In dark mode use the same subtle vertical gradient as the sidebar for cohesion */
+	background: linear-gradient(180deg, #031023 0%, var(--surface) 100%);
 	border-radius: var(--radius);
 	padding: 14px;
 	box-shadow: var(--elevation);
@@ -511,6 +564,11 @@ body,
 	min-height: 320px;
 	max-height: 90vh;
 	overflow: auto;
+}
+
+/* Keep task cards using the normal surface color in light mode for contrast */
+.theme-light .task-card {
+	background: var(--surface);
 }
 
 .task-card:hover {
