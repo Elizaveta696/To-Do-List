@@ -1,8 +1,17 @@
 :root {
-	/* deeper, more blueish background for dark mode */
-	--bg: linear-gradient(180deg, #041428 0%, #071a2b 100%);
-	--surface: #0b1220;
-	--muted-surface: #07101a;
+	/* deeper, more saturated blue background for dark mode */
+	--bg: linear-gradient(
+		180deg,
+		#00131a 0%,
+		#00324a 40%,
+		#00526a 75%,
+		#00607a 100%
+	);
+	/* slightly bluer surface so columns/cards contrast with the page gradient */
+	--surface: #071829;
+	--muted-surface: #03121a;
+	/* darker column surface for priority columns in dark mode */
+	--column-surface: #14202f;
 	--text: #e6eef8;
 	--muted-text: #9aa6b2;
 	--accent: #60a5fa;
@@ -94,17 +103,36 @@
 html,
 body,
 #root {
+	/* let content determine document height but never smaller than the viewport */
+	height: auto;
 	min-height: 100vh;
-	height: 100%;
 	width: 100vw;
-	background-attachment: fixed;
-	background-size: cover;
-	/* use the theme background variable so dark/light switch applies */
-	background: var(--bg);
+	position: relative;
+
+	/* keep a plain surface color here; the actual gradient is rendered by
+	   the fixed pseudo-element `body::before` so it always covers the page */
+	background: var(--surface);
 	color: var(--text);
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+
+/* Render the theme gradient as a fixed, full-viewport background using a
+   pseudo-element so it remains continuous regardless of content height. */
+body::before {
+	content: "";
+	/* position absolute so it grows with the document height (body is relative) */
+	position: absolute;
+	inset: 0;
+	z-index: -9999;
+	pointer-events: none;
+	background: var(--bg);
+	background-repeat: no-repeat;
+	background-position: top center;
+	/* stretch the gradient to the full document height so it scales with content */
+	background-size: 100% 100%;
+	min-height: 100vh;
 }
 
 .app {
@@ -113,13 +141,12 @@ body,
 
 .theme-light .app {
 	background: transparent; /* keep app surface transparent so --bg (root) covers whole viewport */
-}
-
-/* App container */
-.app {
-	width: 100%;
-	margin: 0;
-	display: flex;
+	/* apply the theme gradient and make it scale with the full document height */
+	background: var(--bg);
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-size: 100% 100%;
+	background-attachment: scroll;
 	flex-direction: column;
 	gap: 20px;
 }
@@ -556,7 +583,8 @@ body,
 	flex: 1 1 320px;
 	max-width: 380px;
 	min-width: 260px;
-	background: var(--surface);
+	/* use a slightly darker surface for columns in dark mode */
+	background: var(--column-surface);
 	border-radius: calc(var(--radius) - 4px);
 	padding: 24px; /* increased padding for more space between card and container */
 	box-shadow: var(--elevation);
@@ -564,6 +592,11 @@ body,
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
+}
+
+/* In light theme the columns should remain bright — override darker column surface */
+.theme-light .task-column {
+	background: var(--surface);
 }
 .column-title {
 	margin: 0;
@@ -651,18 +684,51 @@ body,
 	box-shadow: 0 16px 36px rgba(2, 20, 46, 0.32);
 }
 
-/* Bright blue glow in dark mode for task cards; keep dark shadow in light mode */
+/* Per-column colored glow in dark mode; keep bright mode unchanged */
 :not(.theme-light) .task-card {
+	/* base dark shadow for all cards in dark mode */
+	box-shadow: 0 12px 36px rgba(2, 20, 46, 0.32);
+}
+
+/* High priority (red) glow */
+:not(.theme-light) .column-high .task-card {
 	box-shadow:
 		0 12px 36px rgba(2, 20, 46, 0.32),
-		0 0 28px rgba(96, 165, 250, 0.14);
+		0 0 28px rgba(229, 57, 53, 0.12);
 }
-:not(.theme-light) .task-card:hover {
+:not(.theme-light) .column-high .task-card:hover {
 	transform: translateY(-4px);
 	box-shadow:
 		0 20px 48px rgba(2, 20, 46, 0.44),
-		0 0 36px rgba(96, 165, 250, 0.2);
+		0 0 36px rgba(229, 57, 53, 0.16);
 }
+
+/* Medium priority (yellow) glow */
+:not(.theme-light) .column-medium .task-card {
+	box-shadow:
+		0 12px 36px rgba(2, 20, 46, 0.32),
+		0 0 28px rgba(251, 192, 45, 0.12);
+}
+:not(.theme-light) .column-medium .task-card:hover {
+	transform: translateY(-4px);
+	box-shadow:
+		0 20px 48px rgba(2, 20, 46, 0.44),
+		0 0 36px rgba(251, 192, 45, 0.16);
+}
+
+/* Low priority (green) glow */
+:not(.theme-light) .column-low .task-card {
+	box-shadow:
+		0 12px 36px rgba(2, 20, 46, 0.32),
+		0 0 28px rgba(67, 160, 71, 0.12);
+}
+:not(.theme-light) .column-low .task-card:hover {
+	transform: translateY(-4px);
+	box-shadow:
+		0 20px 48px rgba(2, 20, 46, 0.44),
+		0 0 36px rgba(67, 160, 71, 0.16);
+}
+
 .theme-light .task-card {
 	box-shadow: var(--elevation);
 }

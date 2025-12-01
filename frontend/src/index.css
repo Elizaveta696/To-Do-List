@@ -18,10 +18,8 @@ body,
 #root {
 	min-height: 100vh;
 	height: auto;
-	/* Use the raw --bg variable (may be a color or a gradient). Keep it fixed and cover the viewport. */
-	background: var(--bg, #0f1724);
-	background-attachment: fixed;
-	background-size: cover;
+	/* leave the document background to App.css (body::before) to avoid duplicate/overriding backgrounds */
+	background: none;
 }
 body {
 	display: flex;
