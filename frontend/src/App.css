@@ -576,6 +576,25 @@ body,
 	box-shadow: 0 16px 36px rgba(2, 20, 46, 0.32);
 }
 
+/* Bright blue glow in dark mode for task cards; keep dark shadow in light mode */
+:not(.theme-light) .task-card {
+	box-shadow:
+		0 12px 36px rgba(2, 20, 46, 0.32),
+		0 0 28px rgba(96, 165, 250, 0.14);
+}
+:not(.theme-light) .task-card:hover {
+	transform: translateY(-4px);
+	box-shadow:
+		0 20px 48px rgba(2, 20, 46, 0.44),
+		0 0 36px rgba(96, 165, 250, 0.2);
+}
+.theme-light .task-card {
+	box-shadow: var(--elevation);
+}
+.theme-light .task-card:hover {
+	box-shadow: 0 16px 36px rgba(2, 20, 46, 0.32);
+}
+
 /* Only make the edit form vertical (inputs) but keep action buttons inline */
 .task-card .task-form {
 	background: transparent;
