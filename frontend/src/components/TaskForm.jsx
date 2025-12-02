@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { createTask } from "../api/tasks";
 
 export default function TaskForm({ token, onCreated, onClose }) {
@@ -8,6 +8,24 @@ export default function TaskForm({ token, onCreated, onClose }) {
 	const [dueDate, setDueDate] = useState("");
 	const [priority, setPriority] = useState("medium");
 	const [loading, setLoading] = useState(false);
+
+	const availableUsers = useMemo(
+		() => [
+			{ id: 1, name: "Alice" },
+			{ id: 2, name: "Bob" },
+			{ id: 3, name: "Eve" },
+			{ id: 4, name: "Carol" },
+		],
+		[],
+	);
+
+	const [assignees, setAssignees] = useState([]);
+
+	function toggleAssignee(id) {
+		setAssignees((s) =>
+			s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
+		);
+	}
 
 	const submit = async (e) => {
 		e.preventDefault();
@@ -19,6 +37,7 @@ export default function TaskForm({ token, onCreated, onClose }) {
 				description,
 				dueDate: dueDate || null,
 				priority,
+				assignees, // frontend-only: list of user ids assigned to the task
 			});
 			setTitle("");
 			setDescription("");
@@ -85,6 +104,22 @@ export default function TaskForm({ token, onCreated, onClose }) {
 						<option value="low">Low</option>
 					</select>
 				</label>
+			</div>
+			{/* Assign users - frontend-only multi-select scroll list */}
+			<div>
+				<label htmlFor={`assign-${id}`}>Assign user</label>
+				<div className="assign-users">
+					{availableUsers.map((u) => (
+						<label key={u.id} className="user-item">
+							<input
+								type="checkbox"
+								checked={assignees.includes(u.id)}
+								onChange={() => toggleAssignee(u.id)}
+							/>
+							<span className="user-name">{u.name}</span>
+						</label>
+					))}
+				</div>
 			</div>
 			<div className="form-actions">
 				<button

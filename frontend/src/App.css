@@ -691,6 +691,28 @@ body::before {
 .teams-grid .team-id-value {
 	display: inline-block;
 }
+
+/* Assign users multi-select for TaskForm */
+.assign-users {
+	max-height: 160px;
+	overflow: auto;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	padding: 8px;
+	border-radius: 6px;
+	background: rgba(2, 20, 46, 0.04);
+}
+.assign-users .user-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 4px;
+}
+.assign-users .user-item + .user-item {
+	border-top: 1px solid rgba(255, 255, 255, 0.02);
+}
+.assign-users .user-name {
+	margin-left: 6px;
+}
 .remove-team-btn:hover {
 	transform: translateY(-2px);
 	background: rgba(255, 77, 79, 0.06);

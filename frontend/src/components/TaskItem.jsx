@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { FiTrash2 } from "react-icons/fi";
 
 export default function TaskItem({ task, onUpdate, onDelete }) {
@@ -45,69 +46,83 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
 		<article className="task-card" style={{ position: "relative" }}>
 			{/* ...existing code... */}
 			{editing ? (
-				<form
-					onSubmit={handleSave}
-					className="task-form"
-					style={{ flex: 1, display: "flex", flexDirection: "column" }}
-				>
-					<div
-						style={{
-							flexGrow: 1,
-							display: "flex",
-							flexDirection: "column",
-							gap: 10,
-						}}
-					>
-						<input
-							className="input"
-							value={editTitle}
-							onChange={(e) => setEditTitle(e.target.value)}
-							placeholder="Title"
-						/>
-						<input
-							className="input"
-							value={editDescription}
-							onChange={(e) => setEditDescription(e.target.value)}
-							placeholder="Description"
-						/>
-						<div>
-							<label htmlFor={`edit-due-${task.id}`}>Due Date:</label>
-							<input
-								id={`edit-due-${task.id}`}
-								className="input"
-								type="date"
-								value={editDueDate}
-								onChange={(e) => setEditDueDate(e.target.value)}
-								placeholder="Due Date"
-							/>
-						</div>
-						<div>
-							<label htmlFor={`edit-priority-${task.id}`}>Priority:</label>
-							<select
-								id={`edit-priority-${task.id}`}
-								className="input"
-								value={editPriority}
-								onChange={(e) => setEditPriority(e.target.value)}
+				createPortal(
+					<div className="overlay-form">
+						<div className="overlay-panel" role="dialog" aria-modal="true">
+							<button
+								type="button"
+								className="modal-close"
+								onClick={() => setEditing(false)}
+								aria-label="Close"
 							>
-								<option value="high">High</option>
-								<option value="medium">Medium</option>
-								<option value="low">Low</option>
-							</select>
+								×
+							</button>
+							<h3 className="modal-title">Edit Task</h3>
+							<form onSubmit={handleSave} className="task-form">
+								<div
+									style={{ display: "flex", flexDirection: "column", gap: 10 }}
+								>
+									<label>
+										Title
+										<input
+											className="input"
+											value={editTitle}
+											onChange={(e) => setEditTitle(e.target.value)}
+											placeholder="Title"
+										/>
+									</label>
+									<label>
+										Description
+										<input
+											className="input"
+											value={editDescription}
+											onChange={(e) => setEditDescription(e.target.value)}
+											placeholder="Description"
+										/>
+									</label>
+									<label>
+										Date
+										<input
+											className="input"
+											type="date"
+											value={editDueDate}
+											onChange={(e) => setEditDueDate(e.target.value)}
+										/>
+									</label>
+									<label>
+										Priority
+										<select
+											className="input"
+											value={editPriority}
+											onChange={(e) => setEditPriority(e.target.value)}
+										>
+											<option value="high">High</option>
+											<option value="medium">Medium</option>
+											<option value="low">Low</option>
+										</select>
+									</label>
+								</div>
+								<div className="form-actions" style={{ marginTop: 12 }}>
+									<button
+										className="btn btn-ghost"
+										type="button"
+										onClick={() => setEditing(false)}
+									>
+										Cancel
+									</button>
+									<button
+										className="btn btn-primary"
+										type="submit"
+										disabled={saving}
+									>
+										{saving ? "Saving…" : "Save"}
+									</button>
+								</div>
+							</form>
 						</div>
-					</div>
-					<div className="form-actions" style={{ marginTop: "auto" }}>
-						<button className="btn btn-primary" type="submit" disabled={saving}>
-							{saving ? "Saving…" : "Save"}
-						</button>
-						<button
-							className="btn btn-ghost"
-							type="button"
-							onClick={() => setEditing(false)}
-						>
-							Cancel
-						</button>
-					</div>
-				</form>
+					</div>,
+					document.body,
+				)
 			) : (
 				<>
 					<div
