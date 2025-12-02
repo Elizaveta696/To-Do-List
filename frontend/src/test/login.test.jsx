@@ -23,13 +23,13 @@ describe("Login flow", () => {
 				return Promise.resolve({
 					ok: true,
 					status: 200,
-					json: () => Promise.resolve({ accessToken: "mock-token" })
+					json: () => Promise.resolve({ accessToken: "mock-token" }),
 				});
 			}
 			return Promise.resolve({
 				ok: true,
 				status: 200,
-				json: () => Promise.resolve({})
+				json: () => Promise.resolve({}),
 			});
 		});
 		// Mock fetchTasks to return an empty array so TaskList doesn't crash
@@ -42,13 +42,20 @@ describe("Login flow", () => {
 		await user.type(screen.getByPlaceholderText(/username/i), "testuser");
 		await user.type(screen.getByPlaceholderText(/password/i), "testpass");
 		await user.click(screen.getByRole("button", { name: /login/i }));
-		expect(await screen.findByText("TeamBoard")).toBeInTheDocument();
+		// Header/profile button indicates the app has navigated to the main area
+		expect(
+			await screen.findByRole("button", { name: /profile/i }),
+		).toBeInTheDocument();
 		// Theme toggle button presence depends on feature flag
 		const { FEATURE_FLAGS } = require("../featureFlags");
 		if (FEATURE_FLAGS.lightThemeToggle) {
-			expect(screen.getByRole("button", { name: /toggle night mode/i })).toBeInTheDocument();
+			expect(
+				screen.getByRole("button", { name: /toggle night mode/i }),
+			).toBeInTheDocument();
 		} else {
-			expect(screen.queryByRole("button", { name: /toggle night mode/i })).not.toBeInTheDocument();
+			expect(
+				screen.queryByRole("button", { name: /toggle night mode/i }),
+			).not.toBeInTheDocument();
 		}
 	});
 });

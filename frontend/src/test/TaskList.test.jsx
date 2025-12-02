@@ -29,7 +29,10 @@ describe("TaskList (unit)", () => {
 	it("shows 'No tasks yet' when fetchTasks returns []", async () => {
 		fetchTasks.mockResolvedValueOnce([]);
 		render(<TaskList />);
-		expect(await screen.findByText("No tasks yet")).toBeInTheDocument();
+		// Component now renders column-specific empty messages
+		expect(
+			await screen.findByText(/No medium priority tasks/i),
+		).toBeInTheDocument();
 		expect(fetchTasks).toHaveBeenCalled();
 	});
 

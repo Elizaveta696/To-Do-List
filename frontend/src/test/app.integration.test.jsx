@@ -1,6 +1,6 @@
 // src/test/app.integration.test.jsx
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -14,8 +14,8 @@ vi.mock("../api/tasks", () => ({
 }));
 
 import App from "../App";
-import { FEATURE_FLAGS } from "../featureFlags";
 import { createTask, fetchTasks } from "../api/tasks";
+import { FEATURE_FLAGS } from "../featureFlags";
 
 describe("App integration", () => {
 	beforeEach(() => {
@@ -27,14 +27,14 @@ describe("App integration", () => {
 				return Promise.resolve({
 					ok: true,
 					status: 200,
-					json: () => Promise.resolve({ accessToken: "mock-token" })
+					json: () => Promise.resolve({ accessToken: "mock-token" }),
 				});
 			}
 			// fallback for other fetches
 			return Promise.resolve({
 				ok: true,
 				status: 200,
-				json: () => Promise.resolve({})
+				json: () => Promise.resolve({}),
 			});
 		});
 	});
@@ -57,31 +57,47 @@ describe("App integration", () => {
 		await user.type(screen.getByPlaceholderText(/password/i), "testpass");
 		await user.click(screen.getByRole("button", { name: /login/i }));
 
-		// Should show header after login
-		expect(await screen.findByText("TeamBoard")).toBeInTheDocument();
-		// Should show 'No tasks yet' in TaskList
-		expect(await screen.findByText("No tasks yet")).toBeInTheDocument();
+		// Should show header/navigation after login
+		expect(
+			await screen.findByRole("button", { name: /profile/i }),
+		).toBeInTheDocument();
+		// Should show the empty-column message for medium priority tasks
+		expect(
+			await screen.findByText(/No medium priority tasks/i),
+		).toBeInTheDocument();
 
 		// Theme toggle button presence depends on feature flag
 		if (FEATURE_FLAGS.lightThemeToggle) {
-			expect(screen.getByRole("button", { name: /toggle night mode/i })).toBeInTheDocument();
+			expect(
+				screen.getByRole("button", { name: /toggle night mode/i }),
+			).toBeInTheDocument();
 		} else {
-			expect(screen.queryByRole("button", { name: /toggle night mode/i })).not.toBeInTheDocument();
+			expect(
+				screen.queryByRole("button", { name: /toggle night mode/i }),
+			).not.toBeInTheDocument();
 		}
 
-		// Add a task
-		await user.click(screen.getByRole("button", { name: /new task/i }));
-		expect(screen.getByText(/new task/i)).toBeInTheDocument();
-		await user.type(screen.getByPlaceholderText("Title"), newTask.title);
-		await user.type(screen.getByPlaceholderText("Description"), newTask.description);
-		await user.click(screen.getByRole("button", { name: /add/i }));
+		// Add a task via the floating add button (aria-label="Add task")
+		await user.click(screen.getByRole("button", { name: /add task/i }));
+		// scope all form interactions to the dialog overlay to avoid ambiguous matches
+		const dialog = await screen.findByRole("dialog");
+		expect(
+			within(dialog).getByRole("heading", { name: /add task/i }),
+		).toBeInTheDocument();
+		await user.type(within(dialog).getByLabelText(/title/i), newTask.title);
+		await user.type(
+			within(dialog).getByLabelText(/description/i),
+			newTask.description,
+		);
+		await user.click(within(dialog).getByRole("button", { name: /add task/i }));
 
-			expect(createTask).toHaveBeenCalledWith({
-				title: newTask.title,
-				description: newTask.description,
-				priority: "medium",
-				dueDate: null,
-			});
-			expect(await screen.findByText(newTask.title)).toBeInTheDocument();
+		expect(createTask).toHaveBeenCalledWith({
+			title: newTask.title,
+			description: newTask.description,
+			priority: "medium",
+			dueDate: null,
+			assignees: [],
+		});
+		expect(await screen.findByText(newTask.title)).toBeInTheDocument();
 	});
 });
