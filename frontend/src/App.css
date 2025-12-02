@@ -26,6 +26,43 @@
 	--max-width: 980px;
 }
 
+/* --- Enforcement: ensure hover/focus behavior for sidebar and action buttons --- */
+/* Consolidated rules placed at the end to avoid being shadowed by earlier selectors. */
+
+/* Make sure sidebar icon buttons show a blue border on hover in both themes */
+.theme-light .sidebar .theme-btn:hover,
+.theme-light .sidebar .nav-expand-btn:hover,
+.theme-light .sidebar .logout-btn:hover,
+.theme-light .sidebar .person-btn:hover,
+:not(.theme-light) .sidebar .theme-btn:hover,
+:not(.theme-light) .sidebar .nav-expand-btn:hover,
+:not(.theme-light) .sidebar .logout-btn:hover,
+:not(.theme-light) .sidebar .person-btn:hover {
+	border-color: #646cff;
+}
+
+/* Add a visible focus ring for keyboard users */
+.sidebar .theme-btn:focus-visible,
+.sidebar .nav-expand-btn:focus-visible,
+.sidebar .logout-btn:focus-visible,
+.sidebar .person-btn:focus-visible {
+	outline: 3px solid rgba(96, 165, 250, 0.18);
+	outline-offset: 2px;
+}
+
+/* Settings: ensure Add-user button shows blue border on hover in light theme */
+/* Use higher specificity; add !important to ensure it isn't overridden by other theme helpers */
+.theme-light .add-user-actions .btn:hover {
+	border-color: #646cff !important;
+}
+.theme-light .add-user-actions .btn:focus-visible {
+	outline: 3px solid rgba(96, 165, 250, 0.18);
+	outline-offset: 2px;
+}
+
+/* Add Task overlay: make Cancel (ghost) button appear black on hover in light theme
+   (finalized near end of file to avoid accidental overrides) */
+
 .theme-light {
 	/* softer, more subtle bright background */
 	/* more white in the middle; blue concentrated near the bottom */
@@ -65,6 +102,14 @@
 		border-color 0.12s ease,
 		transform 0.12s ease;
 }
+
+/* Final enforcement for Add Task Cancel button: ensure black text on hover in light theme */
+html.theme-light .overlay-panel .form-actions .btn.btn-ghost:hover {
+	color: #000000;
+	background: rgba(7, 20, 34, 0.04);
+	border-color: #646cff;
+}
+
 .theme-toggle:hover {
 	background: rgba(255, 255, 255, 0.03);
 	border-color: rgba(255, 255, 255, 0.12);
@@ -334,6 +379,37 @@ body::before {
 	color: #ffffff;
 }
 
+/* Person / profile button in the sidebar (placeholder) */
+.sidebar .person-btn {
+	width: 48px;
+	height: 48px;
+	font-size: 1.45rem;
+	padding: 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--surface);
+	transition:
+		background 0.12s ease,
+		transform 0.12s ease;
+}
+.sidebar .person-btn:hover {
+	background: rgba(124, 219, 255, 0.06);
+	transform: translateY(-2px);
+}
+.sidebar.night .person-btn {
+	color: #ffffff;
+}
+.theme-light .person-btn {
+	color: #000000;
+	border: 1px solid rgba(7, 20, 34, 0.12);
+}
+.theme-light .sidebar .person-btn:hover {
+	background: rgba(7, 20, 34, 0.04);
+	transform: translateY(-2px);
+	border-color: rgba(7, 20, 34, 0.16);
+}
+
 /* Expand / collapse button shown at top of the sidebar (hamburger) */
 .sidebar .nav-expand-btn {
 	/* mimic sidebar theme button sizing/behavior; color comes from .theme-btn */
@@ -358,6 +434,16 @@ body::before {
 	border-color: #646cff;
 	background: rgba(100, 108, 255, 0.04);
 	transform: translateY(-2px);
+}
+
+/* Ensure these sidebar icon buttons show a blue border on hover in dark mode
+   while preserving the existing light-theme hover overrides. */
+:not(.theme-light) .sidebar .theme-btn:hover,
+:not(.theme-light) .sidebar .logout-btn:hover,
+:not(.theme-light) .sidebar .nav-expand-btn:hover,
+:not(.theme-light) .sidebar .person-btn:hover {
+	border-color: #646cff;
+	/* keep the existing background/transform behavior provided earlier */
 }
 
 /* Task card buttons: lift slightly on hover for a tactile feel */
@@ -490,7 +576,7 @@ body::before {
 .users-grid {
 	display: grid;
 	/* bring role column closer to user column */
-	grid-template-columns: 1fr 140px;
+	grid-template-columns: 160px 1fr;
 	gap: 8px 8px;
 	align-items: center;
 }
@@ -501,6 +587,95 @@ body::before {
 .users-grid-user,
 .users-grid-role {
 	padding: 8px 0;
+}
+
+/* Add-user row styles */
+.add-user-input {
+	width: 100%;
+	padding: 8px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: transparent;
+	color: var(--text);
+	box-sizing: border-box;
+	transition:
+		border-color 0.12s ease,
+		background 0.12s ease,
+		transform 0.08s ease,
+		box-shadow 0.12s ease;
+}
+.add-user-actions {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+.add-user-actions select {
+	padding: 8px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: transparent;
+	color: var(--text);
+}
+.add-user-actions .btn {
+	padding: 8px 10px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: transparent;
+	transition:
+		transform 0.12s ease,
+		background 0.12s ease,
+		border-color 0.12s ease;
+}
+
+/* Hover / focus states to match icon/gear button behavior */
+.add-user-input:focus {
+	outline: none;
+	border-color: rgba(96, 165, 250, 0.6);
+	box-shadow: 0 6px 18px rgba(96, 165, 250, 0.06);
+	transform: translateY(-1px);
+	background: rgba(124, 219, 255, 0.02);
+}
+.add-user-actions .btn:hover {
+	transform: translateY(-2px);
+	background: rgba(124, 219, 255, 0.06);
+	border-color: rgba(124, 219, 255, 0.16);
+}
+.theme-light .add-user-actions .btn:hover {
+	background: rgba(7, 20, 34, 0.04);
+	border-color: #646cff; /* show blue border on hover in light theme */
+}
+
+/* Make Add-user button show blue border on hover/focus in dark mode */
+:not(.theme-light) .add-user-actions .btn:hover {
+	border-color: #646cff;
+}
+:not(.theme-light) .add-user-actions .btn:focus-visible {
+	outline: 3px solid rgba(96, 165, 250, 0.18);
+	outline-offset: 2px;
+}
+.add-user-actions .btn:disabled {
+	opacity: 0.5;
+	transform: none;
+	cursor: not-allowed;
+}
+
+/* Light theme: use darker border so inputs and button stand out */
+.theme-light .add-user-input {
+	background: #ffffff;
+	color: #04233a;
+	border: 1px solid rgba(7, 20, 34, 0.12);
+}
+.theme-light .add-user-input:focus {
+	border-color: rgba(7, 20, 34, 0.16);
+	box-shadow: none;
+}
+.theme-light .add-user-actions .btn {
+	border: 1px solid rgba(7, 20, 34, 0.12);
+	background: transparent;
+	color: #04233a;
+}
+.theme-light .add-user-actions .btn:hover {
+	background: rgba(7, 20, 34, 0.04);
+	border-color: rgba(7, 20, 34, 0.16);
 }
 .settings-actions {
 	margin-top: 18px;
@@ -897,6 +1072,18 @@ body::before {
 		padding: 8px 12px;
 		gap: 8px;
 	}
+
+	/* When the sidebar collapses to the top (mobile), make its gradient run left->right */
+	.sidebar {
+		background: linear-gradient(90deg, #031023 0%, var(--surface) 100%);
+	}
+	.theme-light .sidebar {
+		background: linear-gradient(
+			90deg,
+			var(--accent) 0%,
+			var(--accent-strong) 100%
+		);
+	}
 	.sidebar-top {
 		flex-direction: row;
 		gap: 8px;
@@ -905,6 +1092,24 @@ body::before {
 	.sidebar-bottom {
 		margin-top: 0;
 		margin-left: auto;
+		/* lay out bottom buttons horizontally on small screens */
+		flex-direction: row;
+		align-items: center;
+		gap: 8px;
+	}
+	/* ensure compact icon buttons behave inline */
+	.sidebar-bottom .btn,
+	.sidebar-bottom .icon-btn,
+	.sidebar-bottom .nav-expand-btn,
+	.sidebar-bottom .theme-btn,
+	.sidebar-bottom .logout-btn {
+		width: auto;
+		height: 48px;
+		padding: 6px;
+		border-radius: 10px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 	}
 	.main-content {
 		margin-left: 0;
@@ -1525,6 +1730,29 @@ body::before {
 	background: transparent;
 }
 .theme-light .overlay-panel .form-actions .btn.btn-ghost {
+	color: #000000;
+	border-color: rgba(7, 20, 34, 0.08);
+	background: transparent;
+}
+
+/* In light theme, when hovering Cancel (ghost) inside Add Task overlay make text black */
+.theme-light .overlay-panel .form-actions .btn.btn-ghost:hover {
+	color: #000000;
+	background: rgba(7, 20, 34, 0.04);
+	border-color: #646cff;
+}
+
+/* Make the Cancel (ghost) button in the Add Task overlay show blue highlight in dark mode */
+:not(.theme-light) .overlay-panel .form-actions .btn.btn-ghost:hover {
+	border-color: #646cff;
+	background: rgba(100, 108, 255, 0.04);
+	color: #ffffff; /* keep readable */
+}
+:not(.theme-light) .overlay-panel .form-actions .btn.btn-ghost:focus-visible {
+	outline: 3px solid rgba(96, 165, 250, 0.18);
+	outline-offset: 2px;
+}
+.theme-light .overlay-panel .form-actions .btn.btn-ghost {
 	/* in light theme use black text for the ghost Cancel button */
 	color: #000000;
 	border-color: rgba(7, 20, 34, 0.08);
@@ -1539,6 +1767,26 @@ body::before {
 	padding: 24px;
 	width: 100%;
 	box-sizing: border-box;
+}
+
+/* Final, highest-specificity enforcement for Add Task Cancel button hover/focus
+   Uses the `html.theme-light` form to match the common placement of the theme
+   class and is placed at the file end to avoid being overridden. */
+html.theme-light .overlay-panel .form-actions .btn.btn-ghost:hover,
+html.theme-light .overlay-panel .form-actions .btn.btn-ghost:focus-visible {
+	color: #000000;
+	border-color: #646cff;
+	background: rgba(7, 20, 34, 0.04);
+}
+
+html:not(.theme-light) .overlay-panel .form-actions .btn.btn-ghost:hover,
+html:not(.theme-light)
+	.overlay-panel
+	.form-actions
+	.btn.btn-ghost:focus-visible {
+	border-color: #646cff;
+	background: rgba(100, 108, 255, 0.04);
+	color: #ffffff;
 }
 
 .auth-card {

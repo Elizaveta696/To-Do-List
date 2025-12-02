@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { FiLogOut, FiMenu, FiMoon, FiSettings, FiSun } from "react-icons/fi";
+import {
+	FiLogOut,
+	FiMenu,
+	FiMoon,
+	FiSettings,
+	FiSun,
+	FiUser,
+} from "react-icons/fi";
 import { FEATURE_FLAGS } from "../featureFlags";
 
 export default function Header({
@@ -248,6 +255,16 @@ export default function Header({
 						{nightMode ? <FiSun /> : <FiMoon />}
 					</button>
 				)}
+				{/* Person / profile button (placeholder) */}
+				<button
+					type="button"
+					className="btn person-btn icon-btn"
+					aria-label="Profile"
+					title="Profile"
+					onClick={() => console.log("Profile button (placeholder) clicked")}
+				>
+					<FiUser />
+				</button>
 				<button
 					type="button"
 					className="btn logout-btn icon-btn"

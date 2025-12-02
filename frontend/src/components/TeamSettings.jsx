@@ -20,6 +20,8 @@ export default function TeamSettings({
 
 	const [users, setUsers] = useState(initialUsers);
 	const [confirmOpen, setConfirmOpen] = useState(false);
+	const [newUserName, setNewUserName] = useState("");
+	const [newUserRole, setNewUserRole] = useState("contributor");
 
 	function updateRole(id, newRole) {
 		setUsers((u) =>
@@ -45,6 +47,15 @@ export default function TeamSettings({
 		setName(teamName);
 		setPassword("");
 		setUsers(initialUsers);
+	}
+
+	function addUser() {
+		const name = newUserName.trim();
+		if (!name) return;
+		const nextId = users.length ? Math.max(...users.map((u) => u.id)) + 1 : 1;
+		setUsers((u) => [...u, { id: nextId, name, role: newUserRole }]);
+		setNewUserName("");
+		setNewUserRole("contributor");
 	}
 
 	const idTeam = useId();
@@ -128,6 +139,38 @@ export default function TeamSettings({
 							</div>
 						</React.Fragment>
 					))}
+
+					{/* Add-user row: input under User, select + Add button under Role */}
+					<React.Fragment>
+						<div className="users-grid-user">
+							<input
+								type="text"
+								className="add-user-input"
+								placeholder="New user name"
+								value={newUserName}
+								onChange={(e) => setNewUserName(e.target.value)}
+							/>
+						</div>
+						<div className="users-grid-role">
+							<div className="add-user-actions">
+								<select
+									value={newUserRole}
+									onChange={(e) => setNewUserRole(e.target.value)}
+								>
+									<option value="admin">Admin</option>
+									<option value="contributor">Contributor</option>
+								</select>
+								<button
+									type="button"
+									className="btn"
+									onClick={addUser}
+									disabled={!newUserName.trim()}
+								>
+									Add user
+								</button>
+							</div>
+						</div>
+					</React.Fragment>
 				</div>
 			</div>
 
