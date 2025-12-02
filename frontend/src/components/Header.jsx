@@ -255,13 +255,16 @@ export default function Header({
 						{nightMode ? <FiSun /> : <FiMoon />}
 					</button>
 				)}
-				{/* Person / profile button (placeholder) */}
+				{/* Person / profile button (navigates to user settings) */}
 				<button
 					type="button"
 					className="btn person-btn icon-btn"
 					aria-label="Profile"
 					title="Profile"
-					onClick={() => console.log("Profile button (placeholder) clicked")}
+					onClick={() => {
+						onNavigate?.("user-settings");
+						setNavOpen(false);
+					}}
 				>
 					<FiUser />
 				</button>

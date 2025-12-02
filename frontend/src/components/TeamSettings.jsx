@@ -69,25 +69,13 @@ export default function TeamSettings({
 
 	return (
 		<section className="settings-panel">
-			<h2>Team settings</h2>
-			<div className="settings-team-title">
-				<button
-					type="button"
-					className="btn-plain settings-team-name"
-					onClick={() => onNavigate?.("tasks")}
-					title="Back to tasks"
-				>
-					{teamName}
-				</button>
-			</div>
-
+			<h2>Team Settings</h2>{" "}
 			<div className="settings-row">
 				<label htmlFor="team-id">Team ID</label>
 				<div className="settings-value">
 					<input id={idTeam} type="text" value={teamId} readOnly />
 				</div>
 			</div>
-
 			<div className="settings-row">
 				<label htmlFor="team-name">Change team name</label>
 				<div className="settings-value">
@@ -99,7 +87,6 @@ export default function TeamSettings({
 					/>
 				</div>
 			</div>
-
 			<div className="settings-row">
 				<label htmlFor="team-password">Change password</label>
 				<div className="settings-value">
@@ -111,7 +98,6 @@ export default function TeamSettings({
 					/>
 				</div>
 			</div>
-
 			<div className="settings-row">
 				<div className="danger-label">Delete team</div>
 				<div className="settings-value">
@@ -124,7 +110,6 @@ export default function TeamSettings({
 					</button>
 				</div>
 			</div>
-
 			<div className="settings-users">
 				<h3>Team members</h3>
 				<div className="users-grid">
@@ -268,7 +253,6 @@ export default function TeamSettings({
 					</React.Fragment>
 				</div>
 			</div>
-
 			<div className="settings-actions">
 				<button className="btn" type="button" onClick={handleCancel}>
 					Cancel changes
@@ -277,7 +261,6 @@ export default function TeamSettings({
 					Save changes
 				</button>
 			</div>
-
 			{confirmOpen && (
 				<section
 					className="modal-overlay"

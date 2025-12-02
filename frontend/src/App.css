@@ -551,6 +551,9 @@ body::before {
 }
 .settings-panel h2 {
 	margin-top: 0;
+	/* make settings heading slightly smaller than main page title */
+	font-size: 1.15rem;
+	font-weight: 700;
 }
 .settings-row {
 	display: flex;
@@ -664,6 +667,41 @@ body::before {
 		border-color 0.12s ease;
 }
 
+/* UserSettings teams grid */
+.teams-grid {
+	display: grid;
+	grid-template-columns: 160px 200px;
+	gap: 8px 12px;
+	align-items: center;
+}
+.teams-grid-head {
+	font-weight: 700;
+	opacity: 0.9;
+}
+.teams-grid-name,
+.teams-grid-id,
+.teams-grid-action {
+	padding: 8px 0;
+}
+.teams-grid .id-actions {
+	margin-left: 10px;
+	display: inline-flex;
+	vertical-align: middle;
+}
+.teams-grid .team-id-value {
+	display: inline-block;
+}
+.remove-team-btn:hover {
+	transform: translateY(-2px);
+	background: rgba(255, 77, 79, 0.06);
+	border-color: #ff4d4f;
+	color: #ff4d4f;
+}
+.remove-team-btn:focus-visible {
+	outline: 3px solid rgba(255, 77, 79, 0.14);
+	outline-offset: 2px;
+}
+
 /* Hover / focus states to match icon/gear button behavior */
 .add-user-input:focus {
 	outline: none;
@@ -724,6 +762,18 @@ body::before {
 	background: #ff4d4f;
 	border: none;
 	color: white;
+}
+
+.btn-danger:hover {
+	transform: translateY(-2px);
+	background: rgba(255, 77, 79, 0.92);
+	border-color: #ff4d4f;
+	box-shadow: 0 6px 18px rgba(255, 77, 79, 0.06);
+	color: white;
+}
+.btn-danger:focus-visible {
+	outline: 3px solid rgba(255, 77, 79, 0.14);
+	outline-offset: 2px;
 }
 
 .danger-label {
@@ -857,8 +907,10 @@ body::before {
 	color: inherit;
 }
 .page-title-btn {
-	font-size: 1.25rem;
-	font-weight: 700;
+	/* make the main page title (My tasks) larger than the settings title */
+	font-size: 1.6rem;
+	font-weight: 800;
+	line-height: 1.1;
 }
 .page-title-gear {
 	margin-left: 8px;

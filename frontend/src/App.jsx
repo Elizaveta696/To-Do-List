@@ -5,6 +5,7 @@ import Register from "./components/Register";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TeamSettings from "./components/TeamSettings";
+import UserSettings from "./components/UserSettings";
 import { FEATURE_FLAGS } from "./featureFlags";
 import "./App.css";
 import { FiPlus, FiSettings } from "react-icons/fi";
@@ -154,6 +155,9 @@ function App() {
 							onChangeName={(name) => setTeamName(name)}
 							onNavigate={(p) => setPage(p)}
 						/>
+					)}
+					{page === "user-settings" && (
+						<UserSettings onNavigate={(p) => setPage(p)} />
 					)}
 				</div>
 				{/* floating circular add button (hide on settings page) */}
