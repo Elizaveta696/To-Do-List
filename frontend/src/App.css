@@ -106,7 +106,7 @@ body,
 	/* let content determine document height but never smaller than the viewport */
 	height: auto;
 	min-height: 100vh;
-	width: 100vw;
+	width: 100%;
 	position: relative;
 
 	/* keep a plain surface color here; the actual gradient is rendered by
@@ -157,7 +157,7 @@ body::before {
 	top: 0;
 	left: 0;
 	width: 100%;
-	max-width: 100vw;
+	max-width: 100%;
 	box-sizing: border-box;
 	z-index: 100;
 	border-radius: 0;
@@ -306,6 +306,11 @@ body::before {
 	justify-content: center;
 }
 
+.sidebar .theme-btn:hover {
+	background: rgba(124, 219, 255, 0.06);
+	transform: translateY(-2px);
+}
+
 /* Theme icon color: in dark mode make it blend with the sidebar background;
    in light mode make the icon white for visibility */
 .sidebar .theme-btn {
@@ -313,6 +318,14 @@ body::before {
 }
 .theme-light .theme-btn {
 	color: #000000;
+	border: 1px solid rgba(7, 20, 34, 0.12);
+}
+
+/* Light-theme specific hover for the theme button to keep contrast */
+.theme-light .sidebar .theme-btn:hover {
+	background: rgba(7, 20, 34, 0.04);
+	transform: translateY(-2px);
+	border-color: rgba(7, 20, 34, 0.16);
 }
 
 /* When the sidebar is in 'night' mode the visible icon is the sun — keep it blue */
@@ -332,8 +345,8 @@ body::before {
 	align-items: center;
 	justify-content: center;
 	background: transparent;
-	color: #000000;
-	border: 1px solid rgba(255, 255, 255, 0.04);
+	color: var(--surface);
+	border: 1px solid currentColor; /* border matches icon color */
 	font-size: 1.1rem;
 	cursor: pointer;
 	transition:
@@ -345,6 +358,17 @@ body::before {
 	border-color: #646cff;
 	background: rgba(100, 108, 255, 0.04);
 	transform: translateY(-2px);
+}
+
+/* Task card buttons: lift slightly on hover for a tactile feel */
+.task-card .btn {
+	transition:
+		transform 0.12s ease,
+		box-shadow 0.12s ease;
+}
+.task-card .btn:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 18px rgba(2, 20, 46, 0.08);
 }
 
 /* Panel that expands to the right of the sidebar */
@@ -402,6 +426,21 @@ body::before {
 	background: rgba(100, 108, 255, 0.04);
 }
 
+/* Board settings button: text first, then icon; center and add spacing */
+.nav-panel-btn.board-settings {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+.nav-panel-btn.board-settings .board-label {
+	/* ensure label doesn't overflow; allow wrapping if needed */
+	white-space: nowrap;
+}
+.nav-panel-btn.board-settings .board-icon {
+	display: inline-flex;
+}
+
 /* List expand indicator (triangle) inside the List teams button */
 .nav-expand-toggle {
 	display: inline-flex;
@@ -450,7 +489,7 @@ body::before {
 	max-width: 94%;
 	background: var(--surface);
 	color: var(--text);
-	border-radius: 12px;
+	border-radius: 18px; /* more rounded */
 	padding: 22px;
 	box-shadow: 0 28px 80px rgba(2, 20, 46, 0.6);
 	position: relative;
@@ -462,7 +501,7 @@ body::before {
 }
 .join-modal h3 {
 	margin: 0 0 12px 0;
-	font-size: 1.25rem;
+	font-size: 1.4rem; /* slightly larger title */
 	font-weight: 700;
 }
 .modal-close {
@@ -470,7 +509,7 @@ body::before {
 	right: 10px;
 	top: 10px;
 	background: transparent;
-	border: none;
+	border: none; /* remove visible border */
 	font-size: 18px;
 	width: 36px;
 	height: 36px;
@@ -522,7 +561,7 @@ body::before {
 .modal-close:hover {
 	transform: scale(1.08);
 	background: rgba(255, 255, 255, 0.04);
-	color: var(--accent-strong);
+	color: var(--accent); /* highlight bright blue (main color) on hover */
 }
 .modal-close:focus-visible {
 	outline: 3px solid rgba(96, 165, 250, 0.16);
@@ -545,6 +584,22 @@ body::before {
 	background: linear-gradient(180deg, #eef2f7 0%, #e6eef8 100%);
 	color: #04233a;
 	border-left: 1px solid rgba(7, 20, 34, 0.06);
+}
+
+/* Make nav-expand button and modal-close match theme button colors in night/light modes */
+.sidebar.night .nav-expand-btn,
+.sidebar.night .theme-btn,
+.sidebar.night .modal-close,
+.sidebar.night .logout-btn {
+	color: #ffffff;
+	/* make borders much less visible in dark mode so buttons blend softly */
+	border-color: rgba(255, 255, 255, 0.06);
+}
+.theme-light .nav-expand-btn,
+.theme-light .modal-close,
+.theme-light .logout-btn {
+	color: #000000;
+	border-color: rgba(7, 20, 34, 0.08);
 }
 
 /* If the sidebar is explicitly in night mode, ensure the panel is very dark */
@@ -647,6 +702,7 @@ body::before {
 	color: #04233a;
 	filter: none;
 	box-shadow: 0 18px 44px rgba(2, 20, 46, 0.42);
+	transform: translateY(-4px);
 }
 
 @media (max-width: 720px) {
@@ -771,6 +827,18 @@ body::before {
 	border: 1px solid rgba(124, 219, 255, 0.08);
 }
 
+/* Global hover lift for all buttons (applies to popups and normal UI) */
+.btn:hover {
+	transform: translateY(-3px);
+	/* keep existing transition on .btn for smooth motion; add subtle shadow */
+	box-shadow: 0 10px 24px rgba(2, 20, 46, 0.06);
+}
+
+/* Make cancel ghost buttons on task cards show blue border on hover */
+.task-card .form-actions .btn.btn-ghost:hover {
+	border-color: var(--accent);
+}
+
 /* Icon button helper (used in the sidebar for compact icon-only buttons) */
 .icon-btn {
 	font-size: 1.25rem;
@@ -863,6 +931,21 @@ body::before {
 }
 .column-low {
 	border-top: 4px solid rgba(67, 160, 71, 0.12);
+}
+
+/* Lift priority columns slightly on hover for tactile feedback */
+.column-high,
+.column-medium,
+.column-low {
+	transition:
+		transform 0.14s ease,
+		box-shadow 0.14s ease;
+}
+.column-high:hover,
+.column-medium:hover,
+.column-low:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 20px 50px rgba(2, 20, 46, 0.22);
 }
 
 @media (max-width: 900px) {
@@ -1073,7 +1156,7 @@ body::before {
 
 .overlay-panel {
 	background: var(--surface);
-	border-radius: calc(var(--radius) - 4px);
+	border-radius: 18px; /* more rounded panel */
 	width: min(520px, 96%);
 	max-height: calc(100vh - 48px);
 	overflow: auto;
@@ -1095,6 +1178,13 @@ body::before {
 	background: transparent;
 	box-shadow: none;
 	border: none;
+}
+
+/* Modal title inside overlay-panel */
+.overlay-panel .modal-title {
+	margin: 0 0 12px 0;
+	font-size: 1.4rem; /* slightly larger */
+	font-weight: 700;
 }
 
 .overlay-panel .task-form label {

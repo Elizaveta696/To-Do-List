@@ -104,6 +104,7 @@ function App() {
 						>
 							×
 						</button>
+						<h3 className="modal-title">Add Task</h3>
 						<TaskForm
 							token={token}
 							onCreated={() => {
