@@ -589,6 +589,44 @@ body::before {
 	padding: 8px 0;
 }
 
+/* Role actions: select + small icon button */
+.role-with-actions {
+	display: inline-flex;
+	gap: 8px;
+	align-items: center;
+}
+.btn-icon {
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	color: inherit;
+	width: 36px;
+	height: 36px;
+	padding: 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	cursor: pointer;
+	transition:
+		transform 0.12s ease,
+		background 0.12s ease,
+		border-color 0.12s ease;
+}
+.btn-icon svg {
+	display: block;
+	color: inherit;
+}
+.remove-user-btn:hover {
+	transform: translateY(-2px);
+	background: rgba(255, 77, 79, 0.06);
+	border-color: #ff4d4f;
+	color: #ff4d4f;
+}
+.remove-user-btn:focus-visible {
+	outline: 3px solid rgba(255, 77, 79, 0.14);
+	outline-offset: 2px;
+}
+
 /* Add-user row styles */
 .add-user-input {
 	width: 100%;

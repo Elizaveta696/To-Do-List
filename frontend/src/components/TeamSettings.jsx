@@ -20,6 +20,7 @@ export default function TeamSettings({
 
 	const [users, setUsers] = useState(initialUsers);
 	const [confirmOpen, setConfirmOpen] = useState(false);
+	const [removeConfirm, setRemoveConfirm] = useState(null);
 	const [newUserName, setNewUserName] = useState("");
 	const [newUserRole, setNewUserRole] = useState("contributor");
 
@@ -27,6 +28,10 @@ export default function TeamSettings({
 		setUsers((u) =>
 			u.map((usr) => (usr.id === id ? { ...usr, role: newRole } : usr)),
 		);
+	}
+
+	function removeUser(id) {
+		setUsers((u) => u.filter((usr) => usr.id !== id));
 	}
 
 	function handleSave() {
@@ -129,16 +134,106 @@ export default function TeamSettings({
 						<React.Fragment key={u.id}>
 							<div className="users-grid-user">{u.name}</div>
 							<div className="users-grid-role">
-								<select
-									value={u.role}
-									onChange={(e) => updateRole(u.id, e.target.value)}
-								>
-									<option value="admin">Admin</option>
-									<option value="contributor">Contributor</option>
-								</select>
+								<div className="role-with-actions">
+									<select
+										value={u.role}
+										onChange={(e) => updateRole(u.id, e.target.value)}
+									>
+										<option value="admin">Admin</option>
+										<option value="contributor">Contributor</option>
+									</select>
+									<button
+										type="button"
+										className="btn-icon remove-user-btn"
+										onClick={() => setRemoveConfirm({ id: u.id, name: u.name })}
+										aria-label={`Remove ${u.name}`}
+										title={`Remove ${u.name}`}
+									>
+										<svg
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<title>{`Remove ${u.name}`}</title>
+											<path
+												d="M3 6h18"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											/>
+											<path
+												d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											/>
+											<path
+												d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											/>
+											<path
+												d="M10 11v6"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											/>
+											<path
+												d="M14 11v6"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											/>
+										</svg>
+									</button>
+								</div>
 							</div>
 						</React.Fragment>
 					))}
+
+					{removeConfirm && (
+						<section
+							className="modal-overlay"
+							onClick={() => setRemoveConfirm(null)}
+						>
+							<div className="join-modal" onClick={(e) => e.stopPropagation()}>
+								<h3>Remove user</h3>
+								<div className="modal-body">
+									<p>
+										Are you sure you want to remove{" "}
+										<strong>{removeConfirm.name}</strong> from the team?
+									</p>
+								</div>
+								<div className="modal-actions">
+									<button
+										type="button"
+										className="btn"
+										onClick={() => setRemoveConfirm(null)}
+									>
+										No
+									</button>
+									<button
+										type="button"
+										className="btn btn-danger"
+										onClick={() => {
+											removeUser(removeConfirm.id);
+											setRemoveConfirm(null);
+										}}
+									>
+										Yes
+									</button>
+								</div>
+							</div>
+						</section>
+					)}
 
 					{/* Add-user row: input under User, select + Add button under Role */}
 					<React.Fragment>
