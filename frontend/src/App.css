@@ -441,6 +441,62 @@ body::before {
 	display: inline-flex;
 }
 
+/* Team settings page styles */
+.settings-panel {
+	padding: 16px;
+	background: transparent;
+	color: var(--text);
+	max-width: 720px;
+}
+.settings-panel h2 {
+	margin-top: 0;
+}
+.settings-row {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin-bottom: 12px;
+}
+.settings-row label {
+	min-width: 160px;
+	font-weight: 600;
+}
+.settings-value input {
+	width: 100%;
+	padding: 8px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: rgba(2, 20, 46, 0.12);
+	color: var(--text);
+}
+.settings-users {
+	margin-top: 18px;
+}
+.users-grid {
+	display: grid;
+	grid-template-columns: 1fr 200px;
+	gap: 8px 12px;
+	align-items: center;
+}
+.users-grid-head {
+	font-weight: 700;
+	opacity: 0.9;
+}
+.users-grid-user,
+.users-grid-role {
+	padding: 8px 0;
+}
+.settings-actions {
+	margin-top: 18px;
+	display: flex;
+	gap: 12px;
+}
+.btn-danger {
+	background: #ff4d4f;
+	border: none;
+	color: white;
+}
+
 /* List expand indicator (triangle) inside the List teams button */
 .nav-expand-toggle {
 	display: inline-flex;

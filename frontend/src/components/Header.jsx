@@ -8,6 +8,7 @@ export default function Header({
 	onToggleNightMode,
 	nightMode,
 	teamName = "My tasks",
+	onNavigate,
 }) {
 	const [navOpen, setNavOpen] = useState(false);
 	const [showTeams, setShowTeams] = useState(false);
@@ -46,7 +47,7 @@ export default function Header({
 							<button
 								type="button"
 								className="btn nav-panel-btn board-settings"
-								onClick={() => console.log("Open board settings for", teamName)}
+								onClick={() => onNavigate?.("team-settings")}
 								aria-label={`Board settings for ${teamName}`}
 							>
 								<span className="board-label">{teamName}</span>

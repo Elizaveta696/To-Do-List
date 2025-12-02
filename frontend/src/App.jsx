@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
+import TeamSettings from "./components/TeamSettings";
 import { FEATURE_FLAGS } from "./featureFlags";
 import "./App.css";
 import { FiPlus } from "react-icons/fi";
@@ -13,6 +14,8 @@ function App() {
 		() => localStorage.getItem("token") || null,
 	);
 	const [page, setPage] = useState(token ? "tasks" : "login");
+	const [teamId, setTeamId] = useState("TEAM-12345");
+	const [teamName, setTeamName] = useState("My tasks");
 	const [refreshKey, setRefreshKey] = useState(0);
 	const [nightMode, setNightMode] = useState(() => {
 		try {
@@ -90,6 +93,8 @@ function App() {
 						: undefined
 				}
 				nightMode={nightMode}
+				teamName={teamName}
+				onNavigate={(p) => setPage(p)}
 			/>
 			{/* show New Task form overlay */}
 			{showAddForm && (
@@ -121,18 +126,29 @@ function App() {
 					<h1 className="page-title">My tasks</h1>
 				</header>
 				<div key={refreshKey}>
-					<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
+					{page === "tasks" && (
+						<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
+					)}
+					{page === "team-settings" && (
+						<TeamSettings
+							teamId={teamId}
+							teamName={teamName}
+							onChangeName={(name) => setTeamName(name)}
+						/>
+					)}
 				</div>
-				{/* floating circular add button */}
-				<button
-					type="button"
-					className="floating-add"
-					onClick={() => setShowAddForm(true)}
-					aria-label="Add task"
-					title="New task"
-				>
-					<FiPlus />
-				</button>
+				{/* floating circular add button (hide on settings page) */}
+				{page === "tasks" && (
+					<button
+						type="button"
+						className="floating-add"
+						onClick={() => setShowAddForm(true)}
+						aria-label="Add task"
+						title="New task"
+					>
+						<FiPlus />
+					</button>
+				)}
 			</main>
 		</div>
 	);
