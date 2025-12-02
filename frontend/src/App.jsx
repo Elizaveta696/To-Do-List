@@ -7,7 +7,7 @@ import TaskList from "./components/TaskList";
 import TeamSettings from "./components/TeamSettings";
 import { FEATURE_FLAGS } from "./featureFlags";
 import "./App.css";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiSettings } from "react-icons/fi";
 
 function App() {
 	const [token, setToken] = useState(
@@ -123,7 +123,25 @@ function App() {
 			)}
 			<main className="main-content">
 				<header className="page-header">
-					<h1 className="page-title">My tasks</h1>
+					<h1 className="page-title">
+						<button
+							type="button"
+							className="btn-plain page-title-btn"
+							onClick={() => setPage("tasks")}
+							title="Back to tasks"
+						>
+							My tasks
+						</button>
+						<button
+							type="button"
+							className="icon-btn page-title-gear"
+							onClick={() => setPage("team-settings")}
+							aria-label="Open team settings"
+							title="Settings"
+						>
+							<FiSettings />
+						</button>
+					</h1>
 				</header>
 				<div key={refreshKey}>
 					{page === "tasks" && (
@@ -134,6 +152,7 @@ function App() {
 							teamId={teamId}
 							teamName={teamName}
 							onChangeName={(name) => setTeamName(name)}
+							onNavigate={(p) => setPage(p)}
 						/>
 					)}
 				</div>

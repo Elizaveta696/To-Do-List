@@ -43,18 +43,32 @@ export default function Header({
 						aria-label="Expanded navigation"
 					>
 						<div className="nav-actions">
-							{/* Board settings button placed first */}
-							<button
-								type="button"
-								className="btn nav-panel-btn board-settings"
-								onClick={() => onNavigate?.("team-settings")}
-								aria-label={`Board settings for ${teamName}`}
-							>
-								<span className="board-label">{teamName}</span>
-								<span className="board-icon" aria-hidden="true">
+							{/* Board area: label (go to tasks) and gear (go to settings) */}
+							<div className="nav-panel-btn board-settings-group">
+								<button
+									type="button"
+									className="btn board-label-btn"
+									onClick={() => {
+										onNavigate?.("tasks");
+										setNavOpen(false);
+									}}
+									aria-label={`Open ${teamName} tasks`}
+								>
+									{teamName}
+								</button>
+								<button
+									type="button"
+									className="btn icon-btn board-icon-btn"
+									onClick={() => {
+										onNavigate?.("team-settings");
+										setNavOpen(false);
+									}}
+									aria-label={`Open settings for ${teamName}`}
+									title="Board settings"
+								>
 									<FiSettings />
-								</span>
-							</button>
+								</button>
+							</div>
 							<button
 								type="button"
 								className="btn nav-panel-btn nav-expand-toggle"
@@ -71,6 +85,10 @@ export default function Header({
 										<button
 											type="button"
 											className="btn nav-panel-btn team-item"
+											onClick={() => {
+												onNavigate?.("tasks");
+												setNavOpen(false);
+											}}
 										>
 											{teamName}
 										</button>
