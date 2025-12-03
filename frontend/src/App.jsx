@@ -126,25 +126,29 @@ function App() {
 			)}
 			<main className="main-content">
 				<header className="page-header">
-					<h1 className="page-title">
-						<button
-							type="button"
-							className="btn-plain page-title-btn"
-							onClick={() => setPage("tasks")}
-							title="Back to tasks"
-						>
-							My tasks
-						</button>
-						<button
-							type="button"
-							className="icon-btn page-title-gear"
-							onClick={() => setPage("team-settings")}
-							aria-label="Open team settings"
-							title="Settings"
-						>
-							<FiSettings />
-						</button>
-					</h1>
+					{page === "user-settings" ? (
+						<h1 className="page-title">User Settings</h1>
+					) : (
+						<h1 className="page-title">
+							<button
+								type="button"
+								className="btn-plain page-title-btn"
+								onClick={() => setPage("tasks")}
+								title="Back to tasks"
+							>
+								My tasks
+							</button>
+							<button
+								type="button"
+								className="icon-btn page-title-gear"
+								onClick={() => setPage("team-settings")}
+								aria-label="Open team settings"
+								title="Settings"
+							>
+								<FiSettings />
+							</button>
+						</h1>
+					)}
 				</header>
 				<div key={refreshKey}>
 					{page === "tasks" && (
