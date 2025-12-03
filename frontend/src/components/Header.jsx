@@ -264,7 +264,7 @@ export default function Header({
         </button>
         <button
           type="button"
-          className="btn btn-ghost icon-btn"
+          className="btn person-btn logout-btn icon-btn"
           aria-label="Logout"
           title="Logout"
           onClick={onLogout}

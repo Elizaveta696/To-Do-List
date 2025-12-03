@@ -63,8 +63,6 @@ export default function UserSettings({ onNavigate }) {
 
   return (
     <section className="settings-panel">
-      <h2>User Settings</h2>
-
       <div className="settings-row">
         <label htmlFor={idUsername}>Username</label>
         <div className="settings-value">
