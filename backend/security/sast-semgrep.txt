@@ -1,0 +1,23 @@
+                   
+                   
+┌─────────────────┐
+│ 2 Code Findings │
+└─────────────────┘
+                                                    
+  [36m[22m[24m  src/controllers/taskController.js[0m
+   ❯❯❱ [1majinabraham.njsscan.database.nosql_find_injection.node_nosqli_injection[0m
+          Untrusted user input in findOne() function can result in NoSQL Injection.
+          Details: https://sg.run/0q35                                             
+                                                                                   
+           33┆ const task = await Task.findOne({ where: { id, userId: req.user.userId } });
+                                           
+  [36m[22m[24m  src/routes/authRoutes.js[0m
+    ❯❱ [1majinabraham.njsscan.crypto.timing_attack_node.node_timing_attack[0m
+          String comparisons using '===', '!==', '!=' and '==' is vulnerable to timing attacks. A timing      
+          attack allows the attacker to learn potentially sensitive information by, for example, measuring how
+          long it takes for the application to respond to a request.  More info:                              
+          https://nodejs.org/en/learn/getting-started/security-best-practices#information-exposure-through-   
+          timing-attacks-cwe-208                                                                              
+          Details: https://sg.run/BDR2                                                                        
+                                                                                                              
+           68┆ refreshTokens = refreshTokens.filter((t) => t !== token);

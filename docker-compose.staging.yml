@@ -5,18 +5,31 @@ services:
       - "3000:3000"
     env_file:
       - .env
-    restart: always
-  
-  frontend: 
+    environment:
+      NODE_ENV: production
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_SERVICE_NAME: backend_service
+    networks:
+      - default
+      - observability
+    restart: unless-stopped
+
+  frontend:
     image: ${FRONTEND_IMAGE}
     ports:
       - "80:80"
     env_file:
       - .env
+    networks:
+      - observability
     restart: always
-    
   db:
     image: postgres:15-alpine
+    networks:
+      - observability
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -24,9 +37,10 @@ services:
       POSTGRES_DB: teamboard
     volumes:
       - db-data:/var/lib/postgresql/data
-    # optional: expose port for local tools
     ports:
       - "5432:5432"
-  
 volumes:
   db-data:
+networks:
+  observability:
+    external: true

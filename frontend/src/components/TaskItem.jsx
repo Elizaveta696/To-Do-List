@@ -1,11 +1,17 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
+import { FiTrash2 } from "react-icons/fi";
 
 export default function TaskItem({ task, onUpdate, onDelete }) {
   const [editing, setEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
-  const [editDueDate, setEditDueDate] = useState(task.dueDate ? task.dueDate.slice(0, 10) : "");
-  const [editPriority, setEditPriority] = useState(task.priority || task.importance || "medium");
+  const [editDueDate, setEditDueDate] = useState(
+    task.dueDate ? task.dueDate.slice(0, 10) : "",
+  );
+  const [editPriority, setEditPriority] = useState(
+    task.priority || task.importance || "medium",
+  );
   const [saving, setSaving] = useState(false);
 
   const handleSave = async (e) => {
@@ -37,62 +43,111 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
   };
 
   return (
-    <article className="task-card" style={{position: 'relative'}}>
+    <article className="task-card" style={{ position: "relative" }}>
       {/* ...existing code... */}
       {editing ? (
-        <form onSubmit={handleSave} className="task-form" style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-          <div style={{flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 10}}>
-            <input
-              className="input"
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
-              placeholder="Title"
-            />
-            <input
-              className="input"
-              value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-              placeholder="Description"
-            />
-            <div>
-              <label>Due Date:</label>
-              <input
-                className="input"
-                type="date"
-                value={editDueDate}
-                onChange={(e) => setEditDueDate(e.target.value)}
-                placeholder="Due Date"
-              />
+        createPortal(
+          <div className="overlay-form">
+            <div className="overlay-panel" role="dialog" aria-modal="true">
+              <button
+                type="button"
+                className="modal-close"
+                onClick={() => setEditing(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+              <h3 className="modal-title">Edit Task</h3>
+              <form onSubmit={handleSave} className="task-form">
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                >
+                  <label>
+                    Title
+                    <input
+                      className="input"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      placeholder="Title"
+                    />
+                  </label>
+                  <label>
+                    Description
+                    <input
+                      className="input"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      placeholder="Description"
+                    />
+                  </label>
+                  <label>
+                    Date
+                    <input
+                      className="input"
+                      type="date"
+                      value={editDueDate}
+                      onChange={(e) => setEditDueDate(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Priority
+                    <select
+                      className="input"
+                      value={editPriority}
+                      onChange={(e) => setEditPriority(e.target.value)}
+                    >
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </label>
+                </div>
+                <div className="form-actions" style={{ marginTop: 12 }}>
+                  <button
+                    className="btn btn-ghost"
+                    type="button"
+                    onClick={() => setEditing(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                    disabled={saving}
+                  >
+                    {saving ? "Saving…" : "Save"}
+                  </button>
+                </div>
+              </form>
             </div>
-            <div>
-              <label>Priority:</label>
-              <select className="input" value={editPriority} onChange={e => setEditPriority(e.target.value)}>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
-            </div>
-          </div>
-          <div className="form-actions" style={{marginTop: 'auto'}}>
-            <button className="btn btn-primary" type="submit" disabled={saving}>
-              {saving ? "Saving…" : "Save"}
-            </button>
-            <button
-              className="btn btn-ghost"
-              type="button"
-              onClick={() => setEditing(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+          </div>,
+          document.body,
+        )
       ) : (
         <>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8}}>
-            <span style={{ color: priorityColors[task.priority || task.importance] || "#333", fontWeight: "bold", fontSize: 13 }}>
-              Priority: {(task.priority || task.importance) ? (task.priority || task.importance).charAt(0).toUpperCase() + (task.priority || task.importance).slice(1) : "Medium"}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 8,
+            }}
+          >
+            <span
+              style={{
+                color:
+                  priorityColors[task.priority || task.importance] || "#333",
+                fontWeight: "bold",
+                fontSize: 13,
+              }}
+            >
+              Priority:{" "}
+              {task.priority || task.importance
+                ? (task.priority || task.importance).charAt(0).toUpperCase() +
+                  (task.priority || task.importance).slice(1)
+                : "Medium"}
             </span>
-            <div style={{display: 'flex', alignItems: 'center', gap: 4}}>
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
               {task.dueDate && (
                 <span className="task-due-date" style={{ fontSize: 13 }}>
                   Due: {new Date(task.dueDate).toLocaleDateString()}
@@ -100,35 +155,37 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
               )}
               {!editing && (
                 <button
-                  className="btn btn-ghost"
+                  type="button"
+                  className="btn btn-ghost icon-btn delete-btn"
                   title="Delete"
-                  style={{
-                    width: 26,
-                    height: 26,
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 0,
-                    fontSize: '1rem',
-                    marginLeft: 2,
-                  }}
+                  aria-label="Delete task"
+                  style={{ marginLeft: 2 }}
                   onClick={() => onDelete(task.id)}
                 >
-                  <span style={{fontSize: '0.75rem', lineHeight: 1}}>🗑️</span>
+                  <FiTrash2 />
                 </button>
               )}
             </div>
           </div>
-          <h3 className={`task-title ${task.completed ? "task-completed" : ""}`}>
+          <h3
+            className={`task-title ${task.completed ? "task-completed" : ""}`}
+          >
             {task.title}
           </h3>
           <p className="task-description">{task.description}</p>
           <div className="task-controls">
-            <button className="btn btn-primary" onClick={handleToggle}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleToggle}
+            >
               {task.completed ? "Undo" : "Complete"}
             </button>
-            <button className="btn" onClick={() => setEditing(true)}>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => setEditing(true)}
+            >
               Edit
             </button>
           </div>

@@ -1,3 +1,4 @@
+// server.js
 import "./otel.mjs"; // ← MUST BE FIRST
 import pkg from "@opentelemetry/api";
 import cors from "cors";
@@ -15,17 +16,11 @@ const logger = logs?.getLogger(SERVICE_NAME);
 
 config();
 
-// DO NOT CALL connectDB() HERE
-
 const app = express();
 app.use(cors());
 app.use(json());
 
-app.get("/", (req, res) => {
-	res.json({ status: "OK", service: SERVICE_NAME });
-});
-
-/* OTEL + Loki-Compatible Middleware */
+// OTEL metrics
 const requestCounter = meter?.createCounter("http_server_request_count", {
 	description: "Total HTTP requests",
 }) ?? { add: () => {} };
@@ -35,6 +30,7 @@ const requestDuration = meter?.createHistogram(
 	{ description: "HTTP request duration in seconds" },
 ) ?? { record: () => {} };
 
+// OTEL middleware — Tracing, Metrics, Logs
 app.use((req, res, next) => {
 	const span = tracer.startSpan("http.server", {
 		attributes: { "http.method": req.method, "http.route": req.path },
@@ -63,46 +59,34 @@ app.use((req, res, next) => {
 		span.setAttribute("http.duration_s", duration);
 		span.end();
 
-		// Logs — OTEL if available, otherwise fallback to stdout
-		const logRecord = {
-			service: SERVICE_NAME,          // Loki label
-			route: req.path,                // Loki label
-			method: req.method,             // Loki label
-			status: res.statusCode,         // Loki label
-			duration_s: duration,
-			msg: `Handled request ${req.method} ${req.path}`,
-			level: "INFO",
-		};
-
+		// Logs
 		if (logger?.emit) {
 			logger.emit({
-				body: logRecord.msg,
+				body: `Handled request ${req.method} ${req.path}`,
+				severityNumber: 9, // INFO
 				attributes: {
-					"service.name": SERVICE_NAME,   // matches collector labels
+					"service.name": SERVICE_NAME, // must match collector label
 					route: req.path,
 					method: req.method,
 					status: res.statusCode,
 					duration_s: duration,
 				},
-				severityNumber: 9,
 			});
-		} else {
-			console.log(JSON.stringify(logRecord));
 		}
 	});
 });
 
-/* ROUTES */
+// Routes
 app.use("/api/tasks", router);
 app.use("/api/auth", authRouter);
 app.get("/health", (req, res) => res.status(200).send("OK"));
 
-/* 404 */
+// 404 handler
 app.use((req, res) => {
 	res.status(404).json({ message: "Not Found" });
 });
 
-/* SERVER START — DB INSIDE */
+// Server start
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, async () => {
 	try {
@@ -116,7 +100,7 @@ const server = app.listen(PORT, async () => {
 	}
 });
 
-/* SHUTDOWN */
+// Graceful shutdown
 const shutdown = async () => {
 	console.log("Shutting down...");
 	server.close(async () => {
@@ -130,6 +114,5 @@ const shutdown = async () => {
 		}
 	});
 };
-
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);

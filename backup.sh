@@ -1,5 +1,6 @@
 #!/bin/bash
 # Get the directory of the script
+#
 BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 BACKUP_DIR="$BASE_DIR/backups"

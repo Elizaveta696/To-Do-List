@@ -1,25 +1,34 @@
-services:
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "80:80"
-    env_file:
-      - ./frontend/.env
-    environment:
-      - NODE_ENV=production
-    restart: unless-stopped
+version: "3.9"
 
-  backend:
-    build:
-      context: ./backend
+networks:
+  observability:
+    external: true
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
+  lgtm-data:
+
+services:
+  lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: lgtm
     ports:
-      - "3000:3000"
+      - "3030:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - lgtm-data:/var/lib/grafana
     restart: unless-stopped
-    depends_on:
-      - db
-    env_file:
-      - ./backend/.env.prod
+    networks:
+      - observability
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   db:
     image: postgres:15-alpine
@@ -30,9 +39,53 @@ services:
       POSTGRES_DB: teamboard
     volumes:
       - db-data:/var/lib/postgresql/data
-    # optional: expose port for local tools
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-volumes:
-  db-data:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env.prod
+    environment:
+      NODE_ENV: production
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_SERVICE_NAME: backend_service
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy   # ← wait for DB
+      lgtm:
+        condition: service_started
+    networks:
+      - app-network
+      - observability
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    env_file:
+      - ./frontend/.env
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - app-network
