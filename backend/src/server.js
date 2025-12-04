@@ -4,6 +4,7 @@ import express, { json } from "express";
 import { connectDB, sequelize } from "./config/db.js";
 import { router } from "./routes/taskRoutes.js";
 import { authRouter } from "./routes/authRoutes.js";
+import { teamRouter   } from "./routes/teamRoutes.js";
 
 config();
 connectDB();
@@ -14,6 +15,7 @@ app.use(json());
 
 app.use('/api/tasks', router);
 app.use("/api/auth", authRouter);
+app.use('/api', teamRouter);
 
 sequelize.sync({ alter: true }).then(() => {
 	console.log("Database synced");
