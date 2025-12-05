@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 
 
 //create team
-const createTeam = async(req, res) => {
+const createTeam = async (req, res) => {
     try{
         const { name, password } = req.body;
         const userId = req.user.userId;
@@ -28,7 +28,7 @@ const createTeam = async(req, res) => {
 }
 
 //join team
-const joinTeam = async(req, res) => {
+const joinTeam = async (req, res) => {
     try{
     const { teamCode, password } = req.body;
     const userId = req.user.userId;
@@ -48,7 +48,7 @@ const joinTeam = async(req, res) => {
 }
 
 //get all tasks for the team
-const getTeamTasks = async(req, res) => {
+const getTeamTasks = async (req, res) => {
     try{
         const teamId = req.params.teamId;
         const userId = req.user.userId;
@@ -57,7 +57,7 @@ const getTeamTasks = async(req, res) => {
         if (!member) return res.status(403).json({ error: "Not a member of this team" });
 
         const tasks = await Task.findAll({where: {teamId: teamId}});
-        res.json(tasks);
+        res.status(200).json(tasks);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
@@ -65,7 +65,7 @@ const getTeamTasks = async(req, res) => {
 }
 
 //add team task
-const addTeamTask = async(req, res) => {
+const addTeamTask = async (req, res) => {
     try{
         const teamId = req.params.teamId;
         const { title, description, completed, dueDate, priority } = req.body;
@@ -110,7 +110,7 @@ const editTeamTask = async (req, res) => {
 }
 
 //delete team task
-const deleteTeamTask = async(req, res) => {
+const deleteTeamTask = async (req, res) => {
     try {
         const taskId = req.params.id;
         const userId = req.user.userId;
@@ -118,7 +118,7 @@ const deleteTeamTask = async(req, res) => {
         const task = await Task.findOne({ where: {id: taskId }});
         if (!task) return res.status(404).json({ message: "Task not found" });
 
-        const member = await Team_member.findOne({where: task.teamId, userId, role: 'owner'});
+        const member = await Team_member.findOne({where: {teamId: task.teamId, userId, role: 'owner' }});
         if (!member) return res.status(403).json({ error: "Not a member of this team" });
 
         const deleted = await Task.destroy({ where: { id: taskId } });
@@ -131,4 +131,41 @@ const deleteTeamTask = async(req, res) => {
     }
 }
 
-export { createTeam, joinTeam, getTeamTasks, addTeamTask, editTeamTask, deleteTeamTask };
+const deleteTeamMember = async (req, res) => {
+    try{
+        const teamId = req.params.teamId;
+        const userToDeleteId = req.params.userId;
+        const userId = req.user.userId;
+
+        const member = await Team_member.findOne({where: { teamId, userId, role: 'owner' }});
+        if (!member) return res.status(403).json({ error: "Not a member of this team" });
+
+        const team_member = await Team_member.findOne({where: {teamId: teamId, userId: userToDeleteId}});
+        if (!team_member) return res.status(404).json({ error: "User not found" });
+
+        const deleted = await Team_member.destroy({ where: {teamId: teamId, userId: userToDeleteId}});
+
+        res.status(200).json({message: "Team member deleted!"});
+    } catch (error) {
+        res.status(500).json({message: error});
+    }
+
+}
+
+const getAllTeamMembers = async (req, res) => {
+    try{
+        const teamId = req.params.teamId;
+
+        const team = await Team.findOne({ where: {teamId} });
+        if (!team) return res.status(404).json({ error: "Team not found" });
+
+        const team_members = await Team_member.findAll({ where: {teamId}});
+
+        res.status(200).json(team_members);
+
+    } catch (error) {
+        res.status(500).json({message: error});
+    }
+}
+
+export { createTeam, joinTeam, getTeamTasks, addTeamTask, editTeamTask, deleteTeamTask, deleteTeamMember, getAllTeamMembers };

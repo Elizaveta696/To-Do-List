@@ -3,8 +3,8 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "alice2",
-  "password": "mypassword2"
+  "username": "alice3",
+  "password": "mypassword3"
 }
 ### Login user
 POST http://localhost:3000/api/auth/login
@@ -18,7 +18,7 @@ Content-Type: application/json
 ### Create a task
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 
 {
   "title": "Finish project",
@@ -27,12 +27,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 
 ### Get all tasks
 GET http://localhost:3000/api/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 
 ### Update task
-PUT http://localhost:3000/api/tasks/1
+PUT http://localhost:3000/api/tasks/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 
 {
   "completed": true,
@@ -41,35 +41,35 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 
 ### Delete task
 DELETE http://localhost:3000/api/tasks/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 
 ###Create a team
 POST http://localhost:3000/api/teams
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 
 {
-  "name": "Backend Team",
+  "name": "Backend Team 3",
   "password": "logic"
 }
 
 ###join user to a team
 POST http://localhost:3000/api/teams/join
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc2NDk2OTM0NiwiZXhwIjoxNzY0OTcwMjQ2fQ.qKMYU3SeBng2jepDBEhVCG8Pv9MmRgrB5YhEsy4KNH8
 
 {
-  "teamCode": "V8DZ43",
+  "teamCode": "8NPZNB",
   "password": "logic"
 }
 
 ### get all team's tasks
-GET http://localhost:3000/api/teams/1/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+GET http://localhost:3000/api/teams/3/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 
 ### add task to a team
-POST http://localhost:3000/api/teams/1/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+POST http://localhost:3000/api/teams/3/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 Content-Type: application/json
 
 {
@@ -81,8 +81,8 @@ Content-Type: application/json
 }
 
 ### edit the task
-PUT http://localhost:3000/api/teams/1/tasks/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0NDQxMSwiZXhwIjoxNzY0OTQ1MzExfQ.0XMTKG5AaPG7_ix04NeHCyvHG-k9nPhwv78H0iuF49M
+PUT http://localhost:3000/api/teams/3/tasks/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 Content-Type: application/json 
 
 {
@@ -91,21 +91,21 @@ Content-Type: application/json
 }
 
 ### delete the task from team board
-DELETE http://localhost:3000/api/teams/1/tasks/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+DELETE http://localhost:3000/api/teams/3/tasks/delete/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
 
 
 
 
 
 ### get all team's members (not ready yet)
-GET http://localhost:3000/api/teams/1/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+GET http://localhost:3000/api/team/3/members
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2OTUxMywiZXhwIjoxNzY0OTcwNDEzfQ.8Ekfgtw_t48oycaUjlVPozRCsER7VLMES8rWbFxxWUw
 
 ### remove the user from the team (not ready yet)
-DELETE http://localhost:3000/api/teams/1/members/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+DELETE http://localhost:3000/api/team/3/members/delete/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2OTUxMywiZXhwIjoxNzY0OTcwNDEzfQ.8Ekfgtw_t48oycaUjlVPozRCsER7VLMES8rWbFxxWUw
 
 ### delete the team
 DELETE http://localhost:3000/api/teams/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
