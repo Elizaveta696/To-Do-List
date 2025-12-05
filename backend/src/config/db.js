@@ -2,6 +2,7 @@
 import { config } from "dotenv";
 import { Sequelize } from "sequelize";
 
+
 config();
 
 export const sequelize = new Sequelize(
@@ -18,6 +19,7 @@ export const sequelize = new Sequelize(
 		},
 	},
 );
+
 
 export const connectDB = async () => {
 	let attempts = 0;

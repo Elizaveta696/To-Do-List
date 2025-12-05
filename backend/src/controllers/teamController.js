@@ -15,11 +15,11 @@ const createTeam = async(req, res) => {
         const passwordHashed = await bcrypt.hash(password, 10);
 
         const team = await Team.create({ teamCode, name, passwordHashed, userId });
-        const teamId = team.id;
+        const teamId = team.teamId;
         const role = 'owner';
         const team_member = await Team_member.create({ teamId, userId, role});
 
-        res.json({message: 'Team created successfully!', teamId, userId});
+        res.json({message: 'Team created successfully!', teamId, teamCode, userId});
 
     } catch (error) {
         console.error(error);
@@ -38,8 +38,8 @@ const joinTeam = async(req, res) => {
     const ok = await bcrypt.compare(password, team.passwordHashed);
     if (!ok) return res.status(400).json({ error: "Wrong password" });
 
-    const team_member = await Team_member.create({ teamId: team.id, userId, role: 'member'});
-    res.json({message: 'joined!', teamId: team.id});
+    const team_member = await Team_member.create({ teamId: team.teamId, userId, role: 'member'});
+    res.json({message: 'joined!', teamId: team.teamId});
 
     } catch (error){
         console.error(error);

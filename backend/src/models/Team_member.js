@@ -6,7 +6,7 @@ export class Team_member extends Model {}
 Team_member.init({
     id: {
         type: DataTypes.INTEGER,
-        primaryKey:true,
+        primaryKey: true,
         autoIncrement:true
     },
     teamId: {
@@ -24,6 +24,7 @@ Team_member.init({
     }
 }, {
     sequelize,
-    modelName: "Team_members",
+    modelName: "Team_member",
     tableName: "team_members",
+    freezeTableName: true,
 });

@@ -7,6 +7,7 @@ import express, { json } from "express";
 import { connectDB, sequelize } from "./config/db.js";
 import { authRouter } from "./routes/authRoutes.js";
 import { router } from "./routes/taskRoutes.js";
+import { teamRouter } from "./routes/teamRoutes.js";
 
 const { trace, context, metrics, logs } = pkg;
 const SERVICE_NAME = "backend_service";
@@ -80,6 +81,7 @@ app.use((req, res, next) => {
 app.use("/api/tasks", router);
 app.use("/api/auth", authRouter);
 app.get("/health", (req, res) => res.status(200).send("OK"));
+app.use("/api", teamRouter);
 
 // 404 handler
 app.use((req, res) => {

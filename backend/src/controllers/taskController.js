@@ -35,7 +35,7 @@ const editTask = async (req, res) => {
 
   const safeUserID = mongoSanitize(req.user.userId);
 
-  const task = await Task.findOne({ where: { safeId, userId: safeUserID } });
+  const task = await Task.findOne({ where: { id: safeId, userId: safeUserID } });
   if (!task) return res.status(404).json({ message: "Task not found" });
 
   task.title = title ?? task.title;

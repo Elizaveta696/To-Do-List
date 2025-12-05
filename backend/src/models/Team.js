@@ -4,12 +4,16 @@ import { sequelize } from '../config/db.js';
 export class Team extends Model {}
 
 Team.init({
-        id: {
+    teamId: {
         type: DataTypes.INTEGER,
         primaryKey:true,
         autoIncrement:true
     },
     teamCode: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -23,10 +27,11 @@ Team.init({
     },
     createdBy: {
         type: DataTypes.INTEGER,
-        allowNull:false,
+        allowNull:true,
     },
 }, {
     sequelize,
-    modelName: "Teams",
+    modelName: "Team",
     tableName: "teams",
+    freezeTableName: true,
 });

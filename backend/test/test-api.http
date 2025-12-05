@@ -3,8 +3,8 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "alice",
-  "password": "mypassword"
+  "username": "alice2",
+  "password": "mypassword2"
 }
 ### Login user
 POST http://localhost:3000/api/auth/login
@@ -18,7 +18,7 @@ Content-Type: application/json
 ### Create a task
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
 
 {
   "title": "Finish project",
@@ -27,12 +27,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 
 ### Get all tasks
 GET http://localhost:3000/api/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
 
 ### Update task
-PUT http://localhost:3000/api/tasks/4
+PUT http://localhost:3000/api/tasks/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
 
 {
   "completed": true,
@@ -40,5 +40,72 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### Delete task
-DELETE http://localhost:3000/api/tasks/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2MDk5NjExOSwiZXhwIjoxNzYwOTk3MDE5fQ.J9y3HUK2O9vTUpKHG4FtxuZ_LlO7OjHRTWaE3t7mzt4
+DELETE http://localhost:3000/api/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+
+###Create a team
+POST http://localhost:3000/api/teams
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+
+{
+  "name": "Backend Team",
+  "password": "logic"
+}
+
+###join user to a team
+POST http://localhost:3000/api/teams/join
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+
+{
+  "teamCode": "V8DZ43",
+  "password": "logic"
+}
+
+### get all team's tasks
+GET http://localhost:3000/api/teams/1/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+
+### add task to a team
+POST http://localhost:3000/api/teams/1/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+Content-Type: application/json
+
+{
+  "title": "Design DB schema",
+  "description": "Create database schema for the project",
+  "completed": false,
+  "dueDate": "2025-12-10T00:00:00Z",
+  "priority": "high"
+}
+
+### edit the task
+PUT http://localhost:3000/api/teams/1/tasks/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0NDQxMSwiZXhwIjoxNzY0OTQ1MzExfQ.0XMTKG5AaPG7_ix04NeHCyvHG-k9nPhwv78H0iuF49M
+Content-Type: application/json 
+
+{
+  "title": "Update DB schema",
+  "completed": true
+}
+
+### delete the task from team board
+DELETE http://localhost:3000/api/teams/1/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+
+
+
+
+
+### get all team's members (not ready yet)
+GET http://localhost:3000/api/teams/1/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+
+### remove the user from the team (not ready yet)
+DELETE http://localhost:3000/api/teams/1/members/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo
+
+### delete the team
+DELETE http://localhost:3000/api/teams/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk0MzQxOSwiZXhwIjoxNzY0OTQ0MzE5fQ.PApN1Bdr_Ux1Ytjp6ZmMVu09PcI-ZYaAFux_rUUtjbo

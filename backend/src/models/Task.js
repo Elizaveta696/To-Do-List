@@ -1,7 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/db.js';
-import { User } from './User.js';
-import { Team } from './Team.js'
 
 export class Task extends Model {}
 
@@ -17,10 +15,6 @@ Task.init({
     teamId: {
         type:DataTypes.INTEGER,
         allowNull:true,
-        references: {
-            model: 'team',
-            key:'id'
-        }
     },
     completed: {
         type: DataTypes.BOOLEAN,
@@ -32,11 +26,7 @@ Task.init({
     },
     userId: {
         type: DataTypes.INTEGER,
-        allowNull:false,
-        references: {
-            model: User,
-            key: 'id',
-        },
+        allowNull:true,
         
     },
     priority: {
@@ -49,9 +39,3 @@ Task.init({
     modelName: "Task",
     tableName: "tasks",
 });
-
-User.hasMany(Task, {foreignKey: 'userId', onDelete: 'CASCADE' });
-Task.belongsTo(User, { foreignKey: 'userId'});
-
-Team.hasMany(Task, { foreignKey: 'teamId', onDelete: 'CASCADE'});
-Task.belongsTo(Team, { foreignKey: 'teamId'});

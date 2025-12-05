@@ -37,10 +37,10 @@ authRouter.post("/login", async (req, res) => {
 	if (!isValid)
 		return res.status(401).json({ message: " Invalid password :(" });
 
-	const accessToken = jwt.sign({ userId: user.id }, ACCESS_TOKEN_SECRET, {
+	const accessToken = jwt.sign({ userId: user.userId }, ACCESS_TOKEN_SECRET, {
 		expiresIn: "15m",
 	});
-	const refreshToken = jwt.sign({ userId: user.id }, REFRESH_TOKEN_SECRET, {
+	const refreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, {
 		expiresIn: "30d",
 	});
 	refreshTokens.push(refreshToken);
