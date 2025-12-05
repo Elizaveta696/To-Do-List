@@ -1,10 +1,20 @@
 FROM node:22-alpine AS build-stage
 WORKDIR /app
-COPY package*.json /app/
+COPY package*.json ./
 RUN npm install
-COPY ./ /app/
+COPY . .
 RUN npm run build
 
 FROM nginx:alpine3.20-slim
+
+RUN mkdir -p /var/cache/nginx/client_temp && \
+    chown -R nginx:nginx /var/cache/nginx /usr/share/nginx/html
+
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+USER root
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

@@ -5,7 +5,7 @@ export class User extends Model {}
 
 User.init(
 	{
-		id: {
+		userId: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
@@ -24,5 +24,6 @@ User.init(
 		sequelize,
 		modelName: "User",
 		tableName: "users",
+		freezeTableName: true,
 	},
 );

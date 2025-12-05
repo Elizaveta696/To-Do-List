@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import express from "express";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { User } from "../models/User.js";
 
 export const authRouter = express.Router();
@@ -36,10 +37,10 @@ authRouter.post("/login", async (req, res) => {
 	if (!isValid)
 		return res.status(401).json({ message: " Invalid password :(" });
 
-	const accessToken = jwt.sign({ userId: user.id }, ACCESS_TOKEN_SECRET, {
+	const accessToken = jwt.sign({ userId: user.userId }, ACCESS_TOKEN_SECRET, {
 		expiresIn: "15m",
 	});
-	const refreshToken = jwt.sign({ userId: user.id }, REFRESH_TOKEN_SECRET, {
+	const refreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, {
 		expiresIn: "30d",
 	});
 	refreshTokens.push(refreshToken);
@@ -65,6 +66,12 @@ authRouter.post("/token", (req, res) => {
 // logout
 authRouter.post("/logout", (req, res) => {
 	const { token } = req.body;
-	refreshTokens = refreshTokens.filter((t) => t !== token);
+	refreshTokens = refreshTokens.filter((t) => {
+		const tBuffer = Buffer.from(t);
+		const tokenBuffer = Buffer.from(token);
+
+		if(tBuffer.length !== tokenBuffer.length) return true;
+		return !crypto.timingSafeEqual(tBuffer, tokenBuffer);
+	});
 	res.json({ message: "Logged out" });
 });

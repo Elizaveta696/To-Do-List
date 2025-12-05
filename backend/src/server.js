@@ -4,8 +4,10 @@ import cors from "cors";
 import { config } from "dotenv";
 import express, { json } from "express";
 import { connectDB, sequelize } from "./config/db.js";
+import './models/index.js';
 import { authRouter } from "./routes/authRoutes.js";
 import { router } from "./routes/taskRoutes.js";
+import { teamRouter } from "./routes/teamRoutes.js";
 
 const { trace, context, metrics, logs } = pkg;
 const SERVICE_NAME = "backend_service";
@@ -93,9 +95,10 @@ app.use((req, res, next) => {
 });
 
 /* ROUTES */
-app.use("/api/tasks", router);
 app.use("/api/auth", authRouter);
+app.use("/api/tasks", router);
 app.get("/health", (req, res) => res.status(200).send("OK"));
+app.use("/api", teamRouter);
 
 /* 404 */
 app.use((req, res) => {
