@@ -1,3 +1,6 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc2NTA1MDY1OCwiZXhwIjoxNzY1MDUxNTU4fQ.-icAQnmESX7SgWfXoZBSXA0igkVvgKYWmXMR-O054qY
+@ownertoken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NTA1MDAzMiwiZXhwIjoxNzY1MDUwOTMyfQ.pK4TftkMcGlC6yFCmWxjZzrHjTSZ5FWB48cRcOiV5bo
+@teamcode = GREVUW
 ### Register a new user
 POST http://localhost:3000/api/auth/register
 Content-Type: application/json
@@ -11,14 +14,14 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "alice",
-  "password": "mypassword"
+  "username": "alice3",
+  "password": "mypassword3"
 }
 
 ### Create a task
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+Authorization: Bearer {{token}}
 
 {
   "title": "Finish project",
@@ -27,12 +30,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 
 ### Get all tasks
 GET http://localhost:3000/api/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+Authorization: Bearer {{token}}
 
 ### Update task
-PUT http://localhost:3000/api/tasks/3
+PUT http://localhost:3000/api/tasks/6
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+Authorization: Bearer {{token}}
 
 {
   "completed": true,
@@ -41,39 +44,42 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 
 ### Delete task
 DELETE http://localhost:3000/api/tasks/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+Authorization: Bearer {{token}}
+
+
+
 
 ###Create a team
 POST http://localhost:3000/api/teams
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+Authorization: Bearer {{token}}
 
 {
-  "name": "Backend Team 3",
+  "name": "My first team",
   "password": "logic"
 }
 
 ###join user to a team
 POST http://localhost:3000/api/teams/join
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc2NDk2OTM0NiwiZXhwIjoxNzY0OTcwMjQ2fQ.qKMYU3SeBng2jepDBEhVCG8Pv9MmRgrB5YhEsy4KNH8
+Authorization: Bearer {{token}}
 
 {
-  "teamCode": "8NPZNB",
+  "teamCode": "GREVUW",
   "password": "logic"
 }
 
 ### get all team's tasks
-GET http://localhost:3000/api/teams/3/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+GET http://localhost:3000/api/teams/4/tasks
+Authorization: Bearer {{token}}
 
 ### add task to a team
-POST http://localhost:3000/api/teams/3/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+POST http://localhost:3000/api/teams/4/tasks
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Design DB schema",
+  "title": "Design DB schema 3",
   "description": "Create database schema for the project",
   "completed": false,
   "dueDate": "2025-12-10T00:00:00Z",
@@ -81,31 +87,56 @@ Content-Type: application/json
 }
 
 ### edit the task
-PUT http://localhost:3000/api/teams/3/tasks/5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+PUT http://localhost:3000/api/teams/4/tasks/9
+Authorization: Bearer {{token}}
 Content-Type: application/json 
 
 {
-  "title": "Update DB schema",
+  "title": "Update DB schema 3",
   "completed": true
 }
 
 ### delete the task from team board
-DELETE http://localhost:3000/api/teams/3/tasks/delete/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+DELETE http://localhost:3000/api/teams/4/tasks/delete/9
+Authorization: Bearer {{token}}
 
 
+### get all team's members
+GET http://localhost:3000/api/teams/4/members
+Authorization: Bearer {{token}}
 
+### get all users
+GET http://localhost:3000/api/users
+Authorization: Bearer {{token}}
 
+### add user to the team through userId by owner
+POST http://localhost:3000/api/teams/4/join
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
-### get all team's members (not ready yet)
-GET http://localhost:3000/api/team/3/members
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2OTUxMywiZXhwIjoxNzY0OTcwNDEzfQ.8Ekfgtw_t48oycaUjlVPozRCsER7VLMES8rWbFxxWUw
+{
+    "userIdToAdd": 4,
+    "role": "member"
+}
 
-### remove the user from the team (not ready yet)
-DELETE http://localhost:3000/api/team/3/members/delete/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2OTUxMywiZXhwIjoxNzY0OTcwNDEzfQ.8Ekfgtw_t48oycaUjlVPozRCsER7VLMES8rWbFxxWUw
+### change user role by owner
+PUT http://localhost:3000/api/teams/4/members/change
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "userIdToChange": 4,
+    "role": "owner"
+}
+
+### get all user's boards
+GET http://localhost:3000/api/teams/all
+Authorization: Bearer {{token}}
+
+### remove the user from the team
+DELETE http://localhost:3000/api/teams/4/members/delete/2
+Authorization: Bearer {{token}}
 
 ### delete the team
-DELETE http://localhost:3000/api/teams/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2NDk2ODQyNCwiZXhwIjoxNzY0OTY5MzI0fQ.DdyCVaRRx8g2vWY2yG0hdT_Gc9hpbEEfDgqq5UvOyjg
+DELETE http://localhost:3000/api/teams/4/delete
+Authorization: Bearer {{token}}
