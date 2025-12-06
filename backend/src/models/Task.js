@@ -34,6 +34,14 @@ Task.init({
         allowNull: false,
         defaultValue: 'medium',
     },
+    assignedUserId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    assignedUserName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    }
 }, {
     sequelize,
     modelName: "Task",
