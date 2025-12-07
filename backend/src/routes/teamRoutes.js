@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTeam, joinTeam, getTeamTasks, addTeamTask, editTeamTask, deleteTeamTask, deleteTeamMember, getAllTeamMembers, getAllTeamBoardsTheUserHas, getAllUsers, addUserToTeam, changeUserRole, deleteTeam } from '../controllers/teamController.js';
+import { createTeam, joinTeam, getTeamTasks, addTeamTask, editTeamTask, deleteTeamTask, deleteTeamMember, getAllTeamMembers, getAllTeamBoardsTheUserHas, getAllUsers, addUserToTeam, changeUserRole, deleteTeam, editUser, editTeam } from '../controllers/teamController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const teamRouter = express.Router();
@@ -17,4 +17,6 @@ teamRouter.get('/users', authenticateToken, getAllUsers);
 teamRouter.post('/teams/:teamId/join', authenticateToken, addUserToTeam);
 teamRouter.put('/teams/:teamId/members/change', authenticateToken, changeUserRole);
 teamRouter.delete('/team/:teamId/delete', authenticateToken, deleteTeam);
+teamRouter.put('/users/me', authenticateToken, editUser);
+teamRouter.put('/teams/:teamId/edit', authenticateToken, editTeam);
 export { teamRouter };
