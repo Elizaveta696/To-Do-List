@@ -137,6 +137,27 @@ Authorization: Bearer {{token}}
 DELETE http://localhost:3000/api/teams/4/members/delete/2
 Authorization: Bearer {{token}}
 
+### Edit current user
+PUT http://localhost:3000/api/users/me
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "username": "newUsername",
+  "password": "newPassword"
+}
+
+### Edit team info
+PUT http://localhost:3000/api/teams/1/edit
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "New Team Name",
+  "password": "newTeamPassword123"
+}
+
+
 ### delete the team
 DELETE http://localhost:3000/api/teams/4/delete
 Authorization: Bearer {{token}}

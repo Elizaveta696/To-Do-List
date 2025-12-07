@@ -207,6 +207,49 @@ const editTeamTask = async (req, res) => {
     }
 }
 
+const editTeam = async (req, res) => {
+    try {
+        const teamId = req.params.teamId;
+        const userId = req.user.userId;
+        const { name, password } = req.body;
+
+        const member = await Team_member.findOne({where: {teamId: teamId, userId, role: "owner"}});
+        if (!member) return res.status(403).json({ error: "Forbidden" });
+
+        const team = await Team.findOne({ where: { teamId } });
+        if (!team) return res.status(404).json({ error: "Team not found" });
+
+        if (name) { team.name = name; };
+        if (password) { team.passwordHashed = await bcrypt.hash(password, 10); };
+
+        await team.save();
+        res.status(200).json({ message: "Team info updated!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const editUser = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { username, password } = req.body;
+
+        const user = await User.findOne({ where: {userId} });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (username) { user.username = username; };
+        if (password) { user.password = await bcrypt.hash(password, 10); };
+        
+        await user.save();
+        res.status(200).json({ message: "User info updated!" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });        
+    }
+}
+
 //delete team task
 const deleteTeamTask = async (req, res) => {
     try {
@@ -306,4 +349,4 @@ const deleteTeam = async (req, res) => {
 };
 
 
-export { createTeam, joinTeam, getTeamTasks, addTeamTask, editTeamTask, deleteTeamTask, deleteTeamMember, getAllTeamMembers, getAllTeamBoardsTheUserHas, getAllUsers, addUserToTeam, changeUserRole,  deleteTeam };
+export { createTeam, joinTeam, getTeamTasks, addTeamTask, editTeamTask, deleteTeamTask, deleteTeamMember, getAllTeamMembers, getAllTeamBoardsTheUserHas, getAllUsers, addUserToTeam, changeUserRole,  deleteTeam, editTeam, editUser };
