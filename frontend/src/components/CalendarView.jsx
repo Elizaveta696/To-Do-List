@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { fetchTasks } from "../api/tasks";
 
 const monthNames = [
 	"January",
@@ -48,6 +49,28 @@ export default function CalendarView() {
 	});
 
 	const [selectedDate, setSelectedDate] = useState(new Date());
+	const [tasks, setTasks] = useState([]);
+	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		let cancelled = false;
+		const load = async () => {
+			setLoading(true);
+			try {
+				const data = await fetchTasks();
+				if (!cancelled) setTasks(Array.isArray(data) ? data : []);
+			} catch (e) {
+				console.warn("Failed to load tasks", e);
+			} finally {
+				if (!cancelled) setLoading(false);
+			}
+		};
+
+		load();
+		return () => {
+			cancelled = true;
+		};
+	}, []);
 
 	const monthMatrix = useMemo(
 		() => getMonthMatrix(display.year, display.month),
@@ -74,6 +97,22 @@ export default function CalendarView() {
 		setSelectedDate(new Date(display.year, display.month, day));
 	};
 
+	// helper: group tasks by yyyy-mm-dd
+	const tasksByDate = useMemo(() => {
+		const map = new Map();
+		for (const t of tasks) {
+			if (!t.dueDate) continue;
+			const d = new Date(t.dueDate);
+			const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+			if (!map.has(key)) map.set(key, []);
+			map.get(key).push(t);
+		}
+		return map;
+	}, [tasks]);
+
+	const formatKey = (year, month, day) =>
+		`${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
 	return (
 		<section className="calendar-page">
 			<div className="calendar-left">
@@ -99,7 +138,7 @@ export default function CalendarView() {
 					</button>
 				</div>
 
-				<table className="calendar-table" role="grid" aria-label="Calendar">
+				<table className="calendar-table" aria-label="Calendar">
 					<thead>
 						<tr>
 							<th>Sun</th>
@@ -113,29 +152,68 @@ export default function CalendarView() {
 					</thead>
 					<tbody>
 						{monthMatrix.map((week, wi) => (
-							<tr key={wi}>
-								{week.map((d, i) => (
-									<td key={i} className={d ? "day-cell" : "empty-cell"}>
-										{d ? (
-											<button
-												type="button"
-												className={
-													"day-btn " +
-													(selectedDate.getDate() === d &&
-													selectedDate.getMonth() === display.month &&
-													selectedDate.getFullYear() === display.year
-														? "selected"
-														: "")
-												}
-												onClick={() => onSelectDay(d)}
-											>
-												{d}
-											</button>
-										) : (
-											""
-										)}
-									</td>
-								))}
+							<tr key={`${display.year}-${display.month}-week-${wi}`}>
+								{week.map((d, i) => {
+									const isDay = Boolean(d);
+									const isSelected =
+										isDay &&
+										selectedDate.getDate() === d &&
+										selectedDate.getMonth() === display.month &&
+										selectedDate.getFullYear() === display.year;
+									const key = isDay
+										? formatKey(display.year, display.month, d)
+										: null;
+									const cellTasks = key ? tasksByDate.get(key) || [] : [];
+									return (
+										<td
+											key={`${display.year}-${display.month}-${wi}-${i}`}
+											className={isDay ? "day-cell" : "empty-cell"}
+											onClick={isDay ? () => onSelectDay(d) : undefined}
+											role={isDay ? "button" : undefined}
+											tabIndex={isDay ? 0 : undefined}
+											onKeyDown={
+												isDay
+													? (e) => {
+															if (e.key === "Enter" || e.key === " ") {
+																e.preventDefault();
+																onSelectDay(d);
+															}
+														}
+													: undefined
+											}
+										>
+											{isDay ? (
+												<>
+													<button
+														type="button"
+														className={
+															"day-btn " + (isSelected ? "selected" : "")
+														}
+														onClick={(e) => {
+															e.stopPropagation();
+															onSelectDay(d);
+														}}
+													>
+														{d}
+													</button>
+													<div className="cell-tasks">
+														{cellTasks.slice(0, 3).map((t) => (
+															<div
+																key={t.id}
+																className="cell-task-title"
+																title={t.title}
+															>
+																{t.title}
+															</div>
+														))}
+													</div>
+												</>
+											) : (
+												""
+											)}
+										</td>
+									);
+								})}
 							</tr>
 						))}
 					</tbody>
@@ -143,13 +221,47 @@ export default function CalendarView() {
 			</div>
 
 			<aside className="calendar-right">
-				<div className="day-box" role="complementary" aria-label="Day details">
+				<section className="day-box" aria-label="Day details">
 					<h3 className="day-box-title">{selectedDate.toDateString()}</h3>
 					<div className="day-box-body">
-						<p className="muted">Tasks for this day will appear here.</p>
-						{/* TODO: fetch and show tasks for selectedDate */}
+						{loading ? (
+							<p className="muted">Loading tasks…</p>
+						) : (
+							<>
+								{(() => {
+									const key = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`;
+									const list = tasksByDate.get(key) || [];
+									if (list.length === 0)
+										return <p className="muted">No tasks for this day.</p>;
+									return (
+										<div className="task-cards">
+											{list.map((t) => (
+												<article key={t.id} className="task-card">
+													<h4 className="task-card-title">{t.title}</h4>
+													<p className="task-card-desc">
+														{t.description || "No description"}
+													</p>
+													<div className="task-meta">
+														<span
+															className={`priority ${t.priority || "medium"}`}
+														>
+															{t.priority}
+														</span>
+														{t.assignedUserName && (
+															<span className="assigned">
+																{t.assignedUserName}
+															</span>
+														)}
+													</div>
+												</article>
+											))}
+										</div>
+									);
+								})()}
+							</>
+						)}
 					</div>
-				</div>
+				</section>
 			</aside>
 		</section>
 	);

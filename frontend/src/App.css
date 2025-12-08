@@ -808,13 +808,14 @@ body::before {
 .day-cell,
 .empty-cell {
 	width: 14.28%;
-	height: 84px;
+	height: 110px; /* slightly smaller to make calendar more compact */
 	vertical-align: top;
-	padding: 6px;
+	padding: 8px;
 	background: rgba(2, 20, 46, 0.02);
 	border-radius: 10px;
 	border: 1px solid rgba(255, 255, 255, 0.04);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+	position: relative; /* allow absolute positioning of the day button */
 }
 .calendar-header {
 	display: flex;
@@ -834,6 +835,15 @@ body::before {
 	border: 1px solid transparent;
 	background: transparent;
 	cursor: pointer;
+	/* keep the button in the top-left while centering its label */
+	position: absolute;
+	left: 8px;
+	top: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	line-height: 1;
 }
 .day-cell:hover,
 .empty-cell:hover {
@@ -845,6 +855,57 @@ body::before {
 	color: #04233a;
 	border-color: transparent;
 }
+.cell-tasks {
+	margin-top: 44px; /* ensure tasks render beneath the small day button */
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	max-height: 78px;
+	overflow: hidden;
+}
+.cell-task-title {
+	font-size: 0.85rem;
+	color: var(--muted-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.task-cards {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.task-card {
+	background: rgba(2, 20, 46, 0.03);
+	padding: 12px;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.task-card-title {
+	margin: 0 0 6px 0;
+	font-size: 1rem;
+}
+.task-card-desc {
+	margin: 0 0 8px 0;
+	color: var(--muted-text);
+	font-size: 0.9rem;
+}
+.task-meta {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	font-size: 0.8rem;
+}
+.priority.high {
+	color: var(--danger);
+}
+.priority.medium {
+	color: var(--accent-strong);
+}
+.priority.low {
+	color: #94a3b8;
+}
 .day-btn:hover {
 	border-color: rgba(100, 108, 255, 0.12);
 }
@@ -854,6 +915,12 @@ body::before {
 }
 .calendar-right {
 	position: relative;
+}
+
+.calendar-page {
+	display: grid;
+	grid-template-columns: 640px 420px; /* smaller calendar (left) + task cards (right) */
+	gap: 20px;
 }
 .day-box {
 	background: rgba(2, 20, 46, 0.06);
