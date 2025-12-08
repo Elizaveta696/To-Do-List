@@ -898,13 +898,13 @@ body::before {
 	font-size: 0.8rem;
 }
 .priority.high {
-	color: var(--danger);
+	color: #e53935; /* red */
 }
 .priority.medium {
-	color: var(--accent-strong);
+	color: #fbc02d; /* yellow */
 }
 .priority.low {
-	color: #94a3b8;
+	color: #43a047; /* green */
 }
 .day-btn:hover {
 	border-color: rgba(100, 108, 255, 0.12);
@@ -919,8 +919,9 @@ body::before {
 
 .calendar-page {
 	display: grid;
-	grid-template-columns: 640px 420px; /* smaller calendar (left) + task cards (right) */
+	grid-template-columns: 2fr 1fr; /* wider calendar + task details */
 	gap: 20px;
+	width: 100%;
 }
 .day-box {
 	background: rgba(2, 20, 46, 0.06);
