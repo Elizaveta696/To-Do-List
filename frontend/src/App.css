@@ -2141,3 +2141,37 @@ html:not(.theme-light)
 		border-color 0.12s ease,
 		transform 0.12s ease;
 }
+
+/* Responsive fixes: make task cards fill their column and avoid overflow */
+.task-card {
+	width: 100% !important;
+	min-width: 0 !important; /* allow shrinking inside narrow columns */
+	box-sizing: border-box !important;
+	/* remove any fixed flex-basis forcing a larger width */
+	flex: 0 1 auto !important;
+}
+
+/* Ensure task text wraps instead of overflowing the card */
+.task-title,
+.task-card-title {
+	white-space: normal !important;
+	overflow-wrap: anywhere !important;
+	word-break: break-word !important;
+}
+.task-description,
+.task-card-desc {
+	white-space: normal !important;
+	overflow-wrap: anywhere !important;
+	word-break: break-word !important;
+}
+
+/* Slightly reduce the column minimum so 3 columns fit better on narrow screens */
+.task-column {
+	min-width: 200px;
+}
+
+@media (max-width: 900px) {
+	.task-column {
+		min-width: 180px;
+	}
+}
