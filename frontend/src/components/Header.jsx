@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { createTeam, fetchTeams, joinTeam } from "../api/teams.js"
 import {
   FiLogOut,
   FiMenu,
@@ -23,6 +24,39 @@ export default function Header({
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamPassword, setNewTeamPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [teams, setTeams] = useState([]);
+  const [teamCodeInput, setTeamCodeInput] = useState("");
+  const [teamPasswordInput, setTeamPasswordInput] = useState("");
+
+  useEffect(() => {
+    const loadTeams = async () => {
+      const res = await fetchTeams();
+
+      console.log("TEAMS RESPONSE:", res.data);
+
+      if (res.ok && Array.isArray(res.data.teams)) {
+        setTeams(res.data.teams);
+      } else {
+        setTeams([]);
+      }
+    };
+
+    loadTeams();
+  }, []);
+
+  const handleCreateTeam = async () => {
+  const res = await createTeam(newTeamName, newTeamPassword);
+
+  if (!res.ok) {
+    setMessage("Error: " + (res.data.message || "Something went wrong"));
+    return;
+  }
+  setTeams((prev) => [...prev, res.data.team]);
+
+  setMessage("Team created! Code: " + res.data.teamCode);
+};
+
 
   return (
     <nav
@@ -88,18 +122,20 @@ export default function Header({
 
               {showTeams && (
                 <ul className="team-list">
-                  <li>
-                    <button
-                      type="button"
-                      className="btn nav-panel-btn team-item"
-                      onClick={() => {
-                        onNavigate?.("tasks");
-                        setNavOpen(false);
-                      }}
-                    >
-                      {teamName}
-                    </button>
-                  </li>
+                  {teams.filter(t => t && t.teamId).map((t) => (
+                    <li key={t.teamId}>
+                      <button
+                        type="button"
+                        className="btn nav-panel-btn team-item"
+                        onClick={() => {
+                          onNavigate?.("tasks", t.teamId);
+                          setNavOpen(false);
+                        }}
+                      >
+                        {t.name}
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               )}
 
@@ -154,15 +190,11 @@ export default function Header({
                     onChange={(e) => setNewTeamPassword(e.target.value)}
                   />
                 </label>
+
                 <label>
-                  Team ID (assigned automatically)
-                  <input
-                    type="text"
-                    name="teamId"
-                    value="(assigned automatically)"
-                    disabled
-                  />
+                  <p>{message}</p>
                 </label>
+
               </div>
               <div className="modal-actions">
                 <button
@@ -175,13 +207,7 @@ export default function Header({
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => {
-                    console.log("Create team", {
-                      name: newTeamName,
-                      password: newTeamPassword,
-                    });
-                    setCreateModalOpen(false);
-                  }}
+                  onClick={handleCreateTeam}
                 >
                   Create
                 </button>
@@ -207,11 +233,11 @@ export default function Header({
               <div className="modal-body">
                 <label>
                   Enter team ID
-                  <input type="text" name="teamId" />
+                  <input type="text" name="teamId" value={teamCodeInput} onChange={(e) => setTeamCodeInput(e.target.value)} />
                 </label>
                 <label>
                   Enter password
-                  <input type="password" name="teamPassword" />
+                  <input type="password" name="teamPassword" value={teamPasswordInput} onChange={(e) => setTeamPasswordInput(e.target.value)} />
                 </label>
               </div>
               <div className="modal-actions">
@@ -225,9 +251,17 @@ export default function Header({
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => {
-                    /* No backend logic for now */
-                    console.log("Join clicked");
+                  onClick={async () => {
+                    const res = await joinTeam(teamCodeInput, teamPasswordInput);
+
+                    if (!res.ok) {
+                      alert("Error: " + res.data.message);
+                      return;
+                    }
+
+                    setTeams((prev) => [...prev, res.data.team]);
+
+                    setJoinModalOpen(false);  
                   }}
                 >
                   Join

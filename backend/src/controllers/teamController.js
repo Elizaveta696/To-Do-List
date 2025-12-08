@@ -20,7 +20,7 @@ const createTeam = async (req, res) => {
         const role = 'owner';
         const team_member = await Team_member.create({ teamId, userId, role});
 
-        res.json({message: 'Team created successfully!', teamId, teamCode, userId});
+        res.json({ok: true, message: 'Team created successfully!', team, teamCode: team.teamCode});
 
     } catch (error) {
         console.error(error);
@@ -34,20 +34,20 @@ const joinTeam = async (req, res) => {
     const { teamCode, password } = req.body;
     const userId = req.user.userId;
     const team = await Team.findOne({ where: { teamCode: teamCode } });
-    if (!team) return res.status(404).json({ error: "Team not found" });
+    if (!team) return res.status(404).json({ ok: false, error: "Team not found" });
 
     const ok = await bcrypt.compare(password, team.passwordHashed);
-    if (!ok) return res.status(400).json({ error: "Wrong password" });
+    if (!ok) return res.status(400).json({ ok: false, error: "Wrong password" });
 
     const existingMember = await Team_member.findOne({where: {teamId:team.teamId, userId}});
-    if(existingMember) return res.status(400).json({message:"User already added to the team!"});
+    if(existingMember) return res.status(400).json({ ok: false, message:"User already added to the team!"});
 
     const team_member = await Team_member.create({ teamId: team.teamId, userId, role: 'member'});
-    res.json({message: 'joined!', teamId: team.teamId});
+    res.json({ok: true, message: 'joined!', team});
 
     } catch (error){
         console.error(error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ ok: false, message: error.message });
     }
 }
 
@@ -56,14 +56,14 @@ const getAllTeamBoardsTheUserHas = async (req, res) => {
         const userId = req.user.userId;
 
         const teamIds = (await Team_member.findAll({ where: {userId: userId}})).map(t => t.teamId);
-        if(teamIds.length === 0) return res.status(200).json([]);
+        if(teamIds.length === 0) return res.status(200).json({  ok: true, teams: [] });
         
         const teams = await Team.findAll({ where: {teamId: teamIds}});
 
-        res.status(200).send(teams)
+        res.status(200).send({ ok: true, teams })
     }catch (error) {
         console.error(error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ ok: false, message: error.message });
     }
 }
 const getAllUsers = async (req, res) => {
@@ -311,14 +311,16 @@ const getAllTeamMembers = async (req, res) => {
         const teamId = req.params.teamId;
 
         const team = await Team.findOne({ where: {teamId} });
-        if (!team) return res.status(404).json({ error: "Team not found" });
+        if (!team) return res.status(404).json({ ok: false, error: "Team not found" });
 
         const team_members = await Team_member.findAll({ where: {teamId}});
+        const userIds = team_members.map(m => m.userId);
+        const users = await User.findAll({ where: { userId: userIds }});
 
-        res.status(200).json(team_members);
+        res.status(200).json({ok:true, users});
 
     } catch (error) {
-        res.status(500).json({message: error});
+        res.status(500).json({ ok: false, message: error});
     }
 }
 
