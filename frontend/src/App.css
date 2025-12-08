@@ -857,45 +857,74 @@ body::before {
 }
 .cell-tasks {
 	margin-top: 44px; /* ensure tasks render beneath the small day button */
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-	max-height: 78px;
-	overflow: hidden;
+	display: block; /* use block layout to ensure scrolling inside table cells */
+	max-height: 56px; /* fixed visible area before scrolling */
+	overflow-y: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
 }
 .cell-task-title {
-	font-size: 0.85rem;
-	color: var(--muted-text);
+	font-size: 0.95rem;
+	color: var(--text);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	background: rgba(2, 20, 46, 0.06);
+	padding: 4px 6px;
+	border-radius: 6px;
+	font-weight: 600;
+	display: block;
+	margin-bottom: 4px;
+}
+
+/* Scrollbar styling for the small day-box task list */
+.cell-tasks::-webkit-scrollbar {
+	width: 8px;
+}
+.cell-tasks::-webkit-scrollbar-track {
+	background: transparent;
+}
+.cell-tasks::-webkit-scrollbar-thumb {
+	background: rgba(2, 20, 46, 0.12);
+	border-radius: 6px;
+}
+.cell-tasks {
+	scrollbar-width: thin; /* Firefox */
+	scrollbar-color: rgba(2, 20, 46, 0.12) transparent;
 }
 
 .task-cards {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 8px;
 }
 .task-card {
 	background: rgba(2, 20, 46, 0.03);
-	padding: 12px;
-	border-radius: 10px;
+	padding: 8px; /* smaller card padding */
+	border-radius: 8px;
 	border: 1px solid rgba(255, 255, 255, 0.03);
+	font-size: 1.05rem; /* larger base font for content */
 }
 .task-card-title {
 	margin: 0 0 6px 0;
-	font-size: 1rem;
+	font-size: 1.25rem; /* larger title font */
 }
 .task-card-desc {
 	margin: 0 0 8px 0;
 	color: var(--muted-text);
-	font-size: 0.9rem;
+	font-size: 1.05rem; /* slightly bigger description font */
 }
 .task-meta {
 	display: flex;
 	gap: 8px;
 	align-items: center;
-	font-size: 0.8rem;
+	font-size: 1rem; /* larger metadata font */
+}
+
+/* Priority label inside task cards */
+.task-priority {
+	font-weight: 700;
+	font-size: 1.05rem;
 }
 .priority.high {
 	color: #e53935; /* red */
