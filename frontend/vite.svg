@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TeamBoard favicon: stylized kanban / board icon -->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1">
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#7dd3fc"/>
+    </linearGradient>
+  </defs>
+  <rect rx="22" width="128" height="128" fill="url(#bg)"/>
+  <!-- board base -->
+  <rect x="16" y="22" width="96" height="84" rx="10" fill="#0f172a" opacity="0.08"/>
+  <!-- three columns -->
+  <g fill="#ffffff" opacity="0.98">
+    <rect x="24" y="32" width="20" height="64" rx="6"/>
+    <rect x="54" y="32" width="20" height="64" rx="6"/>
+    <rect x="84" y="32" width="20" height="64" rx="6"/>
+  </g>
+  <!-- cards in columns -->
+  <g>
+    <rect x="28" y="38" width="14" height="10" rx="3" fill="#60a5fa"/>
+    <rect x="28" y="52" width="14" height="8" rx="3" fill="#34d399"/>
+    <rect x="28" y="64" width="14" height="8" rx="3" fill="#fde68a"/>
+
+    <rect x="58" y="40" width="14" height="10" rx="3" fill="#60a5fa"/>
+    <rect x="58" y="54" width="14" height="8" rx="3" fill="#a78bfa"/>
+
+    <rect x="88" y="38" width="14" height="10" rx="3" fill="#fb7185"/>
+    <rect x="88" y="52" width="14" height="8" rx="3" fill="#60a5fa"/>
+  </g>
+  <!-- subtle border/shine -->
+  <rect x="16" y="22" width="96" height="84" rx="10" fill="none" stroke="#ffffff" stroke-opacity="0.06"/>
+</svg>
