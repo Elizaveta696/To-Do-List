@@ -23,58 +23,58 @@ app.use(json());
 
 // OTEL metrics
 const requestCounter = meter?.createCounter("http_server_request_count", {
-	description: "Total HTTP requests",
+  description: "Total HTTP requests",
 }) ?? { add: () => {} };
 
 const requestDuration = meter?.createHistogram(
-	"http_server_request_duration_seconds",
-	{ description: "HTTP request duration in seconds" },
+  "http_server_request_duration_seconds",
+  { description: "HTTP request duration in seconds" },
 ) ?? { record: () => {} };
 
 // OTEL middleware — Tracing, Metrics, Logs
 app.use((req, res, next) => {
-	const span = tracer.startSpan("http.server", {
-		attributes: { "http.method": req.method, "http.route": req.path },
-	});
-	const start = Date.now();
-	const ctx = trace.setSpan(context.active(), span);
-	context.with(ctx, () => next());
+  const span = tracer.startSpan("http.server", {
+    attributes: { "http.method": req.method, "http.route": req.path },
+  });
+  const start = Date.now();
+  const ctx = trace.setSpan(context.active(), span);
+  context.with(ctx, () => next());
 
-	res.on("finish", () => {
-		const duration = (Date.now() - start) / 1000;
+  res.on("finish", () => {
+    const duration = (Date.now() - start) / 1000;
 
-		// Metrics
-		requestCounter.add(1, {
-			route: req.path,
-			method: req.method,
-			status: res.statusCode,
-		});
-		requestDuration.record(duration, {
-			route: req.path,
-			method: req.method,
-			status: res.statusCode,
-		});
+    // Metrics
+    requestCounter.add(1, {
+      route: req.path,
+      method: req.method,
+      status: res.statusCode,
+    });
+    requestDuration.record(duration, {
+      route: req.path,
+      method: req.method,
+      status: res.statusCode,
+    });
 
-		// Tracing
-		span.setAttribute("http.status_code", res.statusCode);
-		span.setAttribute("http.duration_s", duration);
-		span.end();
+    // Tracing
+    span.setAttribute("http.status_code", res.statusCode);
+    span.setAttribute("http.duration_s", duration);
+    span.end();
 
-		// Logs
-		if (logger?.emit) {
-			logger.emit({
-				body: `Handled request ${req.method} ${req.path}`,
-				severityNumber: 9, // INFO
-				attributes: {
-					"service.name": SERVICE_NAME, // must match collector label
-					route: req.path,
-					method: req.method,
-					status: res.statusCode,
-					duration_s: duration,
-				},
-			});
-		}
-	});
+    // Logs
+    if (logger?.emit) {
+      logger.emit({
+        body: `Handled request ${req.method} ${req.path}`,
+        severityNumber: 9, // INFO
+        attributes: {
+          "service.name": SERVICE_NAME, // must match collector label
+          route: req.path,
+          method: req.method,
+          status: res.statusCode,
+          duration_s: duration,
+        },
+      });
+    }
+  });
 });
 
 // Routes
@@ -85,36 +85,36 @@ app.use("/api", teamRouter);
 
 // 404 handler
 app.use((req, res) => {
-	res.status(404).json({ message: "Not Found" });
+  res.status(404).json({ message: "Not Found" });
 });
 
 // Server start
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, async () => {
-	try {
-		await connectDB();
-		await sequelize.sync({ alter: true });
-		console.log("Database synced");
-		console.log(`Server running on port ${PORT}`);
-	} catch (err) {
-		console.error("Startup failed:", err);
-		process.exit(1);
-	}
+  try {
+    await connectDB();
+    await sequelize.sync({ alter: true });
+    console.log("Database synced");
+    console.log(`Server running on port ${PORT}`);
+  } catch (err) {
+    console.error("Startup failed:", err);
+    process.exit(1);
+  }
 });
 
 // Graceful shutdown
 const shutdown = async () => {
-	console.log("Shutting down...");
-	server.close(async () => {
-		try {
-			if (globalThis.sdk) await globalThis.sdk.shutdown();
-			console.log("OTEL SDK shutdown complete");
-		} catch (err) {
-			console.error("OTEL shutdown failed:", err);
-		} finally {
-			process.exit(0);
-		}
-	});
+  console.log("Shutting down...");
+  server.close(async () => {
+    try {
+      if (globalThis.sdk) await globalThis.sdk.shutdown();
+      console.log("OTEL SDK shutdown complete");
+    } catch (err) {
+      console.error("OTEL shutdown failed:", err);
+    } finally {
+      process.exit(0);
+    }
+  });
 };
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);

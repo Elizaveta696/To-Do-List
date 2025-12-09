@@ -1,42 +1,55 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/UrSBfkqg)
-# Web Software Production
-Welcome to the starter repository for your team project in the **Web Software Production** course.
 
-As the course progress and you implement features, keep the README up-to-date.
+# TeamBoard — Collaborative Task Management
 
-## Project: “TeamBoard” – A Collaborative Task Management Web App
-### 🎯 Project Goal
-Build a full-stack web application that allows users to create, manage, and collaborate on tasks within teams. The app should support basic CRUD operations, user authentication, and real-time updates.
+TeamBoard is a concise full‑stack app for creating and collaborating on tasks within teams. It provides user authentication, team-based task boards, and basic task CRUD operations. The project is split into `backend/` (Express + Sequelize + PostgreSQL) and `frontend/` (React + Vite).
 
-### 🧩 Core Features (Required for All Teams)
-#### User Authentication
-- Register, login, logout
-- Join team
+Quick links
+- Backend: `./backend`
+- Frontend: `./frontend`
 
-#### Task Management
-- Create, edit, delete tasks
-- Assign tasks to users
-- Set due dates and priorities
-- Team Collaboration
+Quick Start (development)
 
-#### Create and join teams
-- View team-specific task boards
+1. Install dependencies (use `pnpm` if available):
 
-### 🎨 Options (Choose 2–3 per team)
-Teams can personalize their app by selecting from the following enhancements:
-- AI Assistant: Suggest task priorities or deadlines using a simple ML model or rule-based logic.
-- Calendar View: Visualize tasks in a calendar or timeline format.
-- Notifications: Add email or in-app notifications for task updates.
-- Analytics Dashboard: Show team productivity metrics (e.g., tasks completed per week).
-- Multilingual Support: Add localization for at least two languages.
-- Security Focus: Implement advanced security features like 2FA or audit logs.
-- File Attachments: Allow users to upload files to tasks.
-- Custom Themes: Let users choose or create UI themes.
-- Responsive UI: Works well on desktop and mobile.
-  
-### 🛠️ Tech Stack Guidelines
-Frontend: React
-Backend: Node.js (Express)
-Database: PostgreSQL
-DevOps: Docker, GitHub Actions, CI/CD pipeline
-Testing: Unit + integration tests using Jest, Mocha, Cypress, Playwrite, etc.
+	npm install
+	# or
+	pnpm install
+
+2. Run backend (from `./backend`):
+
+	npm --prefix backend run dev
+	# or
+	pnpm --filter backend dev
+
+	The backend dev script uses `.env.dev` (if present). Required environment variables include `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, and optionally `POSTGRES_HOST`.
+
+3. Run frontend (from `./frontend`):
+
+	npm --prefix frontend run dev
+	# or
+	pnpm --filter frontend dev
+
+Testing
+- Backend tests: `npm --prefix backend test` (uses Vitest)
+- Frontend tests: `npm --prefix frontend test`
+
+Environment variables (backend)
+- `POSTGRES_DB` — database name
+- `POSTGRES_USER` — DB username
+- `POSTGRES_PASSWORD` — DB password
+- `POSTGRES_HOST` — DB host (defaults to `db`)
+- `PORT` — server port (defaults to `3000`)
+
+Repository layout
+
+- `backend/` — Express API, Sequelize models, migrations and tests
+- `frontend/` — React app using Vite
+- `test/`, `backups/`, and `security/` — auxiliary files and reports
+
+Contributing
+
+Keep the README concise and up to date as features and scripts change. Open an issue or PR for larger changes.
+
+License
+
+See `backend/LICENSE` for license details.
