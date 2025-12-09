@@ -16,6 +16,7 @@ export default function Header({
 	onToggleNightMode,
 	nightMode,
 	teamName = "My tasks",
+	teamId = null,
 	onNavigate,
 }) {
 	const [navOpen, setNavOpen] = useState(false);
@@ -101,18 +102,20 @@ export default function Header({
 								>
 									{teamName}
 								</button>
-								<button
-									type="button"
-									className="btn icon-btn board-icon-btn"
-									onClick={() => {
-										onNavigate?.("team-settings");
-										setNavOpen(false);
-									}}
-									aria-label={`Open settings for ${teamName}`}
-									title="Board settings"
-								>
-									<FiSettings />
-								</button>
+								{teamId && (
+									<button
+										type="button"
+										className="btn icon-btn board-icon-btn"
+										onClick={() => {
+											onNavigate?.("team-settings");
+											setNavOpen(false);
+										}}
+										aria-label={`Open settings for ${teamName}`}
+										title="Board settings"
+									>
+										<FiSettings />
+									</button>
+								)}
 							</div>
 							<button
 								type="button"

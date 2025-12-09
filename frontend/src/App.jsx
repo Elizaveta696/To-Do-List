@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CalendarView from "./components/CalendarView";
 import Header from "./components/Header";
 import Login from "./components/Login";
@@ -15,6 +15,19 @@ function App() {
 	const [token, setToken] = useState(
 		() => localStorage.getItem("token") || null,
 	);
+
+	// track previous token so we can detect a fresh login (null -> token)
+	const prevTokenRef = useRef(token);
+
+	useEffect(() => {
+		if (!prevTokenRef.current && token) {
+			// fresh login: always show personal board first
+			setTeamId(null);
+			setTeamName("My tasks");
+			setPage("tasks");
+		}
+		prevTokenRef.current = token;
+	}, [token]);
 	const [page, setPage] = useState(token ? "tasks" : "login");
 	const [teamId, setTeamId] = useState(null);
 	const [teamName, setTeamName] = useState("My tasks");
@@ -115,6 +128,7 @@ function App() {
 				}
 				nightMode={nightMode}
 				teamName={teamName}
+				teamId={teamId}
 				onNavigate={navigate}
 			/>
 			{/* show New Task form overlay */}
@@ -156,15 +170,17 @@ function App() {
 							>
 								{teamName}
 							</button>
-							<button
-								type="button"
-								className="icon-btn page-title-gear"
-								onClick={() => setPage("team-settings")}
-								aria-label="Open team settings"
-								title="Settings"
-							>
-								<FiSettings />
-							</button>
+							{teamId && (
+								<button
+									type="button"
+									className="icon-btn page-title-gear"
+									onClick={() => setPage("team-settings")}
+									aria-label="Open team settings"
+									title="Settings"
+								>
+									<FiSettings />
+								</button>
+							)}
 						</h1>
 					)}
 				</header>

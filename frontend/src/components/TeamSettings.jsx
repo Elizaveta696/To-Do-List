@@ -116,7 +116,6 @@ export default function TeamSettings({
 			});
 	}
 
-	const idTeam = useId();
 	const idName = useId();
 	const idPassword = useId();
 	const idJoin = useId();
@@ -147,12 +146,6 @@ export default function TeamSettings({
 						value={teamCode || "(hidden)"}
 						readOnly
 					/>
-				</div>
-			</div>
-			<div className="settings-row">
-				<label htmlFor={idTeam}>Team ID</label>
-				<div className="settings-value">
-					<input id={idTeam} type="text" value={teamId} readOnly />
 				</div>
 			</div>
 			<div className="settings-row">
