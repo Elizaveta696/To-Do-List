@@ -854,7 +854,18 @@ body::before {
 .day-btn.selected {
 	background: linear-gradient(90deg, var(--accent), var(--accent-strong));
 	color: #04233a;
-	border-color: transparent;
+	/* avoid visible border seams — rely on inset shadow for left-edge masking */
+	border: none;
+	background-clip: padding-box;
+	box-shadow: inset 1px 0 0 rgba(2, 20, 46, 0.5);
+}
+
+/* Light-theme: use a light inset to mask the seam instead of a dark stripe */
+.theme-light .day-btn.selected {
+	/* lighten the inset so the left edge blends with the light cell background */
+	box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.85);
+	border: 1px solid rgba(7, 20, 34, 0.08);
+	background-clip: padding-box;
 }
 .cell-tasks {
 	margin-top: 44px; /* ensure tasks render beneath the small day button */
@@ -942,6 +953,9 @@ body::before {
 .day-btn.selected {
 	background: linear-gradient(90deg, var(--accent), var(--accent-strong));
 	color: #04233a;
+	border: none;
+	background-clip: padding-box;
+	box-shadow: inset 1px 0 0 rgba(2, 20, 46, 0.5);
 }
 .calendar-right {
 	position: relative;
@@ -1197,6 +1211,8 @@ body::before {
 	background: rgba(2, 20, 46, 0.56); /* darker fill */
 	border: 1px solid rgba(255, 255, 255, 0.08);
 	color: var(--text);
+	/* ensure gradient/background doesn't bleed into the border area */
+	background-clip: padding-box;
 }
 .theme-light .nav-expand-panel .team-item {
 	background: rgba(7, 20, 34, 0.06);
@@ -1211,7 +1227,10 @@ body::before {
 		var(--accent-strong-active)
 	);
 	color: #ffffff;
-	border: 1px solid rgba(0, 0, 0, 0.08);
+	/* remove outer border to avoid conflicting light edges and rely on inset shadow */
+	border: none;
+	background-clip: padding-box;
+	box-shadow: inset 1px 0 0 rgba(2, 20, 46, 0.6);
 }
 .theme-light .nav-expand-panel .team-item.active {
 	background: linear-gradient(
@@ -1220,6 +1239,10 @@ body::before {
 		var(--accent-strong-active)
 	);
 	color: #072033;
+	border: none;
+	background-clip: padding-box;
+	/* subtle inset to keep left edge consistent in light theme */
+	box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 .nav-expand-panel .team-item.active:focus-visible {
