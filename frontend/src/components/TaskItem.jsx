@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { FiTrash2 } from "react-icons/fi";
+import { fetchAllUsers, fetchTeamMembers } from "../api/teams";
 
-export default function TaskItem({ task, onUpdate, onDelete }) {
+export default function TaskItem({ task, onUpdate, onDelete, isPersonalView }) {
 	const [editing, setEditing] = useState(false);
 	const [editTitle, setEditTitle] = useState(task.title);
 	const [editDescription, setEditDescription] = useState(task.description);
@@ -14,37 +15,134 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
 	);
 	const [saving, setSaving] = useState(false);
 
+	const [availableUsers, setAvailableUsers] = useState([]);
+	const [editAssignedUser, setEditAssignedUser] = useState(
+		task.assignedUserId ?? null,
+	);
+	const [currentUserRole, setCurrentUserRole] = useState(null);
+	const [forbiddenMessage, setForbiddenMessage] = useState(null);
+
+	useEffect(() => {
+		let mounted = true;
+		async function loadUsers() {
+			try {
+				if (task.teamId) {
+					const { users } = await fetchTeamMembers(task.teamId);
+					if (!mounted) return;
+					setAvailableUsers(users || []);
+					// determine current user's role in this team
+					try {
+						const token = localStorage.getItem("token");
+						if (token) {
+							const payload = JSON.parse(
+								atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+							);
+							const uid = payload?.userId ?? null;
+							const membership = (users || []).find(
+								(u) => Number(u.userId) === Number(uid),
+							);
+							setCurrentUserRole(membership?.role ?? null);
+						}
+					} catch (_e) {
+						setCurrentUserRole(null);
+					}
+				} else {
+					const users = await fetchAllUsers();
+					if (!mounted) return;
+					setAvailableUsers(users || []);
+				}
+			} catch (e) {
+				console.error("Failed to load users for task edit", e);
+				setAvailableUsers([]);
+			}
+		}
+		loadUsers();
+		return () => {
+			mounted = false;
+		};
+	}, [task.teamId]);
+
+	useEffect(() => {
+		if (!forbiddenMessage) return;
+		const t = setTimeout(() => setForbiddenMessage(null), 3000);
+		return () => clearTimeout(t);
+	}, [forbiddenMessage]);
+
 	const handleSave = async (e) => {
 		e.preventDefault();
 		if (!editTitle.trim()) return alert("Title required");
 		try {
 			setSaving(true);
-			await onUpdate(task.id, {
+			const updates = {
 				title: editTitle,
 				description: editDescription,
 				dueDate: editDueDate || null,
 				priority: editPriority,
-			});
-			setEditing(false);
+			};
+			if (editAssignedUser !== undefined) {
+				updates.assignedUserId = editAssignedUser
+					? Number(editAssignedUser)
+					: null;
+				const user = availableUsers.find(
+					(u) => Number(u.userId ?? u.id) === Number(editAssignedUser),
+				);
+				updates.assignedUserName = user ? (user.username ?? user.name) : null;
+			}
+			try {
+				await onUpdate(task.id, updates);
+				setEditing(false);
+			} catch (err) {
+				console.error("Failed to save task edit", err);
+				setForbiddenMessage(
+					err?.message?.toLowerCase().includes("forbid")
+						? "Only owner can do this action"
+						: (err?.message ?? "Failed to save"),
+				);
+			}
 		} finally {
 			setSaving(false);
 		}
 	};
 
 	const handleToggle = async () => {
-		await onUpdate(task.id, { completed: !task.completed });
+		// toggling completion follows same owner rules for team tasks — delegate to parent and catch errors
+		try {
+			await onUpdate(task.id, { completed: !task.completed });
+		} catch (err) {
+			console.error("Failed to toggle completion", err);
+			setForbiddenMessage(
+				err?.message?.toLowerCase().includes("forbid")
+					? "Only owner can do this action"
+					: (err?.message ?? "Action failed"),
+			);
+		}
+	};
+
+	const attemptEdit = () => {
+		if (task.teamId && currentUserRole !== "owner") {
+			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
+		setEditing(true);
+	};
+
+	const attemptDelete = () => {
+		if (task.teamId && currentUserRole !== "owner") {
+			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
+		onDelete(task.id);
 	};
 
 	// Color mapping for priority
 	const priorityColors = {
-		high: "#e53935", // red
-		medium: "#fbc02d", // yellow
-		low: "#43a047", // green
+		high: "#e53935",
+		medium: "#fbc02d",
+		low: "#43a047",
 	};
 
 	return (
 		<article className="task-card" style={{ position: "relative" }}>
-			{/* ...existing code... */}
 			{editing ? (
 				createPortal(
 					<div className="overlay-form">
@@ -101,6 +199,28 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
 											<option value="low">Low</option>
 										</select>
 									</label>
+									{task.teamId && (
+										<label>
+											Assign to
+											<select
+												className="input"
+												value={editAssignedUser ?? ""}
+												onChange={(e) =>
+													setEditAssignedUser(e.target.value || null)
+												}
+											>
+												<option value="">Unassigned</option>
+												{availableUsers.map((u) => (
+													<option
+														key={u.userId ?? u.id}
+														value={u.userId ?? u.id}
+													>
+														{u.username ?? u.name}
+													</option>
+												))}
+											</select>
+										</label>
+									)}
 								</div>
 								<div className="form-actions" style={{ marginTop: 12 }}>
 									<button
@@ -159,13 +279,18 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
 									title="Delete"
 									aria-label="Delete task"
 									style={{ marginLeft: 2 }}
-									onClick={() => onDelete(task.id)}
+									onClick={attemptDelete}
 								>
 									<FiTrash2 />
 								</button>
 							)}
 						</div>
 					</div>
+					{task.assignedUserName && (
+						<div style={{ marginBottom: 8, fontSize: 13 }}>
+							Assigned to: <strong>{task.assignedUserName}</strong>
+						</div>
+					)}
 					<h3
 						className={`task-title ${task.completed ? "task-completed" : ""}`}
 					>
@@ -180,13 +305,18 @@ export default function TaskItem({ task, onUpdate, onDelete }) {
 						>
 							{task.completed ? "Undo" : "Complete"}
 						</button>
-						<button
-							type="button"
-							className="btn"
-							onClick={() => setEditing(true)}
-						>
-							Edit
-						</button>
+						{/* Hide edit button in personal view for tasks that belong to a team; team tasks must be edited in the team board */}
+						{(!isPersonalView || !task.teamId) && (
+							<button type="button" className="btn" onClick={attemptEdit}>
+								Edit
+							</button>
+						)}
+
+						{forbiddenMessage && (
+							<div style={{ color: "#b00020", marginTop: 8 }}>
+								{forbiddenMessage}
+							</div>
+						)}
 					</div>
 				</>
 			)}

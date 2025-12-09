@@ -185,7 +185,7 @@ function App() {
 					)}
 				</header>
 				<div key={refreshKey}>
-					{page === "tasks" && <TaskList teamId={teamId} />}
+					{page === "tasks" && <TaskList teamId={teamId} token={token} />}
 					{page === "team-settings" && (
 						<TeamSettings
 							teamId={teamId}

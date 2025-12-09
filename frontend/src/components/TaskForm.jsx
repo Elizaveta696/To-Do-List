@@ -1,6 +1,6 @@
-import { useId, useMemo, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { createTask } from "../api/tasks";
-import { createTeamTask } from "../api/teams";
+import { createTeamTask, fetchTeamMembers } from "../api/teams";
 
 export default function TaskForm({ onCreated, onClose, teamId }) {
 	const id = useId();
@@ -10,23 +10,33 @@ export default function TaskForm({ onCreated, onClose, teamId }) {
 	const [priority, setPriority] = useState("medium");
 	const [loading, setLoading] = useState(false);
 
-	const availableUsers = useMemo(
-		() => [
-			{ id: 1, name: "Alice" },
-			{ id: 2, name: "Bob" },
-			{ id: 3, name: "Eve" },
-			{ id: 4, name: "Carol" },
-		],
-		[],
-	);
+	const [availableUsers, setAvailableUsers] = useState([]);
+	// Only allow selecting assignee when creating a team task
+	const [selectedAssignee, setSelectedAssignee] = useState(null);
 
-	const [assignees, setAssignees] = useState([]);
-
-	function toggleAssignee(id) {
-		setAssignees((s) =>
-			s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
-		);
-	}
+	useEffect(() => {
+		let mounted = true;
+		async function loadMembers() {
+			try {
+				if (teamId) {
+					const { users } = await fetchTeamMembers(teamId);
+					if (!mounted) return;
+					setAvailableUsers(users || []);
+				} else {
+					// personal board: do not expose assignable users when creating tasks
+					setAvailableUsers([]);
+					setSelectedAssignee(null);
+				}
+			} catch (e) {
+				console.error("Failed to fetch users", e);
+				setAvailableUsers([]);
+			}
+		}
+		loadMembers();
+		return () => {
+			mounted = false;
+		};
+	}, [teamId]);
 
 	const submit = async (e) => {
 		e.preventDefault();
@@ -35,8 +45,9 @@ export default function TaskForm({ onCreated, onClose, teamId }) {
 			setLoading(true);
 			let newTask;
 			if (teamId) {
-				// create task on team board; API expects single assigned user id
-				const assignedUserId = assignees.length > 0 ? assignees[0] : undefined;
+				const assignedUserId = selectedAssignee
+					? Number(selectedAssignee)
+					: undefined;
 				newTask = await createTeamTask({
 					teamId,
 					title,
@@ -46,12 +57,12 @@ export default function TaskForm({ onCreated, onClose, teamId }) {
 					assignedUserId,
 				});
 			} else {
+				// personal board: creating a task is always created by the user and not assigned
 				newTask = await createTask({
 					title,
 					description,
 					dueDate: dueDate || null,
 					priority,
-					assignees, // frontend-only: list of user ids assigned to the task
 				});
 			}
 			setTitle("");
@@ -120,22 +131,25 @@ export default function TaskForm({ onCreated, onClose, teamId }) {
 					</select>
 				</label>
 			</div>
-			{/* Assign users - frontend-only multi-select scroll list */}
-			<div>
-				<label htmlFor={`assign-${id}`}>Assign user</label>
-				<div className="assign-users">
-					{availableUsers.map((u) => (
-						<label key={u.id} className="user-item">
-							<input
-								type="checkbox"
-								checked={assignees.includes(u.id)}
-								onChange={() => toggleAssignee(u.id)}
-							/>
-							<span className="user-name">{u.name}</span>
-						</label>
-					))}
+			{/* Assign users: only when creating a task on a team board */}
+			{teamId && (
+				<div>
+					<label htmlFor={`assign-${id}`}>Assign user</label>
+					<select
+						id={`assign-${id}`}
+						className="input"
+						value={selectedAssignee ?? ""}
+						onChange={(e) => setSelectedAssignee(e.target.value || null)}
+					>
+						<option value="">Unassigned</option>
+						{availableUsers.map((u) => (
+							<option key={u.userId ?? u.id} value={u.userId ?? u.id}>
+								{u.username ?? u.name}
+							</option>
+						))}
+					</select>
 				</div>
-			</div>
+			)}
 			<div className="form-actions">
 				<button
 					className="btn btn-ghost"

@@ -25,8 +25,14 @@ export default function TeamSettings({
 	const [removeConfirm, setRemoveConfirm] = useState(null);
 	const [newUserRole, setNewUserRole] = useState("member");
 	const [selectedUserToAdd, setSelectedUserToAdd] = useState("");
+	const [currentUserRole, setCurrentUserRole] = useState(null);
+	const [forbiddenMessage, setForbiddenMessage] = useState(null);
 
 	function updateRole(id, newRole) {
+		if (currentUserRole !== "owner") {
+			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
 		setUsers((u) =>
 			u.map((usr) => (usr.userId === id ? { ...usr, role: newRole } : usr)),
 		);
@@ -37,6 +43,10 @@ export default function TeamSettings({
 	}
 
 	function removeUser(id) {
+		if (currentUserRole !== "owner") {
+			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
 		// call backend to remove
 		removeTeamMember(teamId, id)
 			.then(() => setUsers((u) => u.filter((usr) => usr.userId !== id)))
@@ -47,6 +57,10 @@ export default function TeamSettings({
 	}
 
 	function handleSave() {
+		if (currentUserRole !== "owner") {
+			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
 		// call API to save team name/password
 		editTeam(teamId, { name, password })
 			.then(() => {
@@ -67,6 +81,10 @@ export default function TeamSettings({
 	}
 
 	function handleDeleteConfirmed() {
+		if (currentUserRole !== "owner") {
+			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
 		deleteTeam(teamId)
 			.then(() => {
 				setConfirmOpen(false);
@@ -100,6 +118,10 @@ export default function TeamSettings({
 		// add existing user from allUsers via add button
 		if (!selectedUserToAdd) return;
 		const userId = Number(selectedUserToAdd);
+		if (currentUserRole !== "owner") {
+			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
 		addUserToTeam(teamId, userId, newUserRole)
 			.then(() => {
 				const user = allUsers.find((u) => u.userId === userId);
@@ -127,6 +149,22 @@ export default function TeamSettings({
 			.then(({ users: members, team }) => {
 				setUsers(members);
 				if (team?.teamCode) setTeamCode(team.teamCode);
+				// determine current user's role
+				try {
+					const token = localStorage.getItem("token");
+					if (token) {
+						const payload = JSON.parse(
+							atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+						);
+						const uid = payload?.userId ?? null;
+						const membership = (members || []).find(
+							(m) => Number(m.userId) === Number(uid),
+						);
+						setCurrentUserRole(membership?.role ?? null);
+					}
+				} catch (_e) {
+					setCurrentUserRole(null);
+				}
 			})
 			.catch((e) => console.error(e));
 		fetchAllUsers()
@@ -134,9 +172,25 @@ export default function TeamSettings({
 			.catch((e) => console.error(e));
 	}, [teamId]);
 
+	useEffect(() => {
+		if (!forbiddenMessage) return;
+		const t = setTimeout(() => setForbiddenMessage(null), 4000);
+		return () => clearTimeout(t);
+	}, [forbiddenMessage]);
+
 	return (
 		<section className="settings-panel">
+			{forbiddenMessage && (
+				<div style={{ color: "#b00020", marginBottom: 12 }}>
+					{forbiddenMessage}
+				</div>
+			)}
 			<h2>Team Settings</h2>{" "}
+			{currentUserRole && currentUserRole !== "owner" && (
+				<div style={{ color: "#b00020", marginBottom: 8 }}>
+					Only owner can perform administrative actions in this panel.
+				</div>
+			)}
 			<div className="settings-row">
 				<label htmlFor={idJoin}>Join code</label>
 				<div className="settings-value">

@@ -11,7 +11,7 @@ import {
 } from "../api/teams";
 import TaskItem from "./TaskItem";
 
-export default function TaskList({ teamId }) {
+export default function TaskList({ teamId, token }) {
 	const [tasks, setTasks] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -33,8 +33,11 @@ export default function TaskList({ teamId }) {
 	}, [teamId]);
 
 	useEffect(() => {
+		// reference token so linter knows we depend on it (trigger reload after login/logout)
+		const _t = token;
+		void _t;
 		load();
-	}, [load]);
+	}, [load, token]);
 
 	const handleUpdate = async (id, updates) => {
 		let updated;
@@ -43,7 +46,34 @@ export default function TaskList({ teamId }) {
 		} else {
 			updated = await updateSoloTask(id, updates);
 		}
-		setTasks((t) => t.map((x) => (x.id === updated.id ? updated : x)));
+
+		// If the update moved ownership to another user, remove it from this user's list
+		const getCurrentUserId = () => {
+			try {
+				const token = localStorage.getItem("token");
+				if (!token) return null;
+				const payload = JSON.parse(
+					atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+				);
+				return payload?.userId ?? null;
+			} catch (_e) {
+				return null;
+			}
+		};
+
+		const currentUserId = getCurrentUserId();
+		// Only remove from current list if this is the personal view (not a team board)
+		if (
+			!teamId &&
+			updated &&
+			currentUserId != null &&
+			Number(updated.userId) !== Number(currentUserId)
+		) {
+			// Task transferred to someone else — remove from current (personal) list
+			setTasks((t) => t.filter((x) => x.id !== updated.id));
+		} else if (updated) {
+			setTasks((t) => t.map((x) => (x.id === updated.id ? updated : x)));
+		}
 	};
 
 	const handleDelete = async (id) => {
@@ -93,6 +123,7 @@ export default function TaskList({ teamId }) {
 							task={task}
 							onUpdate={handleUpdate}
 							onDelete={handleDelete}
+							isPersonalView={!teamId}
 						/>
 					))}
 				</div>
@@ -110,6 +141,7 @@ export default function TaskList({ teamId }) {
 							task={task}
 							onUpdate={handleUpdate}
 							onDelete={handleDelete}
+							isPersonalView={!teamId}
 						/>
 					))}
 				</div>
@@ -127,6 +159,7 @@ export default function TaskList({ teamId }) {
 							task={task}
 							onUpdate={handleUpdate}
 							onDelete={handleDelete}
+							isPersonalView={!teamId}
 						/>
 					))}
 				</div>
