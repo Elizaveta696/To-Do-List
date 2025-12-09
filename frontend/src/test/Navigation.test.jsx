@@ -19,7 +19,10 @@ describe("Navigation / Header", () => {
   it("opens expanded nav and navigates to team settings", async () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
-    render(<Header onNavigate={onNavigate} teamName="BoardName" />);
+    // pass a teamId so the gear (board settings) button is rendered
+    render(
+      <Header onNavigate={onNavigate} teamName="BoardName" teamId="TEAM-1" />,
+    );
 
     // open navigation
     const expandBtn = screen.getByRole("button", {
