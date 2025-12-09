@@ -19,6 +19,7 @@ export default function TeamSettings({
 	const [password, setPassword] = useState("");
 
 	const [users, setUsers] = useState([]);
+	const [currentUserId, setCurrentUserId] = useState(null);
 	const [allUsers, setAllUsers] = useState([]);
 	const [teamCode, setTeamCode] = useState("");
 	const [confirmOpen, setConfirmOpen] = useState(false);
@@ -45,6 +46,12 @@ export default function TeamSettings({
 	function removeUser(id) {
 		if (currentUserRole !== "owner") {
 			setForbiddenMessage("Only owner can do this action");
+			return;
+		}
+
+		// prevent removing yourself from the team via settings UI
+		if (String(id) === String(currentUserId)) {
+			setForbiddenMessage("You cannot remove yourself from the team here");
 			return;
 		}
 		// call backend to remove
@@ -156,6 +163,7 @@ export default function TeamSettings({
 		fetchTeamMembers(teamId)
 			.then(({ users: members, team }) => {
 				setUsers(members);
+				// determine current user's id + role
 				if (team?.teamCode) setTeamCode(team.teamCode);
 				// determine current user's role
 				try {
@@ -165,6 +173,7 @@ export default function TeamSettings({
 							atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
 						);
 						const uid = payload?.userId ?? null;
+						setCurrentUserId(uid ?? null);
 						const membership = (members || []).find(
 							(m) => Number(m.userId) === Number(uid),
 						);
@@ -261,60 +270,62 @@ export default function TeamSettings({
 										<option value="owner">Owner</option>
 										<option value="member">Member</option>
 									</select>
-									<button
-										type="button"
-										className="btn-icon remove-user-btn"
-										onClick={() =>
-											setRemoveConfirm({ id: u.userId, name: u.username })
-										}
-										aria-label={`Remove ${u.username}`}
-										title={`Remove ${u.username}`}
-									>
-										<svg
-											width="16"
-											height="16"
-											viewBox="0 0 24 24"
-											fill="none"
-											xmlns="http://www.w3.org/2000/svg"
+									{String(u.userId) !== String(currentUserId) && (
+										<button
+											type="button"
+											className="btn-icon remove-user-btn"
+											onClick={() =>
+												setRemoveConfirm({ id: u.userId, name: u.username })
+											}
+											aria-label={`Remove ${u.username}`}
+											title={`Remove ${u.username}`}
 										>
-											<title>{`Remove ${u.name}`}</title>
-											<path
-												d="M3 6h18"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-											<path
-												d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-											<path
-												d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-											<path
-												d="M10 11v6"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-											<path
-												d="M14 11v6"
-												stroke="currentColor"
-												strokeWidth="2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-										</svg>
-									</button>
+											<svg
+												width="16"
+												height="16"
+												viewBox="0 0 24 24"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<title>{`Remove ${u.name}`}</title>
+												<path
+													d="M3 6h18"
+													stroke="currentColor"
+													strokeWidth="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+													stroke="currentColor"
+													strokeWidth="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+													stroke="currentColor"
+													strokeWidth="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M10 11v6"
+													stroke="currentColor"
+													strokeWidth="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M14 11v6"
+													stroke="currentColor"
+													strokeWidth="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+											</svg>
+										</button>
+									)}
 								</div>
 							</div>
 						</React.Fragment>

@@ -1203,6 +1203,30 @@ body::before {
 	border: 1px solid rgba(7, 20, 34, 0.06);
 }
 
+/* Active/selected team styling */
+.nav-expand-panel .team-item.active {
+	background: linear-gradient(
+		90deg,
+		var(--accent-active),
+		var(--accent-strong-active)
+	);
+	color: #ffffff;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.theme-light .nav-expand-panel .team-item.active {
+	background: linear-gradient(
+		90deg,
+		var(--accent-active),
+		var(--accent-strong-active)
+	);
+	color: #072033;
+}
+
+.nav-expand-panel .team-item.active:focus-visible {
+	outline: 3px solid rgba(96, 165, 250, 0.18);
+	outline-offset: 2px;
+}
+
 /* Join modal overlay and dialog */
 .modal-overlay {
 	position: fixed;

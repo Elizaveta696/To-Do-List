@@ -60,7 +60,15 @@ export default function Header({
 		}
 		setTeams((prev) => [...prev, res.data.team]);
 
-		setMessage("Team created! Code: " + res.data.teamCode);
+		// clear inputs and close modal after successful creation
+		setNewTeamName("");
+		setNewTeamPassword("");
+		try {
+			window.dispatchEvent(new CustomEvent("teams:changed"));
+		} catch (_e) {
+			// ignore
+		}
+		setCreateModalOpen(false);
 	};
 
 	return (
@@ -150,7 +158,7 @@ export default function Header({
 									<li>
 										<button
 											type="button"
-											className="btn nav-panel-btn team-item"
+											className={`btn nav-panel-btn team-item ${teamId == null ? "active" : ""}`}
 											onClick={() => {
 												onNavigate?.("tasks");
 												setNavOpen(false);
@@ -165,7 +173,7 @@ export default function Header({
 											<li key={t.teamId}>
 												<button
 													type="button"
-													className="btn nav-panel-btn team-item"
+													className={`btn nav-panel-btn team-item ${String(teamId) === String(t.teamId) ? "active" : ""}`}
 													onClick={() => {
 														onNavigate?.("tasks", t.teamId, t.name);
 														setNavOpen(false);
@@ -319,6 +327,10 @@ export default function Header({
 											}
 
 											setTeams((prev) => [...prev, res.data.team]);
+
+											// clear join inputs so next open shows empty fields
+											setTeamCodeInput("");
+											setTeamPasswordInput("");
 											// inform other parts of the app to refresh team list
 											try {
 												window.dispatchEvent(new CustomEvent("teams:changed"));
