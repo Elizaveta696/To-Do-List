@@ -301,19 +301,35 @@ export default function Header({
 									type="button"
 									className="btn btn-primary"
 									onClick={async () => {
-										const res = await joinTeam(
-											teamCodeInput,
-											teamPasswordInput,
-										);
+										try {
+											if (!teamCodeInput) {
+												alert("Please enter a team code");
+												return;
+											}
+											const res = await joinTeam(
+												teamCodeInput,
+												teamPasswordInput,
+											);
 
-										if (!res.ok) {
-											alert("Error: " + res.data.message);
-											return;
+											if (!res.ok) {
+												alert(
+													"Error: " + (res.data?.message || "Failed to join"),
+												);
+												return;
+											}
+
+											setTeams((prev) => [...prev, res.data.team]);
+											// inform other parts of the app to refresh team list
+											try {
+												window.dispatchEvent(new CustomEvent("teams:changed"));
+											} catch (_e) {
+												// ignore
+											}
+											setJoinModalOpen(false);
+										} catch (e) {
+											console.error(e);
+											alert("Failed to join team: " + (e?.message || e));
 										}
-
-										setTeams((prev) => [...prev, res.data.team]);
-
-										setJoinModalOpen(false);
 									}}
 								>
 									Join

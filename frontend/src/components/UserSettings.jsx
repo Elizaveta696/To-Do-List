@@ -75,6 +75,12 @@ export default function UserSettings({ onNavigate }) {
 			const userId = currentUserId;
 			await removeTeamMember(removeConfirm.id, userId);
 			setTeams((t) => t.filter((x) => x.id !== removeConfirm.id));
+			// inform other parts of the app (header) to refresh team list
+			try {
+				window.dispatchEvent(new CustomEvent("teams:changed"));
+			} catch (_e) {
+				// ignore if dispatch not available
+			}
 			setRemoveConfirm(null);
 		} catch (err) {
 			console.error(err);

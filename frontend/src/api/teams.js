@@ -41,17 +41,28 @@ export async function fetchTeams() {
 
 export async function joinTeam(teamCode, password) {
 	const token = localStorage.getItem("token");
-	const res = await fetch(`${resolveBase()}/api/teams/join`, {
-		method: "POST",
-		credentials: "include",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${token}`,
-		},
-		body: JSON.stringify({ teamCode, password }),
-	});
-	const data = await res.json();
-	return { ok: res.ok, data };
+	try {
+		const res = await fetch(`${resolveBase()}/api/teams/join`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({ teamCode, password }),
+		});
+
+		let data;
+		try {
+			data = await res.json();
+		} catch (_e) {
+			data = { message: res.statusText || "No response body" };
+		}
+
+		return { ok: res.ok, data };
+	} catch (err) {
+		// network or other fetch error
+		return { ok: false, data: { message: err.message || "Network error" } };
+	}
 }
 
 export const createTeamTask = async ({

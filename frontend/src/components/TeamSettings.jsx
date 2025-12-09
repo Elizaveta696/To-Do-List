@@ -49,7 +49,15 @@ export default function TeamSettings({
 		}
 		// call backend to remove
 		removeTeamMember(teamId, id)
-			.then(() => setUsers((u) => u.filter((usr) => usr.userId !== id)))
+			.then(() => {
+				setUsers((u) => u.filter((usr) => usr.userId !== id));
+				// inform other parts of the app (header) to refresh team list
+				try {
+					window.dispatchEvent(new CustomEvent("teams:changed"));
+				} catch (_e) {
+					// ignore if dispatch not available
+				}
+			})
 			.catch((e) => {
 				console.error(e);
 				alert("Failed to remove user");
