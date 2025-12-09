@@ -227,6 +227,26 @@ export const removeTeamMember = async (teamId, userId) => {
 	return res.json();
 };
 
+export const editUser = async ({ username, password }) => {
+	const base = resolveBase();
+	const token = localStorage.getItem("token");
+
+	const res = await fetch(`${base}/api/users/me`, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+		body: JSON.stringify({ username, password }),
+	});
+
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.message || "Failed to edit user");
+	}
+
+	return res.json();
+};
 export const fetchTeamTasks = async (teamId) => {
 	if (!teamId) throw new Error("teamId is required");
 	const base = resolveBase();

@@ -348,17 +348,21 @@ const deleteTeamMember = async (req, res) => {
 		const userToDeleteId = req.params.userId;
 		const userId = req.user.userId;
 
-		const member = await Team_member.findOne({
-			where: { teamId, userId, role: "owner" },
-		});
-		if (!member) return res.status(403).json({ error: "Forbidden" });
+		// allow a user to remove themself from a team, otherwise only an owner may remove others
+		// coerce types because req.params are strings while token userId may be a number
+		if (String(userToDeleteId) !== String(userId)) {
+			const member = await Team_member.findOne({
+				where: { teamId, userId, role: "owner" },
+			});
+			if (!member) return res.status(403).json({ error: "Forbidden" });
+		}
 
 		const team_member = await Team_member.findOne({
 			where: { teamId: teamId, userId: userToDeleteId },
 		});
 		if (!team_member) return res.status(404).json({ error: "User not found" });
 
-		const deleted = await Team_member.destroy({
+		await Team_member.destroy({
 			where: { teamId: teamId, userId: userToDeleteId },
 		});
 
