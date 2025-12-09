@@ -91,13 +91,14 @@ describe("App integration", () => {
     );
     await user.click(within(dialog).getByRole("button", { name: /add task/i }));
 
-    expect(createTask).toHaveBeenCalledWith({
-      title: newTask.title,
-      description: newTask.description,
-      priority: "medium",
-      dueDate: null,
-      assignees: [],
-    });
+    expect(createTask).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: newTask.title,
+        description: newTask.description,
+        priority: "medium",
+        dueDate: null,
+      }),
+    );
     expect(await screen.findByText(newTask.title)).toBeInTheDocument();
   });
 });

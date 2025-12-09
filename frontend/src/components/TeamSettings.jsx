@@ -58,6 +58,9 @@ export default function TeamSettings({
     removeTeamMember(teamId, id)
       .then(() => {
         setUsers((u) => u.filter((usr) => usr.userId !== id));
+        // also remove from the allUsers list so the removed user
+        // does not immediately reappear in the "add user" select
+        setAllUsers((a) => a.filter((au) => au.userId !== id));
         // inform other parts of the app (header) to refresh team list
         try {
           window.dispatchEvent(new CustomEvent("teams:changed"));
