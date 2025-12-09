@@ -1,5 +1,4 @@
-
-# TeamBoard — Collaborative Task Management
+## TeamBoard — Collaborative Task Management
 
 TeamBoard is a concise full‑stack app for creating and collaborating on tasks within teams. It provides user authentication, team-based task boards, and basic task CRUD operations. The project is split into `backend/` (Express + Sequelize + PostgreSQL) and `frontend/` (React + Vite).
 
@@ -9,29 +8,22 @@ Quick links
 
 Quick Start (development)
 
-1. Install dependencies (use `pnpm` if available):
-
-	npm install
-	# or
-	pnpm install
+1. Install dependencies:
+	`npm install`
 
 2. Run backend (from `./backend`):
 
-	npm --prefix backend run dev
-	# or
-	pnpm --filter backend dev
+	`npm run dev`
 
 	The backend dev script uses `.env.dev` (if present). Required environment variables include `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, and optionally `POSTGRES_HOST`.
 
 3. Run frontend (from `./frontend`):
 
-	npm --prefix frontend run dev
-	# or
-	pnpm --filter frontend dev
+	`npm run dev`
 
 Testing
-- Backend tests: `npm --prefix backend test` (uses Vitest)
-- Frontend tests: `npm --prefix frontend test`
+- Backend tests: `npm run test` (uses Vitest)
+- Frontend tests: `npm run test`
 
 Environment variables (backend)
 - `POSTGRES_DB` — database name
