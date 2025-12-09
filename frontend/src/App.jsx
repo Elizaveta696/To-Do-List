@@ -82,10 +82,27 @@ function App() {
 		return (
 			<Register
 				setPage={setPage}
+				setToken={setToken}
 				onToggleNightMode={toggleNight}
 				nightMode={nightMode}
 			/>
 		);
+
+	const navigate = (p, id, name) => {
+		if (p === "tasks") {
+			if (id) {
+				setTeamId(id);
+				if (name) setTeamName(name);
+			} else {
+				// navigate back to personal "My tasks" board
+				setTeamId(null);
+				setTeamName("My tasks");
+			}
+			setPage("tasks");
+			return;
+		}
+		setPage(p);
+	};
 
 	return (
 		<div className="app">
@@ -98,21 +115,7 @@ function App() {
 				}
 				nightMode={nightMode}
 				teamName={teamName}
-				onNavigate={(p, id, name) => {
-					if (p === "tasks") {
-						if (id) {
-							setTeamId(id);
-							if (name) setTeamName(name);
-						} else {
-							// navigate back to personal "My tasks" board
-							setTeamId(null);
-							setTeamName("My tasks");
-						}
-						setPage("tasks");
-						return;
-					}
-					setPage(p);
-				}}
+				onNavigate={navigate}
 			/>
 			{/* show New Task form overlay */}
 			{showAddForm && (
@@ -172,7 +175,7 @@ function App() {
 							teamId={teamId}
 							teamName={teamName}
 							onChangeName={(name) => setTeamName(name)}
-							onNavigate={(p) => setPage(p)}
+							onNavigate={navigate}
 						/>
 					)}
 					{page === "calendar" && <CalendarView />}

@@ -27,23 +27,27 @@ export default function Header({
 	const [message, setMessage] = useState("");
 	const [teams, setTeams] = useState([]);
 	const teamListId = useId();
-	const [teamCodeInput, setTeamCodeInput] = useState("");
-	const [teamPasswordInput, setTeamPasswordInput] = useState("");
 
-	useEffect(() => {
-		const loadTeams = async () => {
+	const loadTeams = React.useCallback(async () => {
+		try {
 			const res = await fetchTeams();
-
-			console.log("TEAMS RESPONSE:", res.data);
-
 			if (res.ok && Array.isArray(res.data.teams)) {
 				setTeams(res.data.teams);
 			} else {
 				setTeams([]);
 			}
-		};
+		} catch (e) {
+			console.error("Failed to load teams", e);
+			setTeams([]);
+		}
+	}, []);
+	const [teamCodeInput, setTeamCodeInput] = useState("");
+	const [teamPasswordInput, setTeamPasswordInput] = useState("");
 
+	useEffect(() => {
 		loadTeams();
+		window.addEventListener("teams:changed", loadTeams);
+		return () => window.removeEventListener("teams:changed", loadTeams);
 	}, []);
 
 	const handleCreateTeam = async () => {
@@ -149,7 +153,7 @@ export default function Header({
 												setNavOpen(false);
 											}}
 										>
-											{teamName}
+											My tasks
 										</button>
 									</li>
 									{teams
@@ -264,10 +268,10 @@ export default function Header({
 							<h3>Join team</h3>
 							<div className="modal-body">
 								<label>
-									Enter team ID
+									Enter team code
 									<input
 										type="text"
-										name="teamId"
+										name="teamCode"
 										value={teamCodeInput}
 										onChange={(e) => setTeamCodeInput(e.target.value)}
 									/>

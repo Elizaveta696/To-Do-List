@@ -110,7 +110,121 @@ export const fetchTeamMembers = async (teamId) => {
 	}
 
 	const data = await res.json();
-	return data.users;
+	// return both users and team metadata
+	return { users: data.users, team: data.team };
+};
+
+export const fetchAllUsers = async () => {
+	const base = resolveBase();
+	const token = localStorage.getItem("token");
+
+	const res = await fetch(`${base}/api/users`, {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	});
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.message || "Failed to fetch users");
+	}
+	const data = await res.json();
+	return data.users || data;
+};
+
+export const editTeam = async (teamId, { name, password }) => {
+	if (!teamId) throw new Error("teamId is required");
+	const base = resolveBase();
+	const token = localStorage.getItem("token");
+
+	const res = await fetch(`${base}/api/teams/${teamId}/edit`, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+		body: JSON.stringify({ name, password }),
+	});
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.message || "Failed to edit team");
+	}
+	return res.json();
+};
+
+export const deleteTeam = async (teamId) => {
+	if (!teamId) throw new Error("teamId is required");
+	const base = resolveBase();
+	const token = localStorage.getItem("token");
+
+	const res = await fetch(`${base}/api/team/${teamId}/delete`, {
+		method: "DELETE",
+		headers: { Authorization: `Bearer ${token}` },
+	});
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.message || "Failed to delete team");
+	}
+	return res.json();
+};
+
+export const addUserToTeam = async (teamId, userIdToAdd, role = "member") => {
+	if (!teamId) throw new Error("teamId is required");
+	const base = resolveBase();
+	const token = localStorage.getItem("token");
+
+	const res = await fetch(`${base}/api/teams/${teamId}/join`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+		body: JSON.stringify({ userIdToAdd, role }),
+	});
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.message || "Failed to add user to team");
+	}
+	return res.json();
+};
+
+export const changeUserRole = async (teamId, userIdToChange, role) => {
+	if (!teamId) throw new Error("teamId is required");
+	const base = resolveBase();
+	const token = localStorage.getItem("token");
+
+	const res = await fetch(`${base}/api/teams/${teamId}/members/change`, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+		body: JSON.stringify({ userIdToChange, role }),
+	});
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.message || "Failed to change user role");
+	}
+	return res.json();
+};
+
+export const removeTeamMember = async (teamId, userId) => {
+	if (!teamId) throw new Error("teamId is required");
+	const base = resolveBase();
+	const token = localStorage.getItem("token");
+
+	const res = await fetch(
+		`${base}/api/teams/${teamId}/members/delete/${userId}`,
+		{
+			method: "DELETE",
+			headers: { Authorization: `Bearer ${token}` },
+		},
+	);
+	if (!res.ok) {
+		const err = await res.json();
+		throw new Error(err.message || "Failed to remove team member");
+	}
+	return res.json();
 };
 
 export const fetchTeamTasks = async (teamId) => {
