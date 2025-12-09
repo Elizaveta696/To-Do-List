@@ -291,6 +291,12 @@ export default function TaskItem({ task, onUpdate, onDelete, isPersonalView }) {
 							Assigned to: <strong>{task.assignedUserName}</strong>
 						</div>
 					)}
+					{/* Show source team if available */}
+					{(task.teamName || task.Team?.name) && (
+						<div style={{ marginBottom: 8, fontSize: 13 }}>
+							From team: <strong>{task.teamName || task.Team?.name}</strong>
+						</div>
+					)}
 					<h3
 						className={`task-title ${task.completed ? "task-completed" : ""}`}
 					>

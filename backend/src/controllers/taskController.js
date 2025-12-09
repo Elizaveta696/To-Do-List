@@ -2,6 +2,7 @@ import mongoSanitize from "mongo-sanitize";
 import { Op } from "sequelize";
 import { sequelize } from "../config/db.js";
 import { Task } from "../models/Task.js";
+import { Team } from "../models/Team.js";
 import { User } from "../models/User.js";
 
 //get all
@@ -13,8 +14,22 @@ const getTask = async (req, res) => {
 			where: {
 				[Op.or]: [{ userId }, { assignedUserId: userId }],
 			},
+			include: [
+				{
+					model: Team,
+					attributes: ["teamId", "name"],
+				},
+			],
 		});
-		res.status(200).json(tasks);
+
+		// Normalize response to include a top-level `teamName` for easier consumption by frontend
+		const result = tasks.map((t) => {
+			const plain = t.toJSON ? t.toJSON() : t;
+			plain.teamName = plain.Team ? plain.Team.name : null;
+			return plain;
+		});
+
+		res.status(200).json(result);
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: error.message });
