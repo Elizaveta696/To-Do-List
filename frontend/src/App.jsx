@@ -16,7 +16,7 @@ function App() {
 		() => localStorage.getItem("token") || null,
 	);
 	const [page, setPage] = useState(token ? "tasks" : "login");
-	const [teamId, _setTeamId] = useState("TEAM-12345");
+	const [teamId, setTeamId] = useState(null);
 	const [teamName, setTeamName] = useState("My tasks");
 	const [refreshKey, setRefreshKey] = useState(0);
 	const [nightMode, setNightMode] = useState(() => {
@@ -98,7 +98,21 @@ function App() {
 				}
 				nightMode={nightMode}
 				teamName={teamName}
-				onNavigate={(p) => setPage(p)}
+				onNavigate={(p, id, name) => {
+					if (p === "tasks") {
+						if (id) {
+							setTeamId(id);
+							if (name) setTeamName(name);
+						} else {
+							// navigate back to personal "My tasks" board
+							setTeamId(null);
+							setTeamName("My tasks");
+						}
+						setPage("tasks");
+						return;
+					}
+					setPage(p);
+				}}
 			/>
 			{/* show New Task form overlay */}
 			{showAddForm && (
@@ -115,7 +129,7 @@ function App() {
 						</button>
 						<h3 className="modal-title">Add Task</h3>
 						<TaskForm
-							token={token}
+							teamId={teamId}
 							onCreated={() => {
 								setRefreshKey((k) => k + 1);
 								setShowAddForm(false);
@@ -137,7 +151,7 @@ function App() {
 								onClick={() => setPage("tasks")}
 								title="Back to tasks"
 							>
-								My tasks
+								{teamName}
 							</button>
 							<button
 								type="button"
@@ -152,9 +166,7 @@ function App() {
 					)}
 				</header>
 				<div key={refreshKey}>
-					{page === "tasks" && (
-						<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
-					)}
+					{page === "tasks" && <TaskList teamId={teamId} />}
 					{page === "team-settings" && (
 						<TeamSettings
 							teamId={teamId}
