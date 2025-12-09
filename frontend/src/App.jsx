@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CalendarView from "./components/CalendarView";
 import Header from "./components/Header";
 import Login from "./components/Login";
@@ -15,8 +15,21 @@ function App() {
 	const [token, setToken] = useState(
 		() => localStorage.getItem("token") || null,
 	);
+
+	// track previous token so we can detect a fresh login (null -> token)
+	const prevTokenRef = useRef(token);
+
+	useEffect(() => {
+		if (!prevTokenRef.current && token) {
+			// fresh login: always show personal board first
+			setTeamId(null);
+			setTeamName("My tasks");
+			setPage("tasks");
+		}
+		prevTokenRef.current = token;
+	}, [token]);
 	const [page, setPage] = useState(token ? "tasks" : "login");
-	const [teamId, _setTeamId] = useState("TEAM-12345");
+	const [teamId, setTeamId] = useState(null);
 	const [teamName, setTeamName] = useState("My tasks");
 	const [refreshKey, setRefreshKey] = useState(0);
 	const [nightMode, setNightMode] = useState(() => {
@@ -82,10 +95,27 @@ function App() {
 		return (
 			<Register
 				setPage={setPage}
+				setToken={setToken}
 				onToggleNightMode={toggleNight}
 				nightMode={nightMode}
 			/>
 		);
+
+	const navigate = (p, id, name) => {
+		if (p === "tasks") {
+			if (id) {
+				setTeamId(id);
+				if (name) setTeamName(name);
+			} else {
+				// navigate back to personal "My tasks" board
+				setTeamId(null);
+				setTeamName("My tasks");
+			}
+			setPage("tasks");
+			return;
+		}
+		setPage(p);
+	};
 
 	return (
 		<div className="app">
@@ -98,7 +128,8 @@ function App() {
 				}
 				nightMode={nightMode}
 				teamName={teamName}
-				onNavigate={(p) => setPage(p)}
+				teamId={teamId}
+				onNavigate={navigate}
 			/>
 			{/* show New Task form overlay */}
 			{showAddForm && (
@@ -115,7 +146,7 @@ function App() {
 						</button>
 						<h3 className="modal-title">Add Task</h3>
 						<TaskForm
-							token={token}
+							teamId={teamId}
 							onCreated={() => {
 								setRefreshKey((k) => k + 1);
 								setShowAddForm(false);
@@ -137,30 +168,30 @@ function App() {
 								onClick={() => setPage("tasks")}
 								title="Back to tasks"
 							>
-								My tasks
+								{teamName}
 							</button>
-							<button
-								type="button"
-								className="icon-btn page-title-gear"
-								onClick={() => setPage("team-settings")}
-								aria-label="Open team settings"
-								title="Settings"
-							>
-								<FiSettings />
-							</button>
+							{teamId && (
+								<button
+									type="button"
+									className="icon-btn page-title-gear"
+									onClick={() => setPage("team-settings")}
+									aria-label="Open team settings"
+									title="Settings"
+								>
+									<FiSettings />
+								</button>
+							)}
 						</h1>
 					)}
 				</header>
 				<div key={refreshKey}>
-					{page === "tasks" && (
-						<TaskList token={token} onAddTask={() => setShowAddForm(true)} />
-					)}
+					{page === "tasks" && <TaskList teamId={teamId} />}
 					{page === "team-settings" && (
 						<TeamSettings
 							teamId={teamId}
 							teamName={teamName}
 							onChangeName={(name) => setTeamName(name)}
-							onNavigate={(p) => setPage(p)}
+							onNavigate={navigate}
 						/>
 					)}
 					{page === "calendar" && <CalendarView />}
