@@ -1,5 +1,9 @@
 ## TeamBoard — Collaborative Task Management
 
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
+
 TeamBoard is a concise full‑stack app for creating and collaborating on tasks within teams. It provides user authentication, team-based task boards, and basic task CRUD operations. The project is split into `backend/` (Express + Sequelize + PostgreSQL) and `frontend/` (React + Vite).
 
 Quick links
